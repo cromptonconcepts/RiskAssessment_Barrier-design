@@ -505,6 +505,8 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+          flex-wrap: wrap;
+          gap: 10px;
             margin-bottom: 24px; 
             border-bottom: 1px solid rgba(255,255,255,0.1); 
             padding-bottom: 16px; 
@@ -536,6 +538,119 @@
             font-weight: 700; 
         }
         .design-speed-input label { color: #e2e8f0; font-size: 0.9rem; font-weight: 500; }
+        .results-controls {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+        .design-input-block {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .design-input-label-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #e2e8f0;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+        .design-input-label-row label {
+          margin: 0;
+          color: inherit;
+          font-size: inherit;
+          font-weight: inherit;
+        }
+        .inline-help {
+          position: relative;
+        }
+        .inline-help summary {
+          list-style: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          border: 1px solid rgba(255,255,255,0.55);
+          color: #e2e8f0;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-weight: 700;
+          line-height: 1;
+          user-select: none;
+        }
+        .inline-help summary::-webkit-details-marker { display: none; }
+        .inline-help-note {
+          position: absolute;
+          top: calc(100% + 6px);
+          right: 0;
+          min-width: 220px;
+          max-width: 280px;
+          background: #ffffff;
+          color: #0f172a;
+          border: 1px solid #cbd5e1;
+          border-radius: 8px;
+          padding: 8px 10px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          box-shadow: var(--shadow-sm);
+          z-index: 5;
+        }
+        .calc-field-legend {
+          width: 100%;
+          display: flex;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 4px;
+        }
+        .calc-legend-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 8px;
+          border-radius: 999px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          border: 1px solid transparent;
+          white-space: nowrap;
+        }
+        .calc-legend-chip.red {
+          background: #fff1f2;
+          border-color: #fda4af;
+          color: #9f1239;
+        }
+        .calc-legend-chip.green {
+          background: #f0fdf4;
+          border-color: #86efac;
+          color: #166534;
+        }
+        .calc-legend-chip.blue {
+          background: #eff6ff;
+          border-color: #93c5fd;
+          color: #1d4ed8;
+        }
+        .state-required {
+          background: #fff1f2 !important;
+          border-color: #fda4af !important;
+          color: #9f1239 !important;
+          font-weight: 700;
+        }
+        .state-auto-fixed {
+          background: #f0fdf4 !important;
+          border-color: #86efac !important;
+          color: #166534 !important;
+          font-weight: 700;
+        }
+        .state-auto-editable {
+          background: #eff6ff !important;
+          border-color: #93c5fd !important;
+          color: #1d4ed8 !important;
+          font-weight: 700;
+        }
 
         /* --- Matrix Tables --- */
         .matrix-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9rem; margin-bottom: 24px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; }
@@ -1740,74 +1855,68 @@
 
             <div id="terminalDetailsDisplay" style="display:none; margin-bottom: 20px;">
                 <div class="section-title" style="margin-top:0;">Specifications</div>
-                <div class="form-group"><label>Type</label><input type="text" id="termFullType" class="readonly" readonly></div>
-                <div class="form-group"><label>MASH TL</label><input type="text" id="termTL" class="readonly" readonly></div>
-                 <div class="form-group"><label>Test Speed</label><input type="text" id="termSpeed" class="readonly" readonly></div>
-                <div class="form-group"><label>Deflection</label><input type="text" id="termDefl" class="readonly" readonly></div>
-                <div class="form-group"><label>Working Width</label><input type="text" id="termWW" class="readonly" readonly></div>
-                <div class="form-group"><label>System Width</label><input type="text" id="termWidth" class="readonly" readonly></div>
-                <div class="form-group"><label>Test Length</label><input type="text" id="termLen" class="readonly" readonly></div>
+                <div class="form-group"><label>Type</label><input type="text" id="termFullType" class="readonly state-auto-fixed" readonly></div>
+                <div class="form-group"><label>MASH TL</label><input type="text" id="termTL" class="readonly state-auto-fixed" readonly></div>
+                 <div class="form-group"><label>Test Speed</label><input type="text" id="termSpeed" class="readonly state-auto-fixed" readonly></div>
+                <div class="form-group"><label>Deflection</label><input type="text" id="termDefl" class="readonly state-auto-fixed" readonly></div>
+                <div class="form-group"><label>Working Width</label><input type="text" id="termWW" class="readonly state-auto-fixed" readonly></div>
+                <div class="form-group"><label>System Width</label><input type="text" id="termWidth" class="readonly state-auto-fixed" readonly></div>
+                <div class="form-group"><label>Test Length</label><input type="text" id="termLen" class="readonly state-auto-fixed" readonly></div>
             </div>
 
             <div id="calcInputSection">
             <div class="section-title" style="margin-top:0;">Impact Parameters</div>
             <div class="form-group">
                 <label>Mass (kg)</label>
-                <input type="number" id="inMass" value="2270" oninput="markCalcDirty()">
+              <input type="number" id="inMass" class="state-required" value="2270" oninput="markCalcDirty()">
             </div>
             <div class="form-group">
                 <label>Test Speed (km/h)</label>
-                <input type="number" id="inSpeed" class="readonly" value="" readonly>
+              <input type="number" id="inSpeed" class="readonly state-auto-fixed" value="" readonly>
             </div>
             <div class="form-group">
                 <label>Angle (°)</label>
-                <input type="number" id="inAngle" value="25" oninput="markCalcDirty()">
+              <input type="number" id="inAngle" class="state-required" value="25" oninput="markCalcDirty()">
             </div>
             <hr class="energy-separator">
             <div class="form-group">
                 <label>Calculated Impact Energy (kJ)</label>
-                <input type="text" id="outEnergy" class="readonly calc-highlight" readonly>
+              <input type="text" id="outEnergy" class="readonly calc-highlight state-auto-fixed" readonly>
             </div>
 
             <div class="section-title">Barrier Config</div>
             <div class="barrier-config-grid">
                 <div class="form-group">
                     <label>Test Len (m)</label>
-                    <input type="text" id="valTestLength" class="readonly" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Design Len (m)</label>
-                  <input type="number" id="inDesignLength" value="30" oninput="markCalcDirty()">
+                  <input type="text" id="valTestLength" class="readonly state-auto-fixed" readonly>
                 </div>
                 <div class="form-group">
                     <label>Friction</label>
-                  <input type="number" id="inFriction" value="0.4" step="0.1" oninput="markCalcDirty()">
+                  <input type="number" id="inFriction" class="state-required" value="0.4" step="0.1" oninput="markCalcDirty()">
                 </div>
                 <div class="form-group">
                     <label>System Width (m)</label>
-                    <input type="text" id="valSystemWidth" class="readonly" readonly>
+                  <input type="text" id="valSystemWidth" class="readonly state-auto-fixed" readonly>
                 </div>
                 <div class="form-group">
                     <label>Design Allowance (m)</label>
-                    <input type="text" id="valWidthAllowance" class="readonly" readonly>
+                  <input type="text" id="valWidthAllowance" class="readonly state-auto-fixed" readonly>
                 </div>
             </div>
 
             <div class="section-title">Unit Specs</div>
             <div class="form-group" id="containerUnitLength">
                 <label>Length (m)</label>
-                <input type="number" id="inUnitLength" value="6" oninput="markCalcDirty()">
+              <input type="number" id="inUnitLength" class="state-auto-editable" value="6" oninput="markCalcDirty()">
             </div>
             <div class="form-group" id="containerUnitWeight">
                 <label>Wt (Tonnes)</label>
-                <input type="number" id="inUnitWeightT" value="0.6" step="0.1" oninput="markCalcDirty()">
+              <input type="number" id="inUnitWeightT" class="state-auto-editable" value="0.6" step="0.1" oninput="markCalcDirty()">
             </div>
             <div class="form-group" id="containerUnitWeightKg">
                 <label>Wt (kg)</label>
-                <input type="text" id="outUnitWeightKg" class="readonly" readonly>
+              <input type="text" id="outUnitWeightKg" class="readonly state-auto-fixed" readonly>
             </div>
-
-              <button id="applyCalcBtn" class="btn no-print" style="display:none; margin: 10px 0 20px 0;" onclick="applyCalcUpdates()">Update Calculations</button>
             </div>
 
             <a id="techSheetLink" href="#" target="_blank" class="btn" style="display:inline-flex; align-items:center; gap:6px;">
@@ -1829,9 +1938,33 @@
           <div class="results-card" id="resultsCard">
             <div class="results-header">
               <h4>Estimated Results</h4>
-              <div class="design-speed-input">
-                <label for="designSpeedInput">Design Speed (km/h)</label>
-                <input type="number" id="designSpeedInput" step="1" min="0" placeholder="e.g. 80" oninput="onDesignSpeedInput()">
+              <div class="results-controls">
+                <div class="design-speed-input design-input-block">
+                  <div class="design-input-label-row">
+                    <label for="designSpeedInput">Design Speed (km/h)</label>
+                    <details class="inline-help">
+                      <summary>?</summary>
+                      <div class="inline-help-note">Design speed = work zone speed + 10.</div>
+                    </details>
+                  </div>
+                  <input type="number" id="designSpeedInput" class="state-auto-editable" step="1" min="0" placeholder="e.g. 80" oninput="onDesignSpeedInput()">
+                </div>
+                <div class="design-speed-input design-input-block">
+                  <div class="design-input-label-row">
+                    <label for="inDesignLength">Design Length (m)</label>
+                    <details class="inline-help">
+                      <summary>?</summary>
+                      <div class="inline-help-note">Barrier length excluding end treatment length.</div>
+                    </details>
+                  </div>
+                  <input type="number" id="inDesignLength" class="state-auto-editable" value="30" oninput="markCalcDirty()">
+                </div>
+                <button id="applyCalcBtn" class="btn no-print btn-auto" style="display:none; align-self:flex-end;" onclick="applyCalcUpdates()">Update Calculations</button>
+                <div class="calc-field-legend" aria-label="Input color legend">
+                  <span class="calc-legend-chip red">Red: user entry required</span>
+                  <span class="calc-legend-chip green">Green: auto-filled, no change needed</span>
+                  <span class="calc-legend-chip blue">Blue: auto-filled, editable</span>
+                </div>
               </div>
             </div>
             <div class="res-row">
@@ -2944,11 +3077,19 @@ const BARRIER_END_TREATMENT_SPEC = {
     "UNIVERSAL TAU-M Crash Cushion",
     "QUADGUARD M10 CZ Crash Cushion"
   ],
+  "221201-TCU-DB80A-T150-Safety-Barrier-Temporary": [
+    "UNIVERSAL TAU-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
   "220314-TCU-3.6-M-JJ-Hooks-Safety-Barrier-Temporary": [
-    "ABSORB-M Crash Cushion",
+    "SMART Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
     "SLED Plastic Water Filled Crash Cushion",
+    "ABSORB-M Crash Cushion",
     "ArmorBuffa Crash Cushion",
-    "LEGACY: ABSORB 350 Plastic Terminal"
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "LEGACY: QUADGUARD CZ Crash Cushion"
   ],
   "220314-TCU-JJ-HOOKS-MASH-Safety-Barrier-Temporary": [
     "SMART Crash Cushion",
@@ -3011,14 +3152,17 @@ const BARRIER_END_TREATMENT_SPEC = {
 const END_TREATMENT_NAME_ALIASES = {
   "absorb m crash cushion": "Absorb-M Plastic Crash Cushion",
   "legacy absorb 350 plastic terminal": "Absorb-M Plastic Crash Cushion",
+  "absorb 350 plastic terminal": "Absorb-M Plastic Crash Cushion",
   "sled plastic water filled crash cushion": "SLED Plastic Water Filled End Terminal",
   "sled lo ro terminal": "SLED Plastic Water Filled End Terminal",
   "smart crash cushion": "Smart Cushion SCI100GM",
   "universal tau m crash cushion": "Universal TAU-M Crash Cushion",
   "universal tau m": "Universal TAU-M Crash Cushion",
   "legacy universal tau ii crash cushion": "Universal TAU-M Crash Cushion",
+  "universal tau ii crash cushion": "Universal TAU-M Crash Cushion",
   "quadguard m10 cz crash cushion": "QUADGUARD M10 CZ Crash Cushion",
   "legacy quadguard cz crash cushion": "QUADGUARD M10 CZ Crash Cushion",
+  "quadguard cz crash cushion": "QUADGUARD M10 CZ Crash Cushion",
   "armorbuffa crash cushion": "ArmorBuffa Plastic Water Filled Crash Cushion",
   "hercules crash cushion": "Hercules Crash Cushion",
   "armorzone mash end treatment unit": "Armorzone MASH End Treatment Unit",
@@ -3053,13 +3197,13 @@ function resolveCanonicalEndTreatmentName(label) {
 const BARRIER_END_TREATMENT_NAMES = Object.fromEntries(
   Object.entries(BARRIER_END_TREATMENT_SPEC).map(([code, labels]) => {
     const names = Array.from(new Set(labels.map(resolveCanonicalEndTreatmentName).filter(Boolean)));
-    return [code, names];
+    return [code.toUpperCase(), names];
   })
 );
 
 function getBarrierApprovalCode(barrier) {
   const link = String(barrier && barrier.link ? barrier.link : '');
-  const match = link.match(/\/(\d{6}-TCU-[^/.]+)\.pdf/i);
+  const match = link.match(/\/(\d{6}-TCU-[^/]+)\.pdf/i);
   return match ? match[1].toUpperCase() : '';
 }
 
@@ -6313,13 +6457,13 @@ function selectBarrier(id, type) {
     if (lenContainer) {
         if (selectedBarrier.availableLengths && selectedBarrier.availableLengths.length > 1) {
             let opts = selectedBarrier.availableLengths.map(l => `<option value="${l}">${l}</option>`).join('');
-            lenContainer.innerHTML = `<label>Length (m)</label><select id="inUnitLength" onchange="updateLinkedSpecs('length')">${opts}</select>`;
+            lenContainer.innerHTML = `<label>Length (m)</label><select id="inUnitLength" class="state-auto-editable" onchange="updateLinkedSpecs('length')">${opts}</select>`;
         } else {
              // Default if single value or no value
             let val = (selectedBarrier.availableLengths && selectedBarrier.availableLengths.length === 1 && selectedBarrier.availableLengths[0] > 0) 
                       ? selectedBarrier.availableLengths[0] 
                       : 6;
-            lenContainer.innerHTML = `<label>Length (m)</label><input type="number" id="inUnitLength" value="${val}" oninput="markCalcDirty()">`;
+            lenContainer.innerHTML = `<label>Length (m)</label><input type="number" id="inUnitLength" class="state-auto-editable" value="${val}" oninput="markCalcDirty()">`;
         }
     }
     
@@ -6329,12 +6473,12 @@ function selectBarrier(id, type) {
                 const t = w / 1000; 
                 return `<option value="${t}">${w} kg (${t}T)</option>`;
             }).join('');
-             wtContainer.innerHTML = `<label>Wt (Tonnes)</label><select id="inUnitWeightT" onchange="updateLinkedSpecs('weight')">${opts}</select>`;
+             wtContainer.innerHTML = `<label>Wt (Tonnes)</label><select id="inUnitWeightT" class="state-auto-editable" onchange="updateLinkedSpecs('weight')">${opts}</select>`;
          } else {
             let val = (selectedBarrier.unitWeight && selectedBarrier.unitWeight.length === 1 && selectedBarrier.unitWeight[0] > 0) 
                       ? (selectedBarrier.unitWeight[0] / 1000)
                       : 0.6;
-             wtContainer.innerHTML = `<label>Wt (Tonnes)</label><input type="number" id="inUnitWeightT" value="${val}" step="0.1" oninput="markCalcDirty()">`;
+             wtContainer.innerHTML = `<label>Wt (Tonnes)</label><input type="number" id="inUnitWeightT" class="state-auto-editable" value="${val}" step="0.1" oninput="markCalcDirty()">`;
          }
     }
     
@@ -6497,7 +6641,7 @@ function markCalcDirty() {
   if (!selectedBarrier) return;
   calcDirty = true;
   const btn = document.getElementById('applyCalcBtn');
-  if (btn) btn.style.display = 'block';
+  if (btn) btn.style.display = 'inline-flex';
 
   const energyField = document.getElementById('outEnergy');
   if (energyField) energyField.value = 'Update required';
@@ -8223,14 +8367,14 @@ function renderEndTreatments(filterText = '') {
       } else if (selectedBarrier && allowedNames.length > 0) {
         scopeNote.innerText = `Showing mapped end treatments for ${selectedBarrier.name}.`;
       } else if (selectedBarrier) {
-        scopeNote.innerText = 'No specific mapping found for this barrier. Showing all end treatments.';
+        scopeNote.innerText = 'No specific mapping found for this barrier. Use "Show all" to see available end treatments.';
       } else {
         scopeNote.innerText = 'Select a barrier to see mapped end treatments, or use Show all.';
       }
     }
 
     const list = END_TREATMENTS.filter(e =>
-      (showAll || allowedNames.length === 0 || allowedNames.includes(e.name)) &&
+      (showAll || !selectedBarrier || allowedNames.includes(e.name)) &&
       (e.name.toLowerCase().includes(term) || e.supplier.toLowerCase().includes(term))
     );
     
