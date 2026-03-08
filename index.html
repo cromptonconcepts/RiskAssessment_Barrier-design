@@ -2144,9 +2144,14 @@
             <h2 style="color:var(--primary); margin-top:0;">Select End Treatment</h2>
             <p style="color:var(--secondary);">Please select the end treatment for this project from the list below.</p>
             
-            <div style="margin-bottom:20px; display:flex; gap:10px;">
-                <input type="text" id="etSearch" placeholder="Search end treatments..." style="padding:10px; border:1px solid #cbd5e1; border-radius:6px; flex:1;" oninput="renderEndTreatments()">
+            <div style="margin-bottom:20px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <input type="text" id="etSearch" placeholder="Search end treatments..." style="padding:10px; border:1px solid #cbd5e1; border-radius:6px; flex:1; min-width:260px;" oninput="renderEndTreatments()">
+                <label style="display:inline-flex; align-items:center; gap:8px; font-weight:600; color:#334155; white-space:nowrap;">
+                  <input type="checkbox" id="etShowAllToggle" onchange="renderEndTreatments()">
+                  Show all
+                </label>
             </div>
+            <div id="etScopeNote" style="margin:-10px 0 14px 0; color:#64748b; font-size:0.9rem;"></div>
             
             <div id="selectedEtDisplay" style="display:none; margin-bottom:20px; padding:15px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
                 <div style="font-weight:700; font-size:1.1em; margin-bottom:5px;" id="etNameSelect"></div>
@@ -2834,6 +2839,234 @@ const END_TREATMENTS = [
   }
 ];
 let selectedEndTreatment = null;
+
+// Map approved barrier certificate IDs to their allowed end treatments.
+const BARRIER_END_TREATMENT_SPEC = {
+  "201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary": ["Armorzone MASH End Treatment Unit"],
+  "201120-TCU-LO-RO-Water-Cable-Barrier-Temporary": ["SLED Lo-Ro Terminal"],
+  "201120-TCU-MBT-1-Safety-Barrier-Temporary": ["MASH TL3 TMA"],
+  "201120-TCU-RICOCHET-Water-Filled-Barrier-Temporary": ["Ricochet MASH TL1 Terminal End"],
+  "201120-TCU-SHIELD-I-Water-Filled-Barrier-System-Temporary": ["SHIELD I Terminal"],
+  "210304-TCU-ZONEGUARD-MDS-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "ABSORB-M Crash Cushion"
+  ],
+  "210720-TCU-DB80-K150-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "SLED Plastic Water Filled Crash Cushion",
+    "SMART Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion"
+  ],
+  "210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "HERCULES Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion"
+  ],
+  "210903-TCU-DEFENDER-100-LDS-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "HERCULES Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion"
+  ],
+  "211201-TCU-BG800-LDS-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "SMART Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "HIGHWAYGUARD LDS Safety Barrier",
+    "ABSORB-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
+  "211201-TCU-BG800-MDS-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "SMART Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "ABSORB-M Crash Cushion",
+    "Universal Tau-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
+  "211201-TCU-BG800-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "HIGHWAYGUARD LDS Safety Barrier",
+    "SMART Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "Universal Tau-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
+  "211201-TCU-DEFENDER-100-FS-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
+  "211201-TCU-DEFENDER-70-Safety-Barrier-Temporary": [
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "ABSORB-M Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion"
+  ],
+  "211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary": [
+    "BG800 Steel Safety Barrier",
+    "LEGACY: Quadguard CZ Crash Cushion",
+    "LEGACY: Universal Tau-II Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion"
+  ],
+  "211201-TCU-HV2-Safety-Barrier-Temporary": [
+    "LEGACY: QuadGuard CZ Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
+  "211201-TCU-PIN-and-LOOP-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "ABSORB-M Crash Cushion"
+  ],
+  "211208-TCU-ZONEGUARD-Safety-Barrier-Temporary": [
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "ABSORB-M Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion"
+  ],
+  "211220-TCU-DB80-T150-Safety-Barrier-Temporary": [
+    "UNIVERSAL TAU-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion"
+  ],
+  "220314-TCU-3.6-M-JJ-Hooks-Safety-Barrier-Temporary": [
+    "ABSORB-M Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
+    "ArmorBuffa Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal"
+  ],
+  "220314-TCU-JJ-HOOKS-MASH-Safety-Barrier-Temporary": [
+    "SMART Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "ArmorBuffa Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal",
+    "LEGACY: QUADGUARD CZ Crash Cushion"
+  ],
+  "220322-TCU-Rebloc-80SAH_12_8B-Safety-Barrier": ["SMART Crash Cushion"],
+  "220616-TCU-Rebloc-120FA_6_FS-Safety-Barrier": ["SMART Crash Cushion"],
+  "220902-TCU-Rebloc-80SAH_12-Safety-Barrier": ["SMART Crash Cushion"],
+  "221201-TCU-Rebloc-80SAH_4-Safety-Barrier-Temporary": ["SMART Crash Cushion"],
+  "220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary": [
+    "QUADGUARD M10 CZ Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: UNIVERSAL TAU-II Crash Cushion"
+  ],
+  "230601-TCU-HIGHWAYGUARD-MDS-Safety-Barrier-Temporary": [
+    "QUADGUARD M10 CZ Crash Cushion",
+    "UNIVERSAL TAU-M Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "BG800 Steel Safety Barrier"
+  ],
+  "230601-TCU-T-LOK-MASH-F-TYPE-Concrete-Safety-Barrier-Temporary": [
+    "UNIVERSAL TAU-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "ArmorBuffa Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal"
+  ],
+  "230601-TCU-T-LOK-Rubber-Safety-Barrier-Temporary": [
+    "UNIVERSAL TAU-M Crash Cushion",
+    "QUADGUARD M10 CZ Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
+    "ABSORB-M Crash Cushion",
+    "ArmorBuffa Crash Cushion"
+  ],
+  "230901-TCU-SAFEZONE-MDS-Safety-Barrier-Permanent-and-Temporary": [
+    "UNIVERSAL TAU-M Crash Cushion",
+    "ABSORB-M Crash Cushion"
+  ],
+  "230925-TCU-IRONMAN-HYBRID-Safety-Barrier-Temporary": [
+    "SLED Plastic Water Filled Crash Cushion",
+    "LEGACY: QUADGUARD CZ Crash Cushion",
+    "LEGACY: ABSORB 350 Plastic Terminal"
+  ],
+  "240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary": [
+    "Universal Tau-M Crash Cushion",
+    "Absorb-M Crash Cushion"
+  ]
+};
+
+const END_TREATMENT_NAME_ALIASES = {
+  "absorb m crash cushion": "Absorb-M Plastic Crash Cushion",
+  "legacy absorb 350 plastic terminal": "Absorb-M Plastic Crash Cushion",
+  "sled plastic water filled crash cushion": "SLED Plastic Water Filled End Terminal",
+  "sled lo ro terminal": "SLED Plastic Water Filled End Terminal",
+  "smart crash cushion": "Smart Cushion SCI100GM",
+  "universal tau m crash cushion": "Universal TAU-M Crash Cushion",
+  "universal tau m": "Universal TAU-M Crash Cushion",
+  "legacy universal tau ii crash cushion": "Universal TAU-M Crash Cushion",
+  "quadguard m10 cz crash cushion": "QUADGUARD M10 CZ Crash Cushion",
+  "legacy quadguard cz crash cushion": "QUADGUARD M10 CZ Crash Cushion",
+  "armorbuffa crash cushion": "ArmorBuffa Plastic Water Filled Crash Cushion",
+  "hercules crash cushion": "Hercules Crash Cushion",
+  "armorzone mash end treatment unit": "Armorzone MASH End Treatment Unit",
+  "ricochet mash tl1 terminal end": "Ricochet MASH TL1 Terminal End"
+};
+
+function normalizeEndTreatmentLabel(label) {
+  return String(label || '')
+    .toLowerCase()
+    .replace(/legacy\s*:\s*/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function resolveCanonicalEndTreatmentName(label) {
+  const normalized = normalizeEndTreatmentLabel(label);
+  if (!normalized) return null;
+
+  const aliasHit = END_TREATMENT_NAME_ALIASES[normalized];
+  if (aliasHit) return aliasHit;
+
+  const direct = END_TREATMENTS.find(et => normalizeEndTreatmentLabel(et.name) === normalized);
+  if (direct) return direct.name;
+
+  const fuzzy = END_TREATMENTS.find(et => {
+    const n = normalizeEndTreatmentLabel(et.name);
+    return n.includes(normalized) || normalized.includes(n);
+  });
+  return fuzzy ? fuzzy.name : null;
+}
+
+const BARRIER_END_TREATMENT_NAMES = Object.fromEntries(
+  Object.entries(BARRIER_END_TREATMENT_SPEC).map(([code, labels]) => {
+    const names = Array.from(new Set(labels.map(resolveCanonicalEndTreatmentName).filter(Boolean)));
+    return [code, names];
+  })
+);
+
+function getBarrierApprovalCode(barrier) {
+  const link = String(barrier && barrier.link ? barrier.link : '');
+  const match = link.match(/\/(\d{6}-TCU-[^/.]+)\.pdf/i);
+  return match ? match[1].toUpperCase() : '';
+}
+
+function getAllowedEndTreatmentNamesForBarrier(barrier) {
+  const code = getBarrierApprovalCode(barrier);
+  return code ? (BARRIER_END_TREATMENT_NAMES[code] || []) : [];
+}
 
 const highwayGuardMatrix = {
     speeds: [20, 40, 50, 60, 70, 80, 90, 100, 110, 120],
@@ -5995,6 +6228,10 @@ function selectBarrier(id, type) {
         if (selectedBarrier) selectedBarrier.isTerminal = false;
     }
 
+  selectedEndTreatment = null;
+  const selectedEtDisplay = document.getElementById('selectedEtDisplay');
+  if (selectedEtDisplay) selectedEtDisplay.style.display = 'none';
+
   // Track recents
   touchRecent(id, type);
     
@@ -7973,11 +8210,28 @@ function renderEndTreatments(filterText = '') {
     const grid = document.getElementById('etGrid');
     if (!grid) return;
     grid.innerHTML = '';
-    
+    const showAllToggle = document.getElementById('etShowAllToggle');
+    const showAll = !!(showAllToggle && showAllToggle.checked);
+    const scopeNote = document.getElementById('etScopeNote');
+
     const term = (document.getElementById('etSearch').value || filterText).toLowerCase();
-    const list = END_TREATMENTS.filter(e => 
-        e.name.toLowerCase().includes(term) || 
-        e.supplier.toLowerCase().includes(term)
+    const allowedNames = showAll ? [] : getAllowedEndTreatmentNamesForBarrier(selectedBarrier);
+
+    if (scopeNote) {
+      if (showAll) {
+        scopeNote.innerText = 'Showing all end treatments.';
+      } else if (selectedBarrier && allowedNames.length > 0) {
+        scopeNote.innerText = `Showing mapped end treatments for ${selectedBarrier.name}.`;
+      } else if (selectedBarrier) {
+        scopeNote.innerText = 'No specific mapping found for this barrier. Showing all end treatments.';
+      } else {
+        scopeNote.innerText = 'Select a barrier to see mapped end treatments, or use Show all.';
+      }
+    }
+
+    const list = END_TREATMENTS.filter(e =>
+      (showAll || allowedNames.length === 0 || allowedNames.includes(e.name)) &&
+      (e.name.toLowerCase().includes(term) || e.supplier.toLowerCase().includes(term))
     );
     
     if (list.length === 0) {
