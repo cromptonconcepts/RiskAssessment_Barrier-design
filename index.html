@@ -912,6 +912,73 @@
 
         .legacy-nav { display: none !important; }
 
+        /* --- Editable Report Modal --- */
+        .report-modal {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 11000;
+          background: rgba(15, 23, 42, 0.55);
+          backdrop-filter: blur(2px);
+          padding: 18px;
+        }
+        .report-modal.show {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .report-modal-panel {
+          width: min(1080px, 98vw);
+          max-height: 94vh;
+          background: #ffffff;
+          border-radius: 12px;
+          border: 1px solid #cbd5e1;
+          box-shadow: var(--shadow-xl);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .report-modal-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 12px 14px;
+          border-bottom: 1px solid #e2e8f0;
+          background: #f8fafc;
+        }
+        .report-modal-title {
+          font-weight: 800;
+          color: #0f172a;
+        }
+        .report-modal-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .report-edit-surface {
+          padding: 14px;
+          overflow: auto;
+          max-height: calc(94vh - 72px);
+          background: #f1f5f9;
+        }
+        .report-edit-content {
+          background: #ffffff;
+          border: 1px dashed #93c5fd;
+          border-radius: 10px;
+          padding: 10px;
+          min-height: 260px;
+        }
+        .report-edit-content:focus {
+          outline: 3px solid rgba(37, 99, 235, 0.22);
+          border-color: #2563eb;
+        }
+        @media print {
+          .report-modal {
+            display: none !important;
+          }
+        }
+
         /* --- Admin --- */
         .admin-only { display: none !important; }
         body.is-admin .admin-only { display: block !important; }
@@ -2504,6 +2571,21 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="editableReportModal" class="report-modal no-print" aria-hidden="true">
+  <div class="report-modal-panel">
+    <div class="report-modal-toolbar">
+      <div class="report-modal-title">Editable Report Preview</div>
+      <div class="report-modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeEditableReport()">Close</button>
+        <button type="button" class="btn" onclick="printEditableReport()">Print Edited Report</button>
+      </div>
+    </div>
+    <div class="report-edit-surface">
+      <div id="editableReportContent" class="report-edit-content" contenteditable="true"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -8788,6 +8870,40 @@ function printReport() {
   }
   printContainer.appendChild(pSign);
 
+  openEditableReport();
+}
+
+function openEditableReport() {
+  const modal = document.getElementById('editableReportModal');
+  const editable = document.getElementById('editableReportContent');
+  const printContainer = document.getElementById('printReportOutput');
+  if (!modal || !editable || !printContainer) {
+    alert('Editable report preview is not available.');
+    return;
+  }
+
+  editable.innerHTML = printContainer.innerHTML;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeEditableReport() {
+  const modal = document.getElementById('editableReportModal');
+  if (!modal) return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+function printEditableReport() {
+  const editable = document.getElementById('editableReportContent');
+  const printContainer = document.getElementById('printReportOutput');
+  if (!editable || !printContainer) {
+    alert('Unable to print edited report.');
+    return;
+  }
+
+  printContainer.innerHTML = editable.innerHTML;
+  closeEditableReport();
   window.print();
 }
 
