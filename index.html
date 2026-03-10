@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1149,30 +1149,30 @@
 
         const canGoPrev = currentUserRole !== 'external' && stageId !== 'stage1';
         let canGoNext = false;
-        let nextText = 'Next →';
+        let nextText = 'Next â†’';
 
         if (currentUserRole === 'external') {
           canGoNext = false;
-          nextText = 'Next →';
+          nextText = 'Next â†’';
         } else {
           if (stageId === 'stage1') {
             canGoNext = true;
-            nextText = 'Next: Barriers →';
+            nextText = 'Next: Barriers â†’';
           } else if (stageId === 'stage2') {
             canGoNext = false;
-            nextText = 'Select barrier card →';
+            nextText = 'Select barrier card â†’';
           } else if (stageId === 'stage3') {
             canGoNext = true;
-            nextText = 'Next: End Treatments →';
+            nextText = 'Next: End Treatments â†’';
           } else if (stageId === 'stage4') {
             canGoNext = true;
-            nextText = 'Next: Details →';
+            nextText = 'Next: Details â†’';
           } else if (stageId === 'stage5') {
             canGoNext = true;
-            nextText = 'Next: Sign Off →';
+            nextText = 'Next: Sign Off â†’';
           } else if (stageId === 'stage7') {
             canGoNext = false;
-            nextText = 'Next →';
+            nextText = 'Next â†’';
           }
         }
 
@@ -1400,7 +1400,7 @@
 </div>
 
 <div class="made-by-badge no-print">
-  <span class="author-icon">👨‍💻</span>
+  <span class="author-icon">ðŸ‘¨â€ðŸ’»</span>
   <span class="author-name">Made by Sanju Bhandari</span>
 </div>
 
@@ -1417,7 +1417,7 @@
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
              <a href="https://drive.google.com/file/d/1CS9_LMbzimHk5tiEhArxSBEKRgGFubXh/view?usp=sharing" target="_blank" class="btn btn-outline no-print" style="display:inline-flex; align-items:center; gap:5px; text-decoration:none;">
-                📋 TMR 
+                ðŸ“‹ TMR 
             </a>
              <button id="showGlossaryBtn" class="btn btn-outline no-print" onclick="openGlossary()" style="display:inline-flex; align-items:center; gap:5px;">
                 <span style="font-weight:bold; border:1px solid currentColor; border-radius:50%; width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem;">?</span>
@@ -1431,9 +1431,9 @@
     <div id="roleModeBanner" class="role-mode-banner no-print" aria-live="polite"></div>
 
     <div class="page-nav no-print" id="pageNavTop">
-      <button type="button" id="prevPageBtnTop" class="page-nav-btn" onclick="goToPreviousPage()">← Previous</button>
+      <button type="button" id="prevPageBtnTop" class="page-nav-btn" onclick="goToPreviousPage()">â† Previous</button>
       <div id="pageNavTitleTop" class="page-nav-title">Current: Risk Assessment</div>
-      <button type="button" id="nextPageBtnTop" class="page-nav-btn" onclick="goToNextPage()">Next →</button>
+      <button type="button" id="nextPageBtnTop" class="page-nav-btn" onclick="goToNextPage()">Next â†’</button>
     </div>
 
     <!-- STAGE 1: Risk Assessment -->
@@ -1445,7 +1445,7 @@
 
         <!-- Design Type Selection -->
         <div class="card" style="margin-bottom:24px; background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border:2px solid var(--primary);">
-            <h3 style="margin-bottom:16px; color:var(--primary);">🎯 Design Type Selection</h3>
+            <h3 style="margin-bottom:16px; color:var(--primary);">ðŸŽ¯ Design Type Selection</h3>
             <p style="color:var(--text-sub); margin-bottom:16px; font-size:0.95rem;">Select the type of design this risk assessment is for. Common risks will be pre-populated based on your selection.</p>
             <div class="input-grid" style="grid-template-columns: 1fr 1fr; gap:16px;">
                 <div class="form-group">
@@ -1501,10 +1501,10 @@
             <div style="margin-bottom:20px; padding:16px; background:var(--primary-light); border-radius:8px; border:1px solid var(--primary);">
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                     <div style="flex:1; min-width:250px;">
-                        <h4 style="margin:0 0 4px 0; color:var(--primary); font-size:1rem;">📄 Import Risk Assessment from PDF</h4>
+                        <h4 style="margin:0 0 4px 0; color:var(--primary); font-size:1rem;">ðŸ“„ Import Risk Assessment from PDF</h4>
                         <p style="margin:0 0 8px 0; font-size:0.85rem; color:var(--text-sub);">Upload your risk assessment PDF or a previously generated report HTML to automatically populate the table below.</p>
                         <details style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
-                            <summary style="cursor:pointer; color:var(--primary); font-weight:600;">ℹ️ Formatting Requirements</summary>
+                            <summary style="cursor:pointer; color:var(--primary); font-weight:600;">â„¹ï¸ Formatting Requirements</summary>
                             <ul style="margin:8px 0 0 20px; padding:0; line-height:1.6;">
                                 <li>PDF must contain a structured risk assessment table</li>
                                 <li>Columns: Hazard, Impact, Likelihood, Consequence, Controls, Risk Owner</li>
@@ -1520,16 +1520,16 @@
                         <input type="file" id="riskJsonUploadInput" accept=".json" style="display:none;" onchange="handleRiskJsonUpload(event)">
                         <div style="display:flex; gap:8px; flex-wrap:wrap;">
                           <button class="btn" onclick="document.getElementById('pdfUploadInput').click()" style="white-space:nowrap;">
-                            📤 Upload File
+                            ðŸ“¤ Upload File
                           </button>
                           <button class="btn btn-outline" onclick="document.getElementById('reportUploadInput').click()" style="white-space:nowrap;">
-                            📥 Load Report (HTML)
+                            ðŸ“¥ Load Report (HTML)
                           </button>
                           <button class="btn btn-outline" onclick="document.getElementById('riskJsonUploadInput').click()" style="white-space:nowrap;">
-                            📥 Load Risk JSON
+                            ðŸ“¥ Load Risk JSON
                           </button>
                           <button class="btn btn-outline" onclick="exportRiskRegisterJson()" style="white-space:nowrap;">
-                            💾 Export Risk JSON
+                            ðŸ’¾ Export Risk JSON
                           </button>
                         </div>
                     </div>
@@ -1543,7 +1543,7 @@
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:20px;">
                 <!-- Rating Scales Reference -->
                 <div style="background:var(--bg-body); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
-                    <h4 style="margin:0 0 12px 0; color:var(--primary); font-size:0.95rem;">📊 Rating Scales Reference</h4>
+                    <h4 style="margin:0 0 12px 0; color:var(--primary); font-size:0.95rem;">ðŸ“Š Rating Scales Reference</h4>
                     
                     <div style="margin-bottom:12px;">
                         <div style="font-weight:700; font-size:0.85rem; margin-bottom:6px; color:var(--text-main);">Likelihood (Probability)</div>
@@ -1588,17 +1588,17 @@
                     </div>
                     
                     <div style="margin-top:12px; padding:10px; background:#eff6ff; border-left:3px solid var(--primary); font-size:0.8rem; border-radius:4px;">
-                        <strong>Risk Rating = Likelihood × Consequence</strong>
+                        <strong>Risk Rating = Likelihood Ã— Consequence</strong>
                     </div>
                 </div>
                 
                 <!-- Risk Matrix Visualization -->
                 <div style="background:var(--bg-body); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
-                    <h4 style="margin:0 0 12px 0; color:var(--primary); font-size:0.95rem;">🎯 Risk Matrix</h4>
+                    <h4 style="margin:0 0 12px 0; color:var(--primary); font-size:0.95rem;">ðŸŽ¯ Risk Matrix</h4>
                     <div id="riskMatrixViz" style="font-size:0.75rem;">
                         <table style="width:100%; border-collapse:collapse; text-align:center; margin-bottom:10px;">
                             <tr>
-                                <td style="border:none; font-weight:700; font-size:0.7rem; padding:4px; vertical-align:middle; text-align:right; color:#1e293b; width:15%;">Likelihood →<br>Consequence ↓</td>
+                                <td style="border:none; font-weight:700; font-size:0.7rem; padding:4px; vertical-align:middle; text-align:right; color:#1e293b; width:15%;">Likelihood â†’<br>Consequence â†“</td>
                                 <td style="border:1px solid #cbd5e1; background:#f1f5f9; font-weight:700; padding:6px; font-size:0.7rem; color:#1e293b;">1<br>Rare</td>
                                 <td style="border:1px solid #cbd5e1; background:#f1f5f9; font-weight:700; padding:6px; font-size:0.7rem; color:#1e293b;">2<br>Unlikely</td>
                                 <td style="border:1px solid #cbd5e1; background:#f1f5f9; font-weight:700; padding:6px; font-size:0.7rem; color:#1e293b;">3<br>Possible</td>
@@ -1696,7 +1696,7 @@
                     + Add Custom Risk Factor
                 </button>
                 <button class="btn btn-outline btn-sm" onclick="clearRiskTable()" style="background:#fee2e2; border-color:#ef4444; color:#991b1b;">
-                    🗑️ Clear All Rows
+                    ðŸ—‘ï¸ Clear All Rows
                 </button>
             </div>
         </div>
@@ -1762,10 +1762,10 @@
 
         <div style="display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap;">
             <button class="btn btn-outline internal-only" onclick="generateRiskReport()">
-                📄 Generate Risk Assessment Report
+                ðŸ“„ Generate Risk Assessment Report
             </button>
             <button class="btn navigation-allowed" onclick="proceedToBarrierSelection()">
-                Continue to Barrier Selection →
+                Continue to Barrier Selection â†’
             </button>
         </div>
     </div>
@@ -1774,7 +1774,7 @@
     <div id="stage2" style="display:none;">
         <div class="filter-panel">
             <div style="margin-bottom:15px;">
-                <button class="btn btn-outline no-print navigation-allowed" onclick="backToStage1()">← Back to Risk Assessment</button>
+                <button class="btn btn-outline no-print navigation-allowed" onclick="backToStage1()">â† Back to Risk Assessment</button>
             </div>
             
             <div class="stage1-tabs">
@@ -1784,7 +1784,7 @@
             
             <div style="margin-bottom:20px;">
                 <button id="btnShowFavs" class="btn btn-outline btn-sm" onclick="toggleFavFilter()" style="border-radius:20px; font-size:0.9rem;">
-                    <span>★</span> Show Favorites Only
+                    <span>â˜…</span> Show Favorites Only
                 </button>
             </div>
 
@@ -1857,11 +1857,11 @@
         </div>
         
         <div style="margin-bottom:15px; padding:10px 12px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:6px; display:flex; align-items:center; gap:8px;">
-            <span style="font-size:0.9rem; color:#0369a1;">📋</span>
+            <span style="font-size:0.9rem; color:#0369a1;">ðŸ“‹</span>
             <span style="font-size:0.9rem; color:#0c4a6e; flex:1;">TMR Master Document:</span>
             <a href="https://drive.google.com/file/d/1CS9_LMbzimHk5tiEhArxSBEKRgGFubXh/view?usp=sharing" target="_blank" style="color:#0284c7; text-decoration:none; font-weight:600; font-size:0.9rem; display:flex; align-items:center; gap:4px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                 View All Barriers & End Treatments
-                <span style="font-size:0.75rem;">↗</span>
+                <span style="font-size:0.75rem;">â†—</span>
             </a>
         </div>
         
@@ -1878,7 +1878,7 @@
         <div id="compareBar" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1e293b; color:white; padding:16px 24px; border-radius:99px; box-shadow:0 10px 25px -5px rgba(0,0,0,0.3); align-items:center; gap:20px; z-index:1000;">
             <div style="font-weight:600;"><span id="compareCount">0</span> selected for comparison</div>
             <button class="btn btn-sm" style="background:white; color:#0f172a; padding:8px 16px; font-size:0.9rem;" onclick="showComparison()">Compare Now</button>
-            <button class="btn-link" style="color:#94a3b8; font-size:1.2rem; padding:0;" onclick="clearComparison()">×</button>
+            <button class="btn-link" style="color:#94a3b8; font-size:1.2rem; padding:0;" onclick="clearComparison()">Ã—</button>
         </div>
 
         <!-- COMPARISON MODAL -->
@@ -1886,7 +1886,7 @@
              <div style="background:white; width:90%; max-width:900px; max-height:90vh; border-radius:12px; display:flex; flex-direction:column; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);">
                  <div style="padding:20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
                      <h3 style="margin:0;">Barrier Comparison</h3>
-                     <button class="btn-link" onclick="closeComparison()" style="color:#64748b; font-size:1.5rem;">×</button>
+                     <button class="btn-link" onclick="closeComparison()" style="color:#64748b; font-size:1.5rem;">Ã—</button>
                  </div>
                  <div id="compareContent" style="padding:20px; overflow-y:auto;"></div>
              </div>
@@ -1899,15 +1899,15 @@
         
         <div class="panel" id="inputsPanel">
             <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
-              <button class="btn btn-outline no-print navigation-allowed" style="flex:1; min-width:140px;" onclick="backToSelection()">← Back to Selection</button>
-              <button class="btn btn-outline no-print" style="flex:1; min-width:140px;" onclick="generateShareLink()">🔗 Share</button>
-              <button class="btn no-print navigation-allowed" style="flex:1; min-width:140px;" onclick="goToStage4()">Next: End Treatment →</button>
+              <button class="btn btn-outline no-print navigation-allowed" style="flex:1; min-width:140px;" onclick="backToSelection()">â† Back to Selection</button>
+              <button class="btn btn-outline no-print" style="flex:1; min-width:140px;" onclick="generateShareLink()">ðŸ”— Share</button>
+              <button class="btn no-print navigation-allowed" style="flex:1; min-width:140px;" onclick="goToStage4()">Next: End Treatment â†’</button>
             </div>
             <h2 id="barrierNameDisplay" style="margin-top:0; color:var(--primary); font-size: 1.25rem;">-</h2>
             <div id="supplierDisplay" style="font-size:0.85rem; color:var(--secondary); margin-bottom:15px;">-</div>
             
             <a id="imgSearchLink" href="#" target="_blank" class="image-preview" title="Search Google Images">
-                <div class="image-icon">📷</div>
+                <div class="image-icon">ðŸ“·</div>
                 <div class="image-text">Find Images</div>
                 <div style="font-size:0.7rem; color:#64748b; margin-top:4px; text-align:center;">
                     Search: <span id="searchQueryDisplay">Supplier + Name</span>
@@ -1916,7 +1916,7 @@
             
             <div id="extraImageSearch" style="display:none; text-align:center; margin-bottom:24px; margin-top:-16px;">
                 <a id="extraSearchLink" href="#" target="_blank" class="btn-link" style="font-size:0.85rem;">
-                   🔍 Search Google for more Images
+                   ðŸ” Search Google for more Images
                 </a>
             </div>
 
@@ -1942,7 +1942,7 @@
               <input type="number" id="inSpeed" class="readonly state-auto-fixed" value="" readonly>
             </div>
             <div class="form-group">
-                <label>Angle (°)</label>
+                <label>Angle (Â°)</label>
               <input type="number" id="inAngle" class="state-required" value="25" oninput="markCalcDirty()">
             </div>
             <hr class="energy-separator">
@@ -1987,16 +1987,16 @@
             </div>
 
             <a id="techSheetLink" href="#" target="_blank" class="btn" style="display:inline-flex; align-items:center; gap:6px;">
-                <span>📄</span> View Tech Sheet
+                <span>ðŸ“„</span> View Tech Sheet
             </a>
             <a id="manuSpecLink" href="#" target="_blank" class="btn" style="display:none; align-items:center; gap:6px; margin-top: 10px; background-color: #64748b;">
-                <span>🏭</span> Manufacturer's Specs
+                <span>ðŸ­</span> Manufacturer's Specs
             </a>
             <a id="installVideoLink" href="#" target="_blank" class="btn" style="display:none; align-items:center; gap:6px; margin-top: 10px; background-color: #dc2626;">
-                <span>🎥</span> Installation Process
+                <span>ðŸŽ¥</span> Installation Process
             </a>
             <a id="manuWebsiteLink" href="#" target="_blank" class="btn" style="display:none; align-items:center; gap:6px; margin-top: 10px; background-color: #0ea5e9;">
-              <span>🌐</span> Manufacturer Website
+              <span>ðŸŒ</span> Manufacturer Website
             </a>
             <div id="linkHealthNote" class="link-health"></div>
         </div>
@@ -2157,7 +2157,7 @@
            <div style="background:white; width:90%; max-width:600px; max-height:90vh; border-radius:12px; display:flex; flex-direction:column; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);">
              <div style="padding:20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
                <h3 style="margin:0;">Definitions & Glossary</h3>
-               <button class="btn-link" onclick="closeGlossary()" style="color:#64748b; font-size:1.5rem;">×</button>
+               <button class="btn-link" onclick="closeGlossary()" style="color:#64748b; font-size:1.5rem;">Ã—</button>
              </div>
              <div style="padding:20px; overflow-y:auto;">
               <dl style="display:grid; grid-template-columns:auto 1fr; gap:10px 20px; align-items:baseline;">
@@ -2251,7 +2251,7 @@
                 <dd style="margin:0; grid-column:2;">Distance from edge of traveled way to traffic face of barrier; affects impact angle/severity.</dd>
 
                 <dt style="font-weight:700; color:#1e40af; grid-column:1; white-space:nowrap;">Impact Angle</dt>
-                <dd style="margin:0; grid-column:2;">Angle at which a vehicle strikes the barrier during crash testing (typically 25° for MASH TL-3).</dd>
+                <dd style="margin:0; grid-column:2;">Angle at which a vehicle strikes the barrier during crash testing (typically 25Â° for MASH TL-3).</dd>
 
                 <dt style="font-weight:700; color:#1e40af; grid-column:1; white-space:nowrap;">Impact Speed</dt>
                 <dd style="margin:0; grid-column:2;">Vehicle speed at moment of barrier impact during crash testing (e.g., 100 km/h for MASH TL-3).</dd>
@@ -2339,7 +2339,7 @@
     <div id="stage4" class="calc-container" style="display:none; grid-template-columns: 1fr;">
         <div class="panel">
             <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
-              <button class="btn btn-outline no-print navigation-allowed" style="flex:1; min-width:160px;" onclick="backToStage2()">← Back to Calculations</button>
+              <button class="btn btn-outline no-print navigation-allowed" style="flex:1; min-width:160px;" onclick="backToStage2()">â† Back to Calculations</button>
             </div>
             <h2 style="color:var(--primary); margin-top:0;">Select End Treatment</h2>
             <p style="color:var(--secondary);">Please select the end treatment for this project from the list below.</p>
@@ -2358,13 +2358,13 @@
                 <div style="color:#64748b; margin-bottom:10px;" id="etSupplierSelect"></div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <a id="etTechSheetLink" href="#" target="_blank" class="btn" style="display:none; font-size:0.9em; padding:6px 12px; align-items:center; gap:5px;">
-                        <span>📄</span> Tech Sheet
+                        <span>ðŸ“„</span> Tech Sheet
                     </a>
                     <a id="etManufSheetLink" href="#" target="_blank" class="btn" style="display:none; font-size:0.9em; padding:6px 12px; align-items:center; gap:5px;">
-                        <span>🏭</span> Manufacturer Spec
+                        <span>ðŸ­</span> Manufacturer Spec
                     </a>
                   <a id="etManufWebsiteLink" href="#" target="_blank" class="btn" style="display:none; font-size:0.9em; padding:6px 12px; align-items:center; gap:5px; background-color:#0ea5e9;">
-                    <span>🌐</span> Manufacturer Website
+                    <span>ðŸŒ</span> Manufacturer Website
                   </a>
                 </div>
             </div>
@@ -2379,8 +2379,8 @@
     <div id="stage5" class="calc-container" style="display:none; grid-template-columns: 1fr;">
         <div class="panel">
             <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
-              <button class="btn btn-outline no-print navigation-allowed" style="flex:1; min-width:160px;" onclick="backToStage3()">← Back to End Treatment</button>
-              <button class="btn no-print internal-only" style="flex:1; min-width:160px;" onclick="goToStage7()">Next: Sign Off →</button>
+              <button class="btn btn-outline no-print navigation-allowed" style="flex:1; min-width:160px;" onclick="backToStage3()">â† Back to End Treatment</button>
+              <button class="btn no-print internal-only" style="flex:1; min-width:160px;" onclick="goToStage7()">Next: Sign Off â†’</button>
             </div>
             <h2 style="color:var(--primary); margin-top:0;">End Treatment Details</h2>
             <div id="etDetailsReview" style="padding:20px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
@@ -2478,7 +2478,7 @@
     <!-- STAGE 7: Sign Off & Print -->
     <div id="stage7" class="calc-container" style="display:none; grid-template-columns: 1fr;">
         <div class="panel" style="max-width:800px; margin:0 auto;">
-            <button class="btn btn-outline no-print navigation-allowed" style="margin-bottom:15px; width:auto;" onclick="backToStage4()">← Back to End Treatment</button>
+            <button class="btn btn-outline no-print navigation-allowed" style="margin-bottom:15px; width:auto;" onclick="backToStage4()">â† Back to End Treatment</button>
             <h2 style="color:var(--primary); margin-top:0;">Sign Off & Generate Report</h2>
             <p style="color:var(--secondary); margin-bottom:25px;">Please verify the details below and provided signature information before generating the PDF.</p>
 
@@ -2524,7 +2524,7 @@
             </div>
 
             <div style="margin-top:30px; display:flex; gap:15px; justify-content:center;">
-                <button class="btn btn-auto planner-no-print admin-only" style="padding:15px 30px; font-size:1.1rem;" onclick="printReport()">🖨️ Sign & Print Report</button>
+                <button class="btn btn-auto planner-no-print admin-only" style="padding:15px 30px; font-size:1.1rem;" onclick="printReport()">ðŸ–¨ï¸ Sign & Print Report</button>
             </div>
         </div>
     </div>
@@ -2537,12 +2537,12 @@
   </div>
 
   <div class="page-nav bottom no-print" id="pageNavBottom">
-    <button type="button" id="prevPageBtnBottom" class="page-nav-btn" onclick="goToPreviousPage()">← Previous</button>
+    <button type="button" id="prevPageBtnBottom" class="page-nav-btn" onclick="goToPreviousPage()">â† Previous</button>
     <div id="pageNavTitleBottom" class="page-nav-title">Current: Risk Assessment</div>
-    <button type="button" id="nextPageBtnBottom" class="page-nav-btn" onclick="goToNextPage()">Next →</button>
+    <button type="button" id="nextPageBtnBottom" class="page-nav-btn" onclick="goToNextPage()">Next â†’</button>
   </div>
 
-  <footer class="app-footer no-print">© 2026 Sanju Bhandari. All rights reserved.</footer>
+  <footer class="app-footer no-print">Â© 2026 Sanju Bhandari. All rights reserved.</footer>
 </div>
 </div><!-- End mainApp -->
 
@@ -2593,465 +2593,465 @@
 
 // End Treatments (Mock Data for Stage 3)
 const END_TREATMENTS = [
-  {
-    "id": 1,
-    "name": "Absorb-M Plastic Crash Cushion",
-    "supplier": "Safe Direction",
-    "type": "Gating",
-    "fullType": "Water Filled, Non-Redirective, Gating Plastic Terminal",
-    "tl": "MASH TL-2",
-    "testSpeed": 60,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.67,
-    "testLen": 5.29,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0031/425587/210607-TCU-ABSORB-M-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1FZ55JffSGO1zGWxZTiBZSr7tZ2v_TA1W/view?usp=sharing"
-  },
-  {
-    "id": 2,
-    "name": "Absorb-M Plastic Crash Cushion",
-    "supplier": "Safe Direction",
-    "type": "Gating",
-    "fullType": "Water Filled, Non-Redirective, Gating Plastic Terminal",
-    "tl": "MASH TL-3",
-    "testSpeed": 80,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.67,
-    "testLen": 7.22,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0031/425587/210607-TCU-ABSORB-M-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1FZ55JffSGO1zGWxZTiBZSr7tZ2v_TA1W/view?usp=sharing"
-  },
-  {
-    "id": 3,
-    "name": "ArmorBuffa Plastic Water Filled Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Gating",
-    "fullType": "Non-Redirective, Gating Plastic Water Filled End Treatment",
-    "tl": "MASH TL-3",
-    "testSpeed": 80,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.46,
-    "testLen": 9.313,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/444291/210903-TCU-ArmorBuffa-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing"
-  },
-  {
-    "id": 4,
-    "name": "ArmorBuffa Plastic Water Filled Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Gating",
-    "fullType": "Non-Redirective, Gating Plastic Water Filled End Treatment",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.46,
-    "testLen": 5.31,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/444291/210903-TCU-ArmorBuffa-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing"
-  },
-  {
-    "id": 5,
-    "name": "SLED Plastic Water Filled End Terminal",
-    "supplier": "Saferoads Pty Ltd",
-    "type": "Gating",
-    "fullType": "Non-Redirective, Gating Plastic Water Filled End Treatment",
-    "tl": "MASH TL-1",
-    "testSpeed": 50,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.7,
-    "testLen": 3.85,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0022/391261/201205-TCU-SLED-Water-Filled-End-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Xiw9-Iq6mzLj3DT0r5d-ywnETOk3_4FY/view?usp=sharing"
-  },
-  {
-    "id": 6,
-    "name": "SLED Plastic Water Filled End Terminal",
-    "supplier": "Saferoads Pty Ltd",
-    "type": "Gating",
-    "fullType": "Non-Redirective, Gating Plastic Water Filled End Treatment",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.7,
-    "testLen": 5.77,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0022/391261/201205-TCU-SLED-Water-Filled-End-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Xiw9-Iq6mzLj3DT0r5d-ywnETOk3_4FY/view?usp=sharing"
-  },
-  {
-    "id": 7,
-    "name": "SLED Plastic Water Filled End Terminal",
-    "supplier": "Saferoads Pty Ltd",
-    "type": "Gating",
-    "fullType": "Non-Redirective, Gating Plastic Water Filled End Treatment",
-    "tl": "MASH TL-3",
-    "testSpeed": 80,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.7,
-    "testLen": 7.92,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0022/391261/201205-TCU-SLED-Water-Filled-End-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing"
-  },
-  {
-    "id": 8,
-    "name": "Universal TAU-M Crash Cushion",
-    "supplier": "Safe Direction",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.76,
-    "testLen": 4.33,
-    "spacing": "Refer to Drawings",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/633386/240307-TCU-Universal-Tau-M-Crash-Cushion-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
-  },
-  {
-    "id": 9,
-    "name": "Universal TAU-M Crash Cushion",
-    "supplier": "Safe Direction",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.76,
-    "testLen": 6.93,
-    "spacing": "Refer to Drawings",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/633386/240307-TCU-Universal-Tau-M-Crash-Cushion-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
-  },
-  {
-    "id": 10,
-    "name": "TAU-XR Crash Cushion",
-    "supplier": "Safe Direction",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.91,
-    "testLen": 7.18,
-    "spacing": "Refer to Drawings",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/674910/240904-TCU-Tau-XR-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1mzfEKLJqgOfMsAXKj9cBqWwjZNGt1yCN/view?usp=sharing"
-  },
-  {
-    "id": 11,
-    "name": "ET-SS Guardrail End Terminal",
-    "supplier": "Ingal Civil Products",
-    "type": "Gating",
-    "fullType": "Gating Terminal",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.45,
-    "testLen": 7.9,
-    "spacing": "1.905",
-    "pinType": "Driven or Baseplate",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/533849/221201-TCU-ET-SS-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
-  },
-  {
-    "id": 12,
-    "name": "ET-SS Guardrail End Terminal",
-    "supplier": "Ingal Civil Products",
-    "type": "Gating",
-    "fullType": "Gating Terminal",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.45,
-    "testLen": 15.48,
-    "spacing": "1.905",
-    "pinType": "Driven or Baseplate",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/533849/221201-TCU-ET-SS-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
-  },
-  {
-    "id": 13,
-    "name": "MASH Sequential Kinking Terminal (MSKT)",
-    "supplier": "Safe Direction",
-    "type": "Gating",
-    "fullType": "Gating Terminal",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.51,
-    "testLen": 9.5,
-    "spacing": "1.905",
-    "pinType": "Driven",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/633375/240307-TCU-MSKT-Permanent.pdf",
-    "manufLink": "https://drive.google.com/file/d/1YFqXazu7cxIF4S0n6ipaXOOHmPFyRj3I/view?usp=sharing"
-  },
-  {
-    "id": 14,
-    "name": "MASH Sequential Kinking Terminal (MSKT)",
-    "supplier": "Safe Direction",
-    "type": "Gating",
-    "fullType": "Gating Terminal",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.51,
-    "testLen": 14.29,
-    "spacing": "1.905",
-    "pinType": "Driven",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/633375/240307-TCU-MSKT-Permanent.pdf",
-    "manufLink": "https://drive.google.com/file/d/1YFqXazu7cxIF4S0n6ipaXOOHmPFyRj3I/view?usp=sharing"
-  },
-  {
-    "id": 15,
-    "name": "MAX-Tension Guardrail Terminal",
-    "supplier": "Safe Direction",
-    "type": "Gating",
-    "fullType": "Gating Terminal",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.44,
-    "testLen": 9.12,
-    "spacing": "1.905",
-    "pinType": "Driven or Baseplate",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/388247/201120-TCU-MAX-TENSION-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1NzEl1OWyiyhKfgG1YtUxzwMK37ZuHcjU/view?usp=sharing"
-  },
-  {
-    "id": 16,
-    "name": "MAX-Tension Guardrail Terminal",
-    "supplier": "Safe Direction",
-    "type": "Gating",
-    "fullType": "Gating Terminal",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.44,
-    "testLen": 16.77,
-    "spacing": "1.905",
-    "pinType": "Driven or Baseplate",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/388247/201120-TCU-MAX-TENSION-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1NzEl1OWyiyhKfgG1YtUxzwMK37ZuHcjU/view?usp=sharing"
-  },
-  {
-    "id": 17,
-    "name": "Trend Median Terminal",
-    "supplier": "Ingal Civil Products",
-    "type": "Gating",
-    "fullType": "Gating Terminal (Median)",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Gating",
-    "ww": "Gating",
-    "width": 0.73,
-    "testLen": 11.1,
-    "spacing": "1.905",
-    "pinType": "Driven",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/554855/230324-TCU-Trend-Median-Terminal.pdf",
-    "manufLink": "https://drive.google.com/file/d/1WvlZui1G65iPq9xgH78fTmyTYGEi83wA/view?usp=sharing"
-  },
-  {
-    "id": 18,
-    "name": "QuadGuard M10 Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.61,
-    "testLen": 4.0,
-    "spacing": "N/A",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/406958/210304-TCU-QUADGUARD-M10-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1T6ToILuzcoIrEvrP87rx5FFrsyKu9if-/view?usp=sharing"
-  },
-  {
-    "id": 19,
-    "name": "QuadGuard M10 Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 1.755,
-    "testLen": 6.71,
-    "spacing": "N/A",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/406958/210304-TCU-QUADGUARD-M10-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1T6ToILuzcoIrEvrP87rx5FFrsyKu9if-/view?usp=sharing"
-  },
-  {
-    "id": 20,
-    "name": "QUADGUARD M10 CZ Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.61,
-    "testLen": 4.0,
-    "spacing": "N/A",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0019/444331/210906-TCU-QUADGUARD-M10-CZ-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1JRQWstGayd8QDaNqFmulJW9TZkPADdf1/view?usp=sharing"
-  },
-  {
-    "id": 21,
-    "name": "QUADGUARD M10 CZ Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.61,
-    "testLen": 6.71,
-    "spacing": "N/A",
-    "pinType": "Refer to Drawings",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0019/444331/210906-TCU-QUADGUARD-M10-CZ-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1JRQWstGayd8QDaNqFmulJW9TZkPADdf1/view?usp=sharing"
-  },
-  {
-    "id": 22,
-    "name": "QuadGuard Elite M10 Crash Cushion",
-    "supplier": "Ingal Civil Products",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.61,
-    "testLen": 8.3,
-    "spacing": "N/A",
-    "pinType": "Anchored",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0030/633378/240307-TCU-Quadguard-Elite-M10-Crash-Cushion-Permanent.pdf",
-    "manufLink": "https://drive.google.com/file/d/145S4gU4vPa24odg_tGvOG_Dl1EMcFuj-/view?usp=sharing"
-  },
-  {
-    "id": 23,
-    "name": "Smart Cushion SCI100GM",
-    "supplier": "LB Australia",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.61,
-    "testLen": 4.2,
-    "spacing": "N/A",
-    "pinType": "Anchored",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/391236/201205-TCU-SMART-Steel-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1_36wbLHK4LcrWe-D9eN0ibK73JRxbt2W/view?usp=sharing"
-  },
-  {
-    "id": 24,
-    "name": "Smart Cushion SCI100GM",
-    "supplier": "LB Australia",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.61,
-    "testLen": 6.6,
-    "spacing": "N/A",
-    "pinType": "Anchored",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/391236/201205-TCU-SMART-Steel-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1_36wbLHK4LcrWe-D9eN0ibK73JRxbt2W/view?usp=sharing"
-  },
-  {
-    "id": 25,
-    "name": "Hercules Crash Cushion",
-    "supplier": "Safe Direction",
-    "type": "Redirective",
-    "fullType": "Redirective Crash Cushion",
-    "tl": "MASH TL-3",
-    "testSpeed": 100,
-    "defl": "Redirective",
-    "ww": "Redirective",
-    "width": 0.59,
-    "testLen": 5.83,
-    "spacing": "N/A",
-    "pinType": "Anchored",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0022/444289/210903-TCU-Hercules-Crash-Cushion.pdf",
-    "manufLink": "https://drive.google.com/file/d/1SfvSsfdRiD1n3AlI_LepNQltOJhjzRGJ/view?usp=sharing"
-  },
-  {
-    "id": 26,
-    "name": "Armorzone MASH End Treatment Unit",
-    "supplier": "Ingal Civil Products",
-    "type": "Gating",
-    "fullType": "Water Filled, Non-Redirective, Gating End Treatment",
-    "tl": "MASH TL-2",
-    "testSpeed": 70,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.45,
-    "testLen": 2.0,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/388283/201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
-    "unitWeight": 496
-  },
-  {
-    "id": 27,
-    "name": "Ricochet MASH TL1 Terminal End",
-    "supplier": "Advantage Plastics",
-    "type": "Gating",
-    "fullType": "Non-Redirective, Gating Plastic End Terminal",
-    "tl": "MASH TL-1",
-    "testSpeed": 50,
-    "defl": "N/A (Gating)",
-    "ww": "N/A",
-    "width": 0.58,
-    "testLen": 1.7,
-    "spacing": "Freestanding",
-    "pinType": "N/A",
-    "unitWeight": 580
-  }
+    {
+        "id":  1,
+        "name":  "Absorb-M Plastic Crash Cushion",
+        "supplier":  "Safe Direction",
+        "type":  "Gating",
+        "fullType":  "Water Filled, Non-Redirective, Gating Plastic Terminal",
+        "tl":  "MASH TL-2",
+        "testSpeed":  60,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.67,
+        "testLen":  5.29,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0031/425587/210607-TCU-ABSORB-M-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1FZ55JffSGO1zGWxZTiBZSr7tZ2v_TA1W/view?usp=sharing"
+    },
+    {
+        "id":  2,
+        "name":  "Absorb-M Plastic Crash Cushion",
+        "supplier":  "Safe Direction",
+        "type":  "Gating",
+        "fullType":  "Water Filled, Non-Redirective, Gating Plastic Terminal",
+        "tl":  "MASH TL-3",
+        "testSpeed":  80,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.67,
+        "testLen":  7.22,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0031/425587/210607-TCU-ABSORB-M-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1FZ55JffSGO1zGWxZTiBZSr7tZ2v_TA1W/view?usp=sharing"
+    },
+    {
+        "id":  3,
+        "name":  "ArmorBuffa Plastic Water Filled Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-3",
+        "testSpeed":  80,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.46,
+        "testLen":  9.313,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/444291/210903-TCU-ArmorBuffa-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing"
+    },
+    {
+        "id":  4,
+        "name":  "ArmorBuffa Plastic Water Filled Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.46,
+        "testLen":  5.31,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/444291/210903-TCU-ArmorBuffa-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing"
+    },
+    {
+        "id":  5,
+        "name":  "SLED Plastic Water Filled End Terminal",
+        "supplier":  "Saferoads Pty Ltd",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-1",
+        "testSpeed":  50,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.7,
+        "testLen":  3.85,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0022/391261/201205-TCU-SLED-Water-Filled-End-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Xiw9-Iq6mzLj3DT0r5d-ywnETOk3_4FY/view?usp=sharing"
+    },
+    {
+        "id":  6,
+        "name":  "SLED Plastic Water Filled End Terminal",
+        "supplier":  "Saferoads Pty Ltd",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.7,
+        "testLen":  5.77,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0022/391261/201205-TCU-SLED-Water-Filled-End-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Xiw9-Iq6mzLj3DT0r5d-ywnETOk3_4FY/view?usp=sharing"
+    },
+    {
+        "id":  7,
+        "name":  "SLED Plastic Water Filled End Terminal",
+        "supplier":  "Saferoads Pty Ltd",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-3",
+        "testSpeed":  80,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.7,
+        "testLen":  7.92,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0022/391261/201205-TCU-SLED-Water-Filled-End-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing"
+    },
+    {
+        "id":  8,
+        "name":  "Universal TAU-M Crash Cushion",
+        "supplier":  "Safe Direction",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.76,
+        "testLen":  4.33,
+        "spacing":  "Refer to Drawings",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/633386/240307-TCU-Universal-Tau-M-Crash-Cushion-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
+    },
+    {
+        "id":  9,
+        "name":  "Universal TAU-M Crash Cushion",
+        "supplier":  "Safe Direction",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.76,
+        "testLen":  6.93,
+        "spacing":  "Refer to Drawings",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/633386/240307-TCU-Universal-Tau-M-Crash-Cushion-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
+    },
+    {
+        "id":  10,
+        "name":  "TAU-XR Crash Cushion",
+        "supplier":  "Safe Direction",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.91,
+        "testLen":  7.18,
+        "spacing":  "Refer to Drawings",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/674910/240904-TCU-Tau-XR-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1mzfEKLJqgOfMsAXKj9cBqWwjZNGt1yCN/view?usp=sharing"
+    },
+    {
+        "id":  11,
+        "name":  "ET-SS Guardrail End Terminal",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.45,
+        "testLen":  7.9,
+        "spacing":  "1.905",
+        "pinType":  "Driven or Baseplate",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/533849/221201-TCU-ET-SS-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
+    },
+    {
+        "id":  12,
+        "name":  "ET-SS Guardrail End Terminal",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.45,
+        "testLen":  15.48,
+        "spacing":  "1.905",
+        "pinType":  "Driven or Baseplate",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/533849/221201-TCU-ET-SS-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing"
+    },
+    {
+        "id":  13,
+        "name":  "MASH Sequential Kinking Terminal (MSKT)",
+        "supplier":  "Safe Direction",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.51,
+        "testLen":  9.5,
+        "spacing":  "1.905",
+        "pinType":  "Driven",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/633375/240307-TCU-MSKT-Permanent.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1YFqXazu7cxIF4S0n6ipaXOOHmPFyRj3I/view?usp=sharing"
+    },
+    {
+        "id":  14,
+        "name":  "MASH Sequential Kinking Terminal (MSKT)",
+        "supplier":  "Safe Direction",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.51,
+        "testLen":  14.29,
+        "spacing":  "1.905",
+        "pinType":  "Driven",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/633375/240307-TCU-MSKT-Permanent.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1YFqXazu7cxIF4S0n6ipaXOOHmPFyRj3I/view?usp=sharing"
+    },
+    {
+        "id":  15,
+        "name":  "MAX-Tension Guardrail Terminal",
+        "supplier":  "Safe Direction",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.44,
+        "testLen":  9.12,
+        "spacing":  "1.905",
+        "pinType":  "Driven or Baseplate",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/388247/201120-TCU-MAX-TENSION-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1NzEl1OWyiyhKfgG1YtUxzwMK37ZuHcjU/view?usp=sharing"
+    },
+    {
+        "id":  16,
+        "name":  "MAX-Tension Guardrail Terminal",
+        "supplier":  "Safe Direction",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.44,
+        "testLen":  16.77,
+        "spacing":  "1.905",
+        "pinType":  "Driven or Baseplate",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/388247/201120-TCU-MAX-TENSION-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1NzEl1OWyiyhKfgG1YtUxzwMK37ZuHcjU/view?usp=sharing"
+    },
+    {
+        "id":  17,
+        "name":  "Trend Median Terminal",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Gating",
+        "fullType":  "Gating Terminal (Median)",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Gating",
+        "ww":  "Gating",
+        "width":  0.73,
+        "testLen":  11.1,
+        "spacing":  "1.905",
+        "pinType":  "Driven",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/554855/230324-TCU-Trend-Median-Terminal.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1WvlZui1G65iPq9xgH78fTmyTYGEi83wA/view?usp=sharing"
+    },
+    {
+        "id":  18,
+        "name":  "QuadGuard M10 Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.61,
+        "testLen":  4,
+        "spacing":  "N/A",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/406958/210304-TCU-QUADGUARD-M10-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1T6ToILuzcoIrEvrP87rx5FFrsyKu9if-/view?usp=sharing"
+    },
+    {
+        "id":  19,
+        "name":  "QuadGuard M10 Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  1.755,
+        "testLen":  6.71,
+        "spacing":  "N/A",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/406958/210304-TCU-QUADGUARD-M10-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1T6ToILuzcoIrEvrP87rx5FFrsyKu9if-/view?usp=sharing"
+    },
+    {
+        "id":  20,
+        "name":  "QUADGUARD M10 CZ Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.61,
+        "testLen":  4,
+        "spacing":  "N/A",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0019/444331/210906-TCU-QUADGUARD-M10-CZ-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1JRQWstGayd8QDaNqFmulJW9TZkPADdf1/view?usp=sharing"
+    },
+    {
+        "id":  21,
+        "name":  "QUADGUARD M10 CZ Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.61,
+        "testLen":  6.71,
+        "spacing":  "N/A",
+        "pinType":  "Refer to Drawings",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0019/444331/210906-TCU-QUADGUARD-M10-CZ-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1JRQWstGayd8QDaNqFmulJW9TZkPADdf1/view?usp=sharing"
+    },
+    {
+        "id":  22,
+        "name":  "QuadGuard Elite M10 Crash Cushion",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.61,
+        "testLen":  8.3,
+        "spacing":  "N/A",
+        "pinType":  "Anchored",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0030/633378/240307-TCU-Quadguard-Elite-M10-Crash-Cushion-Permanent.pdf",
+        "manufLink":  "https://drive.google.com/file/d/145S4gU4vPa24odg_tGvOG_Dl1EMcFuj-/view?usp=sharing"
+    },
+    {
+        "id":  23,
+        "name":  "Smart Cushion SCI100GM",
+        "supplier":  "LB Australia",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.61,
+        "testLen":  4.2,
+        "spacing":  "N/A",
+        "pinType":  "Anchored",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/391236/201205-TCU-SMART-Steel-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1_36wbLHK4LcrWe-D9eN0ibK73JRxbt2W/view?usp=sharing"
+    },
+    {
+        "id":  24,
+        "name":  "Smart Cushion SCI100GM",
+        "supplier":  "LB Australia",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.61,
+        "testLen":  6.6,
+        "spacing":  "N/A",
+        "pinType":  "Anchored",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/391236/201205-TCU-SMART-Steel-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1_36wbLHK4LcrWe-D9eN0ibK73JRxbt2W/view?usp=sharing"
+    },
+    {
+        "id":  25,
+        "name":  "Hercules Crash Cushion",
+        "supplier":  "Safe Direction",
+        "type":  "Redirective",
+        "fullType":  "Redirective Crash Cushion",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  "Redirective",
+        "ww":  "Redirective",
+        "width":  0.59,
+        "testLen":  5.83,
+        "spacing":  "N/A",
+        "pinType":  "Anchored",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0022/444289/210903-TCU-Hercules-Crash-Cushion.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1SfvSsfdRiD1n3AlI_LepNQltOJhjzRGJ/view?usp=sharing"
+    },
+    {
+        "id":  26,
+        "name":  "Armorzone MASH End Treatment Unit",
+        "supplier":  "Ingal Civil Products",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.46,
+        "testLen":  5.31,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/388283/201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
+        "unitWeight":  496
+    },
+    {
+        "id":  27,
+        "name":  "Ricochet MASH TL1 Terminal End",
+        "supplier":  "Saferoads Pty Ltd",
+        "type":  "Gating",
+        "fullType":  "Non-Redirective, Gating Plastic Water Filled End Treatment",
+        "tl":  "MASH TL-1",
+        "testSpeed":  50,
+        "defl":  "N/A (Gating)",
+        "ww":  "N/A",
+        "width":  0.7,
+        "testLen":  3.85,
+        "spacing":  "Freestanding",
+        "pinType":  "N/A",
+        "unitWeight":  580
+    }
 ];
 let selectedEndTreatment = null;
 
@@ -3312,926 +3312,1101 @@ const highwayGuardMatrix = {
 };
 
 const barriers = [
-  // { id: 0, removed (PCB) }
-
-  {
-    "id": 1,
-    "type": "barrier",
-    "name": "DB80 K150 Precast Concrete Barrier",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.44,
-    "ww": 1.94,
-    "width": 0.57,
-    "testLen": 61.17,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0018/433206/210720-TCU-DB80-K150-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1lYLtGalM1_uvM2uevyn4aOc75MevC3fC/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2, 4, 6],
-    "unitWeight": [1200, 2400, 3600]
-  },
-  {
-    "id": 2,
-    "type": "barrier",
-    "name": "DB80 T150S Precast Concrete Barrier",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.81,
-    "ww": 1.36,
-    "width": 0.57,
-    "testLen": 92.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0034/467467/211220-TCU-DB80-T150-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1LLi9Qu3Hp4SGl71314N8pcmX-vN5PVon/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2, 4, 6],
-    "unitWeight": [1050, 2100, 3150]
-  },
-  {
-    "id": 3,
-    "type": "barrier",
-    "name": "DB80A T150S Precast Concrete Barrier",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.34,
-    "ww": 0.91,
-    "width": 0.57,
-    "testLen": 68.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/533846/221201-TCU-DB80A-T150-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1LoZmf0q3aMfYDrtxSn72_EtX7TyoAbwA/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2, 4, 6],
-    "unitWeight": [1100, 2200, 3300]
-  },
-  {
-    "id": 4,
-    "type": "barrier",
-    "name": "JJ Hooks MASH Precast Concrete Barrier",
-    "supplier": "Australian Road Barriers",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.63,
-    "ww": 2.23,
-    "width": 0.61,
-    "testLen": 59.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0025/480508/220314-TCU-3.6-M-JJ-Hooks-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1LUzvzR77MHrTHdq5TS7h2AnqIyhaYJHo/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [3.6],
-    "unitWeight": [2600]
-  },
-  {
-    "id": 5,
-    "type": "barrier",
-    "name": "T-LOK Precast Concrete Barrier",
-    "supplier": "Saferoads Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.27,
-    "ww": 1.88,
-    "width": 0.61,
-    "testLen": 58.5,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0019/570520/230601-TCU-T-LOK-MASH-F-TYPE-Concrete-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1TgaOsIO9LkAI4Xf7xC5RMVxdupqViQ8-/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [3.6, 5.49],
-    "unitWeight": [2600, 3900]
-  },
-  {
-    "id": 6,
-    "type": "barrier",
-    "name": "T-LOK Rubber Precast Concrete Barrier",
-    "supplier": "Saferoads Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.76,
-    "ww": 2.37,
-    "width": 0.61,
-    "testLen": 58.5,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0020/570521/230601-TCU-T-LOK-Rubber-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1DJq-1-IW0DuIIs3Lde-Z8-5LScod1sms/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [3.6, 5.49],
-    "unitWeight": [2600, 3900]
-  },
-  {
-    "id": 7,
-    "type": "barrier",
-    "name": "Pin and Loop Precast Concrete Barrier",
-    "supplier": "WA Limestone",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.61,
-    "ww": 2.22,
-    "width": 0.61,
-    "testLen": 61.4,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/463434/211201-TCU-PIN-and-LOOP-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1R1y0ZOsw5ENT7FVCerx7YCRHVRYppuCm/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 8,
-    "type": "barrier",
-    "name": "BG800 Steel Safety Barrier - Temporary",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.66,
-    "ww": 2.2,
-    "width": 0.54,
-    "testLen": 72.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/463455/211201-TCU-BG800-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 9,
-    "type": "barrier",
-    "name": "BG800 Steel Safety Barrier - Temporary (Minimum Deflection)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.44,
-    "ww": 0.98,
-    "width": 0.54,
-    "testLen": 42.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0031/463459/211201-TCU-BG800-MDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 10,
-    "type": "barrier",
-    "name": "BG800 LDS Steel Safety Barrier - Temporary",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-2",
-    "testSpeed": 80.0,
-    "defl": 0.42,
-    "ww": 0.96,
-    "width": 0.54,
-    "testLen": 72.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/463452/211201-TCU-BG800-LDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 11,
-    "type": "barrier",
-    "name": "HighwayGuard Steel Safety Barrier - Temporary",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.71,
-    "ww": 2.25,
-    "width": 0.54,
-    "testLen": 108.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/516552/220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary.pdf",
-    "manufLink": "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 12,
-    "type": "barrier",
-    "name": "HighwayGuard LDS Steel Safety Barrier - Temporary",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.68,
-    "ww": 1.22,
-    "width": 0.54,
-    "testLen": 60.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/463448/211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 13,
-    "type": "barrier",
-    "name": "HighwayGuard MDS Safety Barrier - Temporary",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.025,
-    "ww": 0.67,
-    "width": 0.54,
-    "testLen": 36.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/570528/230601-TCU-HIGHWAYGUARD-MDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1DxqOzjGDg0E-u3Sou7OhkQMm5b-ZMRcr/view?usp=sharing",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 14,
-    "type": "barrier",
-    "name": "Defender Barrier 70 Steel Safety Barrier - Temporary",
-    "supplier": "Safe Barriers Pty Ltd",
-    "tl": "MASH TL-2",
-    "testSpeed": 70.0,
-    "defl": 1.2,
-    "ww": 1.88,
-    "width": 0.68,
-    "testLen": 105.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0028/463429/211201-TCU-DEFENDER-70-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/11rYLXesmG7J5DFRjhtgntREugcFWgraP/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 15,
-    "type": "barrier",
-    "name": "DEFENDER Barrier 100 LDS Safety Barrier - Temporary",
-    "supplier": "Safe Barriers Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.88,
-    "ww": 1.56,
-    "width": 0.68,
-    "testLen": 78.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0022/444307/210903-TCU-DEFENDER-100-LDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1qLEugecOdtVCNOdUCgJ4jHqsmq7sGMDL/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 16,
-    "type": "barrier",
-    "name": "DEFENDER Barrier 100 HC Steel Safety Barrier - Temporary",
-    "supplier": "Safe Barriers Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.96,
-    "ww": 2.44,
-    "width": 0.68,
-    "testLen": 97.5,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0021/444306/210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 17,
-    "type": "barrier",
-    "name": "SafeZone Steel Safety Barrier - Temporary",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.7,
-    "ww": 2.06,
-    "width": 0.454,
-    "testLen": 69.6,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0013/633100/240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 18,
-    "type": "barrier",
-    "name": "SAFEZONE MDS Safety Barrier – Permanent & Temporary",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.17,
-    "ww": 0.81,
-    "width": 0.639,
-    "testLen": 40.6,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/592643/230901-TCU-SAFEZONE-MDS-Safety-Barrier-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 19,
-    "type": "barrier",
-    "name": "SafeZone LDS Safety Barrier – Permanent & Temporary",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.42,
-    "ww": 1.06,
-    "width": 0.64,
-    "testLen": 40.6,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/592643/230901-TCU-SAFEZONE-MDS-Safety-Barrier-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 20,
-    "type": "barrier",
-    "name": "IronMan Hybrid Steel Safety Barrier - Temporary",
-    "supplier": "Saferoads Pty Ltd",
-    "tl": "MASH TL-2",
-    "testSpeed": 70.0,
-    "defl": 1.49,
-    "ww": 2.04,
-    "width": 0.55,
-    "testLen": 114.3,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0030/598620/230925-TCU-IRONMAN-HYBRID-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1UfcYtt6YNn4epy6depqvQRK3yVBm2XLb/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 21,
-    "type": "barrier",
-    "name": "ZONEGUARD Steel Safety Barrier - Temporary",
-    "supplier": "Hill & Smith Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.9,
-    "ww": 2.6,
-    "width": 0.7,
-    "testLen": 75.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/464981/211208-TCU-ZONEGUARD-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 22,
-    "type": "barrier",
-    "name": "ZONEGUARD MDS Steel Safety Barrier - Temporary",
-    "supplier": "Hill & Smith Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.13,
-    "ww": 0.83,
-    "width": 0.7,
-    "testLen": 95.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/406985/210304-TCU-ZONEGUARD-MDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 23,
-    "type": "barrier",
-    "name": "HV2 Steel and Concrete Longitudinal Barrier - Temporary",
-    "supplier": "Saferoads Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.47,
-    "ww": 1.84,
-    "width": 0.45,
-    "testLen": 98.6,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0021/463440/211201-TCU-HV2-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 24,
-    "type": "barrier",
-    "name": "ArmorZone MASH Water Filled Safety Barrier System - Temporary",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-2",
-    "testSpeed": 70.0,
-    "defl": 4.1,
-    "ww": 4.6,
-    "width": 0.45,
-    "testLen": 50.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/388283/201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2.0],
-    "unitWeight": [496]
-  },
-  {
-    "id": 25,
-    "type": "barrier",
-    "name": "RICOCHET Plastic Water Filled Safety Barrier System - Temporary",
-    "supplier": "Advantage Plastics",
-    "tl": "MASH TL-1",
-    "testSpeed": 50.0,
-    "defl": 2.28,
-    "ww": 2.86,
-    "width": 0.58,
-    "testLen": 45.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/388323/201120-TCU-RICOCHET-Water-Filled-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 26,
-    "type": "barrier",
-    "name": "Lo-Ro Water Filled Cable Barrier System - Temporary",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-2",
-    "testSpeed": 70.0,
-    "defl": 3.6,
-    "ww": 4.1,
-    "width": 0.5,
-    "testLen": 48.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/388320/201120-TCU-LO-RO-Water-Cable-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1ZHSg5IdzkklHhwYzUOmNZuzhSH10LDgZ/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 27,
-    "type": "barrier",
-    "name": "SHIELD I Water Filled Safety Barrier System - Temporary",
-    "supplier": "National Plastic Group",
-    "tl": "MASH TL-1",
-    "testSpeed": 50.0,
-    "defl": 2.2,
-    "ww": 2.8,
-    "width": 0.6,
-    "testLen": 52.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0030/388326/201120-TCU-SHIELD-I-Water-Filled-Barrier-System-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1xW0lqDpWlswA80-4eE983vn0uXsR3n6K/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 28,
-    "type": "barrier",
-    "name": "MOBILE BARRIER MBT-1 Steel Safety Barrier - Temporary",
-    "supplier": "Mobile Barriers",
-    "tl": "MASH TL-3",
-    "testSpeed": 80.0,
-    "defl": 0.61,
-    "ww": 1.22,
-    "width": 0.61,
-    "testLen": 30.5,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0025/388321/201120-TCU-MBT-1-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1seE4XAzVwSerP0X0INvohmuAGIy68teo/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 29,
-    "type": "barrier",
-    "name": "Rebloc 80SAH_12 Safety Barrier - Temporary",
-    "supplier": "Onsite",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.31,
-    "ww": 1.56,
-    "width": 0.3,
-    "testLen": 108.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0015/515130/220902-TCU-Rebloc-80SAH_12-Safety-Barrier.pdf",
-    "manufLink": "https://drive.google.com/file/d/1BnkQoeUW_x0UhJTi2RFMr6IRiSOGc2gh/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 30,
-    "type": "barrier",
-    "name": "Rebloc 80SAH_12_8B Safety Barrier - Temporary",
-    "supplier": "Onsite",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.3,
-    "ww": 0.6,
-    "width": 0.3,
-    "testLen": 60.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/481626/220322-TCU-Rebloc-80SAH_12_8B-Safety-Barrier.pdf",
-    "manufLink": "https://drive.google.com/file/d/1R9GLFNljmj_YqGtuOK3ZsajYkLTHDH8i/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 31,
-    "type": "barrier",
-    "name": "Rebloc 80SAH_4 Safety Barrier - Temporary",
-    "supplier": "Onsite",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.21,
-    "ww": 1.51,
-    "width": 0.3,
-    "testLen": 109.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/533576/221201-TCU-Rebloc-80SAH_4-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1SrR9hEsesKqx5UriGXw7bsDJgDOUefHz/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 32,
-    "type": "barrier",
-    "name": "DB80 T150S Precast Concrete Barrier (MASH TL-4)",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 0.81,
-    "ww": 2.5,
-    "width": 0.57,
-    "testLen": 92.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0034/467467/211220-TCU-DB80-T150-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1LLi9Qu3Hp4SGl71314N8pcmX-vN5PVon/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2, 4, 6],
-    "unitWeight": [1050, 2100, 3150]
-  },
-  {
-    "id": 33,
-    "type": "barrier",
-    "name": "DB80A T150S Precast Concrete Barrier (Asphalt)",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 80.0,
-    "defl": 0.55,
-    "ww": 0.91,
-    "width": 0.57,
-    "testLen": 68.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/533846/221201-TCU-DB80A-T150-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1LoZmf0q3aMfYDrtxSn72_EtX7TyoAbwA/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2, 4, 6],
-    "unitWeight": [1100, 2200, 3300]
-  },
-  {
-    "id": 34,
-    "type": "barrier",
-    "name": "JJ Hooks MASH Precast Concrete Barrier (Variation)",
-    "supplier": "Australian Road Barriers",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.6,
-    "ww": 2.2,
-    "width": 0.6,
-    "testLen": 66.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0026/480509/220314-TCU-JJ-HOOKS-MASH-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1LUzvzR77MHrTHdq5TS7h2AnqIyhaYJHo/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [6],
-    "unitWeight": [4430]
-  },
-  {
-    "id": 35,
-    "type": "barrier",
-    "name": "BG800 Steel Rail Safety Barrier (MASH TL-4)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 2.31,
-    "ww": 3.66,
-    "width": 0.54,
-    "testLen": 72.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0027/463455/211201-TCU-BG800-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 36,
-    "type": "barrier",
-    "name": "HighwayGuard Safety Barrier (MASH TL-3)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.93,
-    "ww": 2.47,
-    "width": 0.54,
-    "testLen": 120.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/516552/220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary.pdf",
-    "manufLink": "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 37,
-    "type": "barrier",
-    "name": "HighwayGuard Safety Barrier (MASH TL-4)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 2.16,
-    "ww": 3.51,
-    "width": 0.54,
-    "testLen": 120.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/516552/220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary.pdf",
-    "manufLink": "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 38,
-    "type": "barrier",
-    "name": "HighwayGuard LDS Safety Barrier ( MASH TL-3)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.16,
-    "ww": 1.7,
-    "width": 0.54,
-    "testLen": 84.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/463448/211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 39,
-    "type": "barrier",
-    "name": "HighwayGuard LDS Safety Barrier (MASH TL-4)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 1.16,
-    "ww": 2.88,
-    "width": 0.54,
-    "testLen": 84.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0029/463448/211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
-    "isMatrix": true
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 40,
-    "type": "barrier",
-    "name": "DEFENDER Barrier 100 HC Steel Safety Barrier (48m)",
-    "supplier": "Safe Barriers Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 2.3,
-    "ww": 2.98,
-    "width": 0.68,
-    "testLen": 97.5,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0021/444306/210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 41,
-    "type": "barrier",
-    "name": "DEFENDER Barrier 100 HC Steel Safety Barrier (MASH TL-4)",
-    "supplier": "Safe Barriers Pty Ltd",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 2.47,
-    "ww": 3.31,
-    "width": 0.68,
-    "testLen": 97.5,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0021/444306/210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 42,
-    "type": "barrier",
-    "name": "DEFENDER 100 FS Safety Barrier - Temporary",
-    "supplier": "Safe Barriers Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 1.9,
-    "ww": 2.58,
-    "width": 0.68,
-    "testLen": 156.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0022/463432/211201-TCU-DEFENDER-100-FS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 43,
-    "type": "barrier",
-    "name": "SafeZone Steel Safety Barrier - Temporary (MASH TL-4)",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 2.07,
-    "ww": 2.96,
-    "width": 0.454,
-    "testLen": 69.6,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0013/633100/240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 44,
-    "type": "barrier",
-    "name": "SafeZone LDS Safety Barrier – Permanent & Temporary (MASH TL-4)",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 0.45,
-    "ww": 2.17,
-    "width": 0.64,
-    "testLen": 40.6,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0013/633100/240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 45,
-    "type": "barrier",
-    "name": "ZONEGUARD MDS Steel Safety Barrier (Asphalt)",
-    "supplier": "Hill & Smith Pty Ltd",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.1,
-    "ww": 0.8,
-    "width": 0.7,
-    "testLen": 95.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/406985/210304-TCU-ZONEGUARD-MDS-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 46,
-    "type": "barrier",
-    "name": "HV2 Steel and Concrete Longitudinal Barrier - Temporary (MASH TL-4)",
-    "supplier": "Saferoads Pty Ltd",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 2.37,
-    "ww": 3.74,
-    "width": 0.45,
-    "testLen": 278.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0021/463440/211201-TCU-HV2-Safety-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 47,
-    "type": "barrier",
-    "name": "ArmorZone MASH Water Filled Safety Barrier System - Temporary (TL-1)",
-    "supplier": "Ingal Civil Products",
-    "tl": "MASH TL-1",
-    "testSpeed": 50.0,
-    "defl": 2.16,
-    "ww": 2.61,
-    "width": 0.45,
-    "testLen": 50.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0032/388283/201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2],
-    "unitWeight": [496]
-  },
-  {
-    "id": 48,
-    "type": "barrier",
-    "name": "Lo-Ro Water Filled Cable Barrier System - Temporary (TL-1)",
-    "supplier": "Jaybro Group Pty Ltd",
-    "tl": "MASH TL-1",
-    "testSpeed": 50.0,
-    "defl": 1.8,
-    "ww": 2.3,
-    "width": 0.5,
-    "testLen": 48.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0024/388320/201120-TCU-LO-RO-Water-Cable-Barrier-Temporary.pdf",
-    "manufLink": "https://drive.google.com/file/d/1ZHSg5IdzkklHhwYzUOmNZuzhSH10LDgZ/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2],
-    "unitWeight": [496]
-  },
-  {
-    "id": 49,
-    "type": "barrier",
-    "name": "Rebloc 80SAH_12 Safety Barrier - Temporary (MASH TL-4)",
-    "supplier": "Onsite",
-    "tl": "MASH TL-4",
-    "testSpeed": 100.0,
-    "defl": 1.7,
-    "ww": 3.23,
-    "width": 0.3,
-    "testLen": 156.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0015/515130/220902-TCU-Rebloc-80SAH_12-Safety-Barrier.pdf",
-    "manufLink": "https://drive.google.com/file/d/1BnkQoeUW_x0UhJTi2RFMr6IRiSOGc2gh/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [2],
-    "unitWeight": [580]
-  },
-  {
-    "id": 50,
-    "type": "barrier",
-    "name": "Rebloc 120FA_6_SF Safety Barrier - Temporary",
-    "supplier": "Rebloc",
-    "tl": "MASH TL-3",
-    "testSpeed": 100.0,
-    "defl": 0.4,
-    "ww": 1.0,
-    "width": 0.62,
-    "testLen": 102.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0043/498778/220616-TCU-Rebloc-120FA_6_FS-Safety-Barrier.pdf",
-    "manufLink": "https://drive.google.com/file/d/1A_h5uprcVqwsF95nHRsFxNmmboe7L6Gn/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  },
-  {
-    "id": 51,
-    "type": "barrier",
-    "name": "Rebloc 120FA_6_SF Safety Barrier - Temporary (MASH TL-5)",
-    "supplier": "Rebloc",
-    "tl": "MASH TL-5",
-    "testSpeed": 100.0,
-    "defl": 1.58,
-    "ww": 2.29,
-    "width": 0.62,
-    "testLen": 102.0,
-    "link": "https://austroads.gov.au/__data/assets/pdf_file/0043/498778/220616-TCU-Rebloc-120FA_6_FS-Safety-Barrier.pdf",
-    "manufLink": "https://drive.google.com/file/d/1A_h5uprcVqwsF95nHRsFxNmmboe7L6Gn/view?usp=sharing",
-    "isMatrix": false
-  ,
-    "availableLengths": [0],
-    "unitWeight": [0]
-  }
+    {
+        "id":  1,
+        "type":  "barrier",
+        "name":  "DB80 K150 Precast Concrete Barrier",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.44,
+        "ww":  1.94,
+        "width":  0.57,
+        "testLen":  61.17,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0018/433206/210720-TCU-DB80-K150-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1lYLtGalM1_uvM2uevyn4aOc75MevC3fC/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 2,
+                                 4,
+                                 6
+                             ],
+        "unitWeight":  [
+                           1200,
+                           2400,
+                           3600
+                       ]
+    },
+    {
+        "id":  2,
+        "type":  "barrier",
+        "name":  "DB80 T150S Precast Concrete Barrier",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.81,
+        "ww":  1.36,
+        "width":  0.57,
+        "testLen":  92,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0034/467467/211220-TCU-DB80-T150-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1LLi9Qu3Hp4SGl71314N8pcmX-vN5PVon/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 2,
+                                 4,
+                                 6
+                             ],
+        "unitWeight":  [
+                           1050,
+                           2100,
+                           3150
+                       ]
+    },
+    {
+        "id":  3,
+        "type":  "barrier",
+        "name":  "DB80A T150S Precast Concrete Barrier",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.34,
+        "ww":  0.91,
+        "width":  0.57000000000000006,
+        "testLen":  68,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/533846/221201-TCU-DB80A-T150-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1LoZmf0q3aMfYDrtxSn72_EtX7TyoAbwA/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 2,
+                                 4,
+                                 6
+                             ],
+        "unitWeight":  [
+                           1100,
+                           2200,
+                           3300
+                       ]
+    },
+    {
+        "id":  4,
+        "type":  "barrier",
+        "name":  "JJ Hooks MASH Precast Concrete Barrier",
+        "supplier":  "Australian Road Barriers",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.63,
+        "ww":  2.23,
+        "width":  0.61,
+        "testLen":  59,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0025/480508/220314-TCU-3.6-M-JJ-Hooks-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1LUzvzR77MHrTHdq5TS7h2AnqIyhaYJHo/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 3.6
+                             ],
+        "unitWeight":  [
+                           2600
+                       ]
+    },
+    {
+        "id":  5,
+        "type":  "barrier",
+        "name":  "T-LOK Precast Concrete Barrier",
+        "supplier":  "Saferoads",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.27,
+        "ww":  1.88,
+        "width":  0.60999999999999988,
+        "testLen":  58.5,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0019/570520/230601-TCU-T-LOK-MASH-F-TYPE-Concrete-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1TgaOsIO9LkAI4Xf7xC5RMVxdupqViQ8-/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 3.6,
+                                 5.49
+                             ],
+        "unitWeight":  [
+                           2600,
+                           3900
+                       ]
+    },
+    {
+        "id":  6,
+        "type":  "barrier",
+        "name":  "T-LOK Rubber Precast Concrete Barrier",
+        "supplier":  "Saferoads",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.76,
+        "ww":  2.37,
+        "width":  0.6100000000000001,
+        "testLen":  58.5,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0020/570521/230601-TCU-T-LOK-Rubber-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1DJq-1-IW0DuIIs3Lde-Z8-5LScod1sms/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 3.6,
+                                 5.49
+                             ],
+        "unitWeight":  [
+                           2600,
+                           3900
+                       ]
+    },
+    {
+        "id":  7,
+        "type":  "barrier",
+        "name":  "Pin and Loop Precast Concrete Barrier",
+        "supplier":  "Pin and Loop Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.61,
+        "ww":  2.22,
+        "width":  0.6100000000000001,
+        "testLen":  61.4,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/463434/211201-TCU-PIN-and-LOOP-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1R1y0ZOsw5ENT7FVCerx7YCRHVRYppuCm/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  8,
+        "type":  "barrier",
+        "name":  "BG800 Steel Safety Barrier - Temporary",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.66,
+        "ww":  2.2,
+        "width":  0.54000000000000026,
+        "testLen":  72,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/463455/211201-TCU-BG800-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  9,
+        "type":  "barrier",
+        "name":  "BG800 Steel Safety Barrier - Temporary (Minimum Deflection)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.44,
+        "ww":  0.98,
+        "width":  0.54,
+        "testLen":  42,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0031/463459/211201-TCU-BG800-MDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  10,
+        "type":  "barrier",
+        "name":  "BG800 LDS Steel Safety Barrier - Temporary",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-2",
+        "testSpeed":  80,
+        "defl":  0.42,
+        "ww":  0.96,
+        "width":  0.54,
+        "testLen":  72,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/463452/211201-TCU-BG800-LDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  11,
+        "type":  "barrier",
+        "name":  "HighwayGuard Steel Safety Barrier - Temporary",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.71,
+        "ww":  2.25,
+        "width":  0.54,
+        "testLen":  108,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/516552/220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  12,
+        "type":  "barrier",
+        "name":  "HighwayGuard LDS Steel Safety Barrier - Temporary",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.68,
+        "ww":  1.22,
+        "width":  0.53999999999999992,
+        "testLen":  60,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/463448/211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  13,
+        "type":  "barrier",
+        "name":  "HighwayGuard MDS Safety Barrier - Temporary",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.025,
+        "ww":  0.67,
+        "width":  0.54,
+        "testLen":  36,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/570528/230601-TCU-HIGHWAYGUARD-MDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1DxqOzjGDg0E-u3Sou7OhkQMm5b-ZMRcr/view?usp=sharing",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  14,
+        "type":  "barrier",
+        "name":  "Defender Barrier 70 Steel Safety Barrier - Temporary",
+        "supplier":  "Safe Barriers Pty. Ltd.",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  1.2,
+        "ww":  1.88,
+        "width":  0.67999999999999994,
+        "testLen":  105,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0028/463429/211201-TCU-DEFENDER-70-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/11rYLXesmG7J5DFRjhtgntREugcFWgraP/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  15,
+        "type":  "barrier",
+        "name":  "DEFENDER Barrier 100 LDS Safety Barrier - Temporary",
+        "supplier":  "Safe Barriers Pty. Ltd.",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.88,
+        "ww":  1.56,
+        "width":  0.68,
+        "testLen":  78,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0022/444307/210903-TCU-DEFENDER-100-LDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1qLEugecOdtVCNOdUCgJ4jHqsmq7sGMDL/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  16,
+        "type":  "barrier",
+        "name":  "DEFENDER Barrier 100 HC Steel Safety Barrier - Temporary",
+        "supplier":  "Safe Barriers Pty. Ltd.",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.96,
+        "ww":  2.44,
+        "width":  0.68,
+        "testLen":  97.5,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0021/444306/210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  17,
+        "type":  "barrier",
+        "name":  "SafeZone Steel Safety Barrier - Temporary",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.7,
+        "ww":  2.06,
+        "width":  0.454,
+        "testLen":  69.6,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0013/633100/240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  18,
+        "type":  "barrier",
+        "name":  "SAFEZONE MDS Safety Barrier â€“ Permanent \u0026 Temporary",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.42,
+        "ww":  1.06,
+        "width":  0.64,
+        "testLen":  40.6,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/592643/230901-TCU-SAFEZONE-MDS-Safety-Barrier-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  19,
+        "type":  "barrier",
+        "name":  "SafeZone LDS Safety Barrier â€“ Permanent \u0026 Temporary",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.42,
+        "ww":  1.06,
+        "width":  0.64,
+        "testLen":  40.6,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/592643/230901-TCU-SAFEZONE-MDS-Safety-Barrier-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  20,
+        "type":  "barrier",
+        "name":  "IronMan Hybrid Steel Safety Barrier - Temporary",
+        "supplier":  "Saferoads",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  1.49,
+        "ww":  2.04,
+        "width":  0.55,
+        "testLen":  114.3,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0030/598620/230925-TCU-IRONMAN-HYBRID-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1UfcYtt6YNn4epy6depqvQRK3yVBm2XLb/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  21,
+        "type":  "barrier",
+        "name":  "ZONEGUARD Steel Safety Barrier - Temporary",
+        "supplier":  "Hill \u0026 Smith",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.9,
+        "ww":  2.6,
+        "width":  0.70000000000000018,
+        "testLen":  75,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/464981/211208-TCU-ZONEGUARD-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  22,
+        "type":  "barrier",
+        "name":  "ZONEGUARD MDS Steel Safety Barrier - Temporary",
+        "supplier":  "Hill \u0026 Smith",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.13,
+        "ww":  0.83,
+        "width":  0.7,
+        "testLen":  95,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/406985/210304-TCU-ZONEGUARD-MDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  23,
+        "type":  "barrier",
+        "name":  "HV2 Steel and Concrete Longitudinal Barrier - Temporary",
+        "supplier":  "Saferoads Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.47,
+        "ww":  1.84,
+        "width":  0.45,
+        "testLen":  98.6,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0021/463440/211201-TCU-HV2-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  24,
+        "type":  "barrier",
+        "name":  "ArmorZone MASH Water Filled Safety Barrier System - Temporary",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  4.1,
+        "ww":  4.6,
+        "width":  0.45,
+        "testLen":  50,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/388283/201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  25,
+        "type":  "barrier",
+        "name":  "RICOCHET Plastic Water Filled Safety Barrier System - Temporary",
+        "supplier":  "TFH Hire Services",
+        "tl":  "MASH TL-1",
+        "testSpeed":  50,
+        "defl":  2.28,
+        "ww":  2.86,
+        "width":  0.58000000000000007,
+        "testLen":  45,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/388323/201120-TCU-RICOCHET-Water-Filled-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1XMeu4A57SUpPbLaY-1P7bOvFBNQSjf_T/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  26,
+        "type":  "barrier",
+        "name":  "Lo-Ro Water Filled Cable Barrier System - Temporary",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-2",
+        "testSpeed":  70,
+        "defl":  3.6,
+        "ww":  4.1,
+        "width":  0.57,
+        "testLen":  48,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/388320/201120-TCU-LO-RO-Water-Cable-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1ZHSg5IdzkklHhwYzUOmNZuzhSH10LDgZ/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  27,
+        "type":  "barrier",
+        "name":  "SHIELD I Water Filled Safety Barrier System - Temporary",
+        "supplier":  "National Plastic Group",
+        "tl":  "MASH TL-1",
+        "testSpeed":  50,
+        "defl":  2.2,
+        "ww":  2.8,
+        "width":  0.59999999999999964,
+        "testLen":  52,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0030/388326/201120-TCU-SHIELD-I-Water-Filled-Barrier-System-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1xW0lqDpWlswA80-4eE983vn0uXsR3n6K/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  28,
+        "type":  "barrier",
+        "name":  "MOBILE BARRIER MBT-1 Steel Safety Barrier - Temporary",
+        "supplier":  "Mobile Barriers",
+        "tl":  "MASH TL-3",
+        "testSpeed":  80,
+        "defl":  0.61,
+        "ww":  1.22,
+        "width":  0.61,
+        "testLen":  30.5,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0025/388321/201120-TCU-MBT-1-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1seE4XAzVwSerP0X0INvohmuAGIy68teo/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  29,
+        "type":  "barrier",
+        "name":  "Rebloc 80SAH_12 Safety Barrier - Temporary",
+        "supplier":  "Onsite",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.31,
+        "ww":  1.56,
+        "width":  0.3,
+        "testLen":  108,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0015/515130/220902-TCU-Rebloc-80SAH_12-Safety-Barrier.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1BnkQoeUW_x0UhJTi2RFMr6IRiSOGc2gh/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  30,
+        "type":  "barrier",
+        "name":  "Rebloc 80SAH_12_8B Safety Barrier - Temporary",
+        "supplier":  "Onsite",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.3,
+        "ww":  0.6,
+        "width":  0.3,
+        "testLen":  60,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/481626/220322-TCU-Rebloc-80SAH_12_8B-Safety-Barrier.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1R9GLFNljmj_YqGtuOK3ZsajYkLTHDH8i/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  31,
+        "type":  "barrier",
+        "name":  "Rebloc 80SAH_4 Safety Barrier - Temporary",
+        "supplier":  "Onsite",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.21,
+        "ww":  1.51,
+        "width":  0.30000000000000004,
+        "testLen":  109,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/533576/221201-TCU-Rebloc-80SAH_4-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1SrR9hEsesKqx5UriGXw7bsDJgDOUefHz/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  32,
+        "type":  "barrier",
+        "name":  "DB80 T150S Precast Concrete Barrier (MASH TL-4)",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  0.81,
+        "ww":  2.5,
+        "width":  0.57,
+        "testLen":  92,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0034/467467/211220-TCU-DB80-T150-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1LLi9Qu3Hp4SGl71314N8pcmX-vN5PVon/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 2,
+                                 4,
+                                 6
+                             ],
+        "unitWeight":  [
+                           1050,
+                           2100,
+                           3150
+                       ]
+    },
+    {
+        "id":  33,
+        "type":  "barrier",
+        "name":  "DB80A T150S Precast Concrete Barrier (Asphalt)",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-3",
+        "testSpeed":  80,
+        "defl":  0.55,
+        "ww":  0.91,
+        "width":  0.57,
+        "testLen":  68,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/533846/221201-TCU-DB80A-T150-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1LoZmf0q3aMfYDrtxSn72_EtX7TyoAbwA/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 2,
+                                 4,
+                                 6
+                             ],
+        "unitWeight":  [
+                           1100,
+                           2200,
+                           3300
+                       ]
+    },
+    {
+        "id":  34,
+        "type":  "barrier",
+        "name":  "JJ Hooks MASH Precast Concrete Barrier (Variation)",
+        "supplier":  "Australian Road Barriers",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.6,
+        "ww":  2.2,
+        "width":  0.6,
+        "testLen":  66,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0026/480509/220314-TCU-JJ-HOOKS-MASH-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1LUzvzR77MHrTHdq5TS7h2AnqIyhaYJHo/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 6
+                             ],
+        "unitWeight":  [
+                           4430
+                       ]
+    },
+    {
+        "id":  35,
+        "type":  "barrier",
+        "name":  "BG800 Steel Rail Safety Barrier (MASH TL-4)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  2.31,
+        "ww":  3.66,
+        "width":  0.54,
+        "testLen":  72,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0027/463455/211201-TCU-BG800-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  36,
+        "type":  "barrier",
+        "name":  "HighwayGuard Safety Barrier (MASH TL-3)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.93,
+        "ww":  2.47,
+        "width":  0.54000000000000026,
+        "testLen":  120,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/516552/220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  37,
+        "type":  "barrier",
+        "name":  "HighwayGuard Safety Barrier (MASH TL-4)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  2.16,
+        "ww":  3.51,
+        "width":  1.3499999999999996,
+        "testLen":  120,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/516552/220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  38,
+        "type":  "barrier",
+        "name":  "HighwayGuard LDS Safety Barrier ( MASH TL-3)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.68,
+        "ww":  1.22,
+        "width":  0.53999999999999992,
+        "testLen":  60,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/463448/211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  39,
+        "type":  "barrier",
+        "name":  "HighwayGuard LDS Safety Barrier (MASH TL-4)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  1.16,
+        "ww":  2.88,
+        "width":  1.72,
+        "testLen":  84,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0029/463448/211201-TCU-HIGHWAYGUARD-LDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
+        "isMatrix":  true,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  40,
+        "type":  "barrier",
+        "name":  "DEFENDER Barrier 100 HC Steel Safety Barrier (48m)",
+        "supplier":  "Safe Barriers Pty. Ltd.",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.96,
+        "ww":  2.44,
+        "width":  0.68,
+        "testLen":  97.5,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0021/444306/210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  41,
+        "type":  "barrier",
+        "name":  "DEFENDER Barrier 100 HC Steel Safety Barrier (MASH TL-4)",
+        "supplier":  "Safe Barriers Pty. Ltd.",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  2.47,
+        "ww":  3.31,
+        "width":  0.68,
+        "testLen":  97.5,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0021/444306/210903-TCU-DEFENDER-100-HC-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  42,
+        "type":  "barrier",
+        "name":  "DEFENDER 100 FS Safety Barrier - Temporary",
+        "supplier":  "Safe Barriers Pty. Ltd.",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  1.9,
+        "ww":  2.58,
+        "width":  0.68,
+        "testLen":  156,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0022/463432/211201-TCU-DEFENDER-100-FS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  43,
+        "type":  "barrier",
+        "name":  "SafeZone Steel Safety Barrier - Temporary (MASH TL-4)",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  2.07,
+        "ww":  2.96,
+        "width":  0.454,
+        "testLen":  69.6,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0013/633100/240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  44,
+        "type":  "barrier",
+        "name":  "SafeZone LDS Safety Barrier â€“ Permanent \u0026 Temporary (MASH TL-4)",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  2.07,
+        "ww":  2.96,
+        "width":  0.454,
+        "testLen":  69.6,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0013/633100/240307-TCU-SafeZone-LDS-Safety-Barrier-Permanent-and-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  45,
+        "type":  "barrier",
+        "name":  "ZONEGUARD MDS Steel Safety Barrier (Asphalt)",
+        "supplier":  "Hill \u0026 Smith",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.13,
+        "ww":  0.83,
+        "width":  0.7,
+        "testLen":  95,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/406985/210304-TCU-ZONEGUARD-MDS-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  46,
+        "type":  "barrier",
+        "name":  "HV2 Steel and Concrete Longitudinal Barrier - Temporary (MASH TL-4)",
+        "supplier":  "Saferoads Pty Ltd",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  2.37,
+        "ww":  3.74,
+        "width":  0.45,
+        "testLen":  278,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0021/463440/211201-TCU-HV2-Safety-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  47,
+        "type":  "barrier",
+        "name":  "ArmorZone MASH Water Filled Safety Barrier System - Temporary (TL-1)",
+        "supplier":  "Ingal Civil Products",
+        "tl":  "MASH TL-1",
+        "testSpeed":  50,
+        "defl":  2.16,
+        "ww":  2.61,
+        "width":  0.44999999999999973,
+        "testLen":  50,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0032/388283/201120-TCU-ARMORZONE-MASH-Water-Filled-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1Ts5JATyX2f5c3vzSMuRGIJ2oYpjW5HS0/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  48,
+        "type":  "barrier",
+        "name":  "Lo-Ro Water Filled Cable Barrier System - Temporary (TL-1)",
+        "supplier":  "Jaybro Group Pty Ltd",
+        "tl":  "MASH TL-1",
+        "testSpeed":  50,
+        "defl":  1.8,
+        "ww":  2.3,
+        "width":  0.57,
+        "testLen":  48,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0024/388320/201120-TCU-LO-RO-Water-Cable-Barrier-Temporary.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1ZHSg5IdzkklHhwYzUOmNZuzhSH10LDgZ/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  49,
+        "type":  "barrier",
+        "name":  "Rebloc 80SAH_12 Safety Barrier - Temporary (MASH TL-4)",
+        "supplier":  "Onsite",
+        "tl":  "MASH TL-4",
+        "testSpeed":  100,
+        "defl":  1.7,
+        "ww":  3.23,
+        "width":  0.3,
+        "testLen":  156,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0015/515130/220902-TCU-Rebloc-80SAH_12-Safety-Barrier.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1BnkQoeUW_x0UhJTi2RFMr6IRiSOGc2gh/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  50,
+        "type":  "barrier",
+        "name":  "Rebloc 120FA_6_SF Safety Barrier - Temporary",
+        "supplier":  "Onsite",
+        "tl":  "MASH TL-3",
+        "testSpeed":  100,
+        "defl":  0.4,
+        "ww":  1,
+        "width":  0.62,
+        "testLen":  102,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0043/498778/220616-TCU-Rebloc-120FA_6_FS-Safety-Barrier.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1A_h5uprcVqwsF95nHRsFxNmmboe7L6Gn/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    },
+    {
+        "id":  51,
+        "type":  "barrier",
+        "name":  "Rebloc 120FA_6_SF Safety Barrier - Temporary (MASH TL-5)",
+        "supplier":  "Onsite",
+        "tl":  "MASH TL-5",
+        "testSpeed":  100.0,
+        "defl":  1.58,
+        "ww":  2.29,
+        "width":  0.62,
+        "testLen":  102,
+        "link":  "https://austroads.gov.au/__data/assets/pdf_file/0043/498778/220616-TCU-Rebloc-120FA_6_FS-Safety-Barrier.pdf",
+        "manufLink":  "https://drive.google.com/file/d/1A_h5uprcVqwsF95nHRsFxNmmboe7L6Gn/view?usp=sharing",
+        "isMatrix":  false,
+        "availableLengths":  [
+                                 0
+                             ],
+        "unitWeight":  [
+                           0
+                       ]
+    }
 ];
 // --- MANUFACTURER SPECIFICATIONS & IMAGE INJECTION ---
 const specMap = {
@@ -4244,14 +4419,14 @@ const specMap = {
   "Pin and Loop Precast Concrete Barrier": "https://drive.google.com/file/d/1R1y0ZOsw5ENT7FVCerx7YCRHVRYppuCm/view?usp=sharing",
   "BG800 Steel Rail Safety Barrier": "https://drive.google.com/file/d/15X4jRGK0T1uSk2_wanHw-3p2pCm36HIx/view?usp=sharing",
   "HighwayGuard Safety Barrier - Temporary": "C:\\Users\\Sanju\\OneDrive - CromptonConcepts\\Desktop\\Temporary barriers\\TMR Approved Barriers\\Barriers\\10.HighwayGuard\\Standard",
-  "HighwayGuard LDS Safety Barrier – Temporary": "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
-  "HighwayGuard MDS Safety Barrier – Temporary": "https://drive.google.com/file/d/1DxqOzjGDg0E-u3Sou7OhkQMm5b-ZMRcr/view?usp=sharing",
+  "HighwayGuard LDS Safety Barrier â€“ Temporary": "https://drive.google.com/file/d/1IH73E0qy5HBPJxKMVHMwDG86m828__di/view?usp=sharing",
+  "HighwayGuard MDS Safety Barrier â€“ Temporary": "https://drive.google.com/file/d/1DxqOzjGDg0E-u3Sou7OhkQMm5b-ZMRcr/view?usp=sharing",
   "DEFENDER Barrier 70 Steel Safety Barrier - Temporary": "https://drive.google.com/file/d/11rYLXesmG7J5DFRjhtgntREugcFWgraP/view?usp=sharing",
   "DEFENDER Barrier 100 LDS Safety Barrier - Temporary": "https://drive.google.com/file/d/1qLEugecOdtVCNOdUCgJ4jHqsmq7sGMDL/view?usp=sharing",
   "DEFENDER Barrier 100 HC Steel Safety Barrier - Temporary": "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
   "DEFENDER 100 FS Safety Barrier - Temporary": "https://drive.google.com/file/d/1aCrUADHqr19hkjxji-N4w--e9W2uR0DX/view?usp=sharing",
   "SAFEZONE Safety Barrier - Temporary": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
-  "SafeZone LDS Safety Barrier – Permanent & Temporary": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
+  "SafeZone LDS Safety Barrier â€“ Permanent & Temporary": "https://drive.google.com/file/d/1yoxc9f54tUAK6XUjY7kFGmVnFh_DeENV/view?usp=sharing",
   "IRONMAN HYBRID Steel Safety Barrier - Temporary": "https://drive.google.com/file/d/1UfcYtt6YNn4epy6depqvQRK3yVBm2XLb/view?usp=sharing",
   "ZONEGUARD Steel Safety Barrier - Temporary": "https://drive.google.com/file/d/11EFH9VYph2NLmm6ZfrO_Wt7NttYXs9XJ/view?usp=sharing",
   "HV2 Steel and Concrete Longitudinal Barrier - Temporary": "https://drive.google.com/file/d/1ibyoMMWi2NxCsLgRkkQcnYcCUugYy3-e/view?usp=sharing",
@@ -4284,8 +4459,8 @@ const imageMap = {
   "DEFENDER Barrier 100 HC Steel Safety Barrier - Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMm5AdBQwuyp-njndvqUyd9L2girh5J469fw&s",
   "DEFENDER 100 FS Safety Barrier - Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMm5AdBQwuyp-njndvqUyd9L2girh5J469fw&s",
   "SafeZone Steel Safety Barrier - Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrke7EEFUMwI0AfwPZuWn2eWlrr_H3L95STw&s",
-  "SAFEZONE MDS Safety Barrier – Permanent & Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrke7EEFUMwI0AfwPZuWn2eWlrr_H3L95STw&s",
-  "SafeZone LDS Safety Barrier – Permanent & Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrke7EEFUMwI0AfwPZuWn2eWlrr_H3L95STw&s",
+  "SAFEZONE MDS Safety Barrier â€“ Permanent & Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrke7EEFUMwI0AfwPZuWn2eWlrr_H3L95STw&s",
+  "SafeZone LDS Safety Barrier â€“ Permanent & Temporary": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrke7EEFUMwI0AfwPZuWn2eWlrr_H3L95STw&s",
   "IronMan Hybrid Steel Safety Barrier - Temporary": "https://www.saferoads.com.au/media/IHB-2.jpg",
   "ZONEGUARD Steel Safety Barrier - Temporary": "https://hillandsmith.com/wp-content/uploads/2022/02/floating-image.png",
   "ZONEGUARD MDS Steel Safety Barrier - Temporary": "https://hillandsmith.com/wp-content/uploads/2022/02/floating-image.png",
@@ -4327,7 +4502,7 @@ const imageAliases = {
   "HighwayGuard LDS Safety Barrier (24m Spacing)": "HighwayGuard LDS Steel Safety Barrier - Temporary",
   "HighwayGuard LDS Safety Barrier (MASH TL-4)": "HighwayGuard LDS Steel Safety Barrier - Temporary",
   "SafeZone Steel Safety Barrier - Temporary (MASH TL-4)": "SafeZone Steel Safety Barrier - Temporary",
-  "SafeZone LDS Safety Barrier – Permanent & Temporary (MASH TL-4)": "SafeZone LDS Safety Barrier – Permanent & Temporary",
+  "SafeZone LDS Safety Barrier â€“ Permanent & Temporary (MASH TL-4)": "SafeZone LDS Safety Barrier â€“ Permanent & Temporary",
   "ZONEGUARD MDS Steel Safety Barrier (Asphalt)": "ZONEGUARD MDS Steel Safety Barrier - Temporary",
   "ArmorZone MASH Water Filled Safety Barrier System - Temporary (TL-1)": "ArmorZone MASH Water Filled Safety Barrier System - Temporary",
   "Lo-Ro Water Filled Cable Barrier System - Temporary (TL-1)": "Lo-Ro Water Filled Cable Barrier System - Temporary",
@@ -4366,8 +4541,8 @@ const manufacturerSiteByName = {
   "Rebloc 80SAH_4 Safety Barrier - Temporary": "https://www.rebloc.com/",
   "Rebloc 120FA_6_SF Safety Barrier - Temporary": "https://www.rebloc.com/",
   "HighwayGuard Steel Safety Barrier - Temporary": "https://highwayguard.com/",
-  "HighwayGuard LDS Steel Safety Barrier – Temporary": "https://highwayguard.com/",
-  "HighwayGuard MDS Safety Barrier – Temporary": "https://highwayguard.com/",
+  "HighwayGuard LDS Steel Safety Barrier â€“ Temporary": "https://highwayguard.com/",
+  "HighwayGuard MDS Safety Barrier â€“ Temporary": "https://highwayguard.com/",
   "HighwayGuard Safety Barrier (58m Spacing)": "https://highwayguard.com/",
   "HighwayGuard Safety Barrier (MASH TL-4)": "https://highwayguard.com/",
   "HighwayGuard LDS Safety Barrier (24m Spacing)": "https://highwayguard.com/",
@@ -4462,7 +4637,7 @@ function renderQuickPicks() {
   if (currentStage1Tab === 'barrier') {
     const favItems = barriers.filter(b => favoriteBarriers.includes(b.id)).slice(0, 5);
     if (favItems.length) {
-      favWrap.innerHTML = '<span class="quick-heading">Favorites:</span>' + favItems.map(b => `<button class="chip chip-fav" onclick="selectBarrier(${b.id}, 'barrier'); event.stopPropagation();">★ ${b.name}</button>`).join('');
+      favWrap.innerHTML = '<span class="quick-heading">Favorites:</span>' + favItems.map(b => `<button class="chip chip-fav" onclick="selectBarrier(${b.id}, 'barrier'); event.stopPropagation();">â˜… ${b.name}</button>`).join('');
       favWrap.style.display = 'flex';
     } else {
       favWrap.innerHTML = '<span class="quick-heading">Favorites:</span><span style="color:#94a3b8;">No favorites yet</span>';
@@ -4503,9 +4678,9 @@ barriers.forEach(b => {
   const resolvedImage = resolveImage(name);
   if (resolvedImage) {
       b.image = resolvedImage;
-      console.log(`✓ Image assigned for: ${name}`, b.image);
+      console.log(`âœ“ Image assigned for: ${name}`, b.image);
   } else {
-      console.log(`✗ No image found for: "${name}"`);
+      console.log(`âœ— No image found for: "${name}"`);
   }
 });
 
@@ -4711,7 +4886,7 @@ function generateShareLink() {
         const btn = document.activeElement;
         if(btn && btn.tagName === 'BUTTON') {
             const originalText = btn.innerHTML;
-            btn.innerHTML = '✅ Link Copied!';
+            btn.innerHTML = 'âœ… Link Copied!';
             setTimeout(() => {
                 btn.innerHTML = originalText;
             }, 2000);
@@ -5081,15 +5256,15 @@ function handleDesignTypeChange() {
         
         switch(designType) {
             case 'swept-paths':
-                infoText = '✓ Pre-populating common risks for Swept Paths Design (footpath encroachment, traffic islands, wide turns, overhead clearance, sight distances). You can edit or add more risks as needed.';
+                infoText = 'âœ“ Pre-populating common risks for Swept Paths Design (footpath encroachment, traffic islands, wide turns, overhead clearance, sight distances). You can edit or add more risks as needed.';
                 riskCount = riskTemplates['swept-paths'].length;
                 break;
             case 'barrier':
-                infoText = '✓ Pre-populating common risks for Barrier Design (deflection containment, installation errors, impacts, end terminals, working width, displacement). You can edit or add more risks as needed.';
+                infoText = 'âœ“ Pre-populating common risks for Barrier Design (deflection containment, installation errors, impacts, end terminals, working width, displacement). You can edit or add more risks as needed.';
                 riskCount = riskTemplates['barrier'].length;
                 break;
             case 'other':
-                infoText = '✓ Pre-populating general traffic management risks. Please specify your design type above and customize the risks as needed.';
+                infoText = 'âœ“ Pre-populating general traffic management risks. Please specify your design type above and customize the risks as needed.';
                 riskCount = riskTemplates['other'].length;
                 break;
         }
@@ -5242,7 +5417,7 @@ function addRiskRowWithData(name, impact, initLikelihood, initConsequence, contr
                    style="width:100%; padding:6px; border:1px solid #cbd5e1; border-radius:4px; font-size:0.9rem;">
         </td>
         <td style="padding:8px; text-align:center; vertical-align:middle;">
-            <button class="btn-link" onclick="removeRiskRow(this)" style="color:#ef4444; font-size:1.5rem; padding:4px;">×</button>
+            <button class="btn-link" onclick="removeRiskRow(this)" style="color:#ef4444; font-size:1.5rem; padding:4px;">Ã—</button>
         </td>
     `;
     
@@ -5444,7 +5619,7 @@ function updateRiskSummary() {
         
         ${residualCounts.Critical > 0 || residualCounts.High > 0 ? `
         <div style="margin-top:16px; padding:12px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:4px;">
-            <strong style="color:#92400e;">⚠️ Action Required:</strong>
+            <strong style="color:#92400e;">âš ï¸ Action Required:</strong>
             <span style="color:#92400e; font-size:0.9rem;">
                 ${residualCounts.Critical > 0 ? `${residualCounts.Critical} Critical risk(s) require immediate attention. ` : ''}
                 ${residualCounts.High > 0 ? `${residualCounts.High} High risk(s) need management review.` : ''}
@@ -5594,7 +5769,7 @@ function generateRiskReport() {
                         1=Insignificant, 2=Minor, 3=Moderate, 4=Major, 5=Catastrophic
                     </div>
                     <div style="margin-top:10px; padding:8px; background:#eff6ff; border-left:3px solid #2563eb; font-size:0.75rem;">
-                        <strong>Risk Rating = Likelihood × Consequence</strong>
+                        <strong>Risk Rating = Likelihood Ã— Consequence</strong>
                     </div>
                 </div>
             </div>
@@ -5795,7 +5970,7 @@ function generateRiskReport() {
                     <td style="border:1px solid #cbd5e1; padding:10px; font-weight:600;">Average Risk Score</td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center;">${avgInitial}</td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center;">${avgResidual}</td>
-                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#10b981; font-weight:600;">▼ ${improvement}%</td>
+                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#10b981; font-weight:600;">â–¼ ${improvement}%</td>
                 </tr>
                 <tr style="background:#f8fafc;">
                     <td style="border:1px solid #cbd5e1; padding:10px; font-weight:600;">Overall Risk Level</td>
@@ -5827,7 +6002,7 @@ function generateRiskReport() {
                     </td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#991b1b; font-weight:600;">${initialCounts.Critical}</td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#991b1b; font-weight:600;">${residualCounts.Critical}</td>
-                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#10b981; font-weight:600;">${initialCounts.Critical > residualCounts.Critical ? '▼ ' + (initialCounts.Critical - residualCounts.Critical) : (residualCounts.Critical > initialCounts.Critical ? '▲ ' + (residualCounts.Critical - initialCounts.Critical) : '-')}</td>
+                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#10b981; font-weight:600;">${initialCounts.Critical > residualCounts.Critical ? 'â–¼ ' + (initialCounts.Critical - residualCounts.Critical) : (residualCounts.Critical > initialCounts.Critical ? 'â–² ' + (residualCounts.Critical - initialCounts.Critical) : '-')}</td>
                 </tr>
                 <tr>
                     <td style="border:1px solid #cbd5e1; padding:10px; display:flex; align-items:center; gap:8px;">
@@ -5836,7 +6011,7 @@ function generateRiskReport() {
                     </td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#9a3412; font-weight:600;">${initialCounts.High}</td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#9a3412; font-weight:600;">${residualCounts.High}</td>
-                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#10b981; font-weight:600;">${initialCounts.High > residualCounts.High ? '▼ ' + (initialCounts.High - residualCounts.High) : (residualCounts.High > initialCounts.High ? '▲ ' + (residualCounts.High - initialCounts.High) : '-')}</td>
+                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#10b981; font-weight:600;">${initialCounts.High > residualCounts.High ? 'â–¼ ' + (initialCounts.High - residualCounts.High) : (residualCounts.High > initialCounts.High ? 'â–² ' + (residualCounts.High - initialCounts.High) : '-')}</td>
                 </tr>
                 <tr>
                     <td style="border:1px solid #cbd5e1; padding:10px; display:flex; align-items:center; gap:8px;">
@@ -5845,7 +6020,7 @@ function generateRiskReport() {
                     </td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#854d0e; font-weight:600;">${initialCounts.Medium}</td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#854d0e; font-weight:600;">${residualCounts.Medium}</td>
-                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; font-weight:600;">${initialCounts.Medium > residualCounts.Medium ? '▼ ' + (initialCounts.Medium - residualCounts.Medium) : (residualCounts.Medium > initialCounts.Medium ? '▲ ' + (residualCounts.Medium - initialCounts.Medium) : '-')}</td>
+                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; font-weight:600;">${initialCounts.Medium > residualCounts.Medium ? 'â–¼ ' + (initialCounts.Medium - residualCounts.Medium) : (residualCounts.Medium > initialCounts.Medium ? 'â–² ' + (residualCounts.Medium - initialCounts.Medium) : '-')}</td>
                 </tr>
                 <tr>
                     <td style="border:1px solid #cbd5e1; padding:10px; display:flex; align-items:center; gap:8px;">
@@ -5854,14 +6029,14 @@ function generateRiskReport() {
                     </td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#065f46; font-weight:600;">${initialCounts.Low}</td>
                     <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; color:#065f46; font-weight:600;">${residualCounts.Low}</td>
-                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; font-weight:600;">${initialCounts.Low > residualCounts.Low ? '▼ ' + (initialCounts.Low - residualCounts.Low) : (residualCounts.Low > initialCounts.Low ? '▲ ' + (residualCounts.Low - initialCounts.Low) : '-')}</td>
+                    <td style="border:1px solid #cbd5e1; padding:10px; text-align:center; font-weight:600;">${initialCounts.Low > residualCounts.Low ? 'â–¼ ' + (initialCounts.Low - residualCounts.Low) : (residualCounts.Low > initialCounts.Low ? 'â–² ' + (residualCounts.Low - initialCounts.Low) : '-')}</td>
                 </tr>
             </tbody>
         </table>
         
         ${residualCounts.Critical > 0 || residualCounts.High > 0 ? `
         <div style="padding:12px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:4px; margin-top:16px;">
-            <strong style="color:#92400e;">⚠️ Action Required:</strong>
+            <strong style="color:#92400e;">âš ï¸ Action Required:</strong>
             <span style="color:#92400e; font-size:0.85rem;">
                 ${residualCounts.Critical > 0 ? `${residualCounts.Critical} Critical risk(s) require immediate attention. ` : ''}
                 ${residualCounts.High > 0 ? `${residualCounts.High} High risk(s) need management review.` : ''}
@@ -5965,7 +6140,7 @@ function renderRiskNotes() {
                 class="btn-link" 
                 style="color:#ef4444; font-size:1.3rem; padding:4px 8px; min-width:auto;" 
                 title="Delete note">
-                ×
+                Ã—
             </button>
         </div>
     `).join('');
@@ -6393,7 +6568,7 @@ function filterBarriers() {
           <span class="fav-btn ${isFav ? 'active' : ''}" 
               onclick="event.stopPropagation(); toggleFavorite(${b.id})" 
               title="${isFav ? 'Remove from Favorites' : 'Add to Favorites'}">
-            ★
+            â˜…
           </span>
         </div>
 
@@ -6599,7 +6774,7 @@ function selectBarrier(id, type) {
              };
              img.onerror = function() {
                  console.error('Image failed to load:', selectedBarrier.image);
-                 imgBtn.innerHTML = `<div style="text-align:center; color:#ef4444;"><div style="font-size:2rem; margin-bottom:8px;">⚠️</div><div>Image failed to load</div><div style="font-size:0.75rem; color:#64748b; margin-top:4px;">URL: ${selectedBarrier.image}</div></div>`;
+                 imgBtn.innerHTML = `<div style="text-align:center; color:#ef4444;"><div style="font-size:2rem; margin-bottom:8px;">âš ï¸</div><div>Image failed to load</div><div style="font-size:0.75rem; color:#64748b; margin-top:4px;">URL: ${selectedBarrier.image}</div></div>`;
              };
              img.src = selectedBarrier.image;
 
@@ -6617,7 +6792,7 @@ function selectBarrier(id, type) {
             imgBtn.href = searchUrl;
             imgBtn.title = "Search Google Images";
             imgBtn.innerHTML = `
-                <div class="image-icon">📷</div>
+                <div class="image-icon">ðŸ“·</div>
                 <div class="image-text">Find Images</div>
                 <div style="font-size:0.7rem; color:#64748b; margin-top:4px; text-align:center;">
                     Search: <span id="searchQueryDisplay">${selectedBarrier.supplier} ${selectedBarrier.name}</span>
@@ -6681,7 +6856,7 @@ function selectBarrier(id, type) {
         if (hasTech) parts.push('Austroads tech link');
         if (hasSpec) parts.push('Manufacturer spec');
         if (siteUrl) parts.push('Website');
-        linkHealth.textContent = `Links available: ${parts.join(' · ')}`;
+        linkHealth.textContent = `Links available: ${parts.join(' Â· ')}`;
         linkHealth.classList.add('ok');
         linkHealth.style.display = 'block';
       } else {
@@ -6878,7 +7053,7 @@ function renderValidationHints() {
     } else {
       hints.push({
         tone: 'ok',
-        text: `Width check OK: ${designWW.toFixed(3)} m ≤ ${siteWidthVal.toFixed(3)} m.`
+        text: `Width check OK: ${designWW.toFixed(3)} m â‰¤ ${siteWidthVal.toFixed(3)} m.`
       });
     }
   } else {
@@ -6985,7 +7160,7 @@ function renderLayoutSummary() {
   }, {});
   const mixText = Object.keys(counts)
     .sort((a, b) => parseFloat(b) - parseFloat(a))
-    .map(len => `${counts[len]} × ${parseFloat(len).toFixed(2)} m`)
+    .map(len => `${counts[len]} Ã— ${parseFloat(len).toFixed(2)} m`)
     .join(' + ');
 
   const overrunText = plan.overrun >= 0
@@ -6997,7 +7172,7 @@ function renderLayoutSummary() {
   let runStatus = 'Corridor length not provided.';
   if (Number.isFinite(runValRaw)) {
     runStatus = plan.total <= runValRaw
-      ? `Fits in available corridor (${plan.total.toFixed(2)} ≤ ${runValRaw.toFixed(2)} m)`
+      ? `Fits in available corridor (${plan.total.toFixed(2)} â‰¤ ${runValRaw.toFixed(2)} m)`
       : `Needs ${(plan.total - runValRaw).toFixed(2)} m more corridor`;
   }
 
@@ -7010,7 +7185,7 @@ function renderLayoutSummary() {
   let widthStatus = 'Width limit not set.';
   if (widthLimit !== null && Number.isFinite(widthUse)) {
     widthStatus = widthUse <= widthLimit
-      ? `Width OK (${widthUse.toFixed(3)} m ≤ ${widthLimit.toFixed(3)} m)`
+      ? `Width OK (${widthUse.toFixed(3)} m â‰¤ ${widthLimit.toFixed(3)} m)`
       : `Width exceeds by ${(widthUse - widthLimit).toFixed(3)} m`;
   }
 
@@ -7199,7 +7374,7 @@ function buildMatrixHTML(inputs, tab, includeTitle = false) {
     let blockHtml = `
     <div class="angle-block">
       <div class="angle-header" title="Rows below use this impact angle">
-        <span>Impact Angle: ${angle}°</span>
+        <span>Impact Angle: ${angle}Â°</span>
       </div>
       <table class="matrix-table">
         <thead><tr>${headerCols}</tr></thead>
@@ -7344,7 +7519,7 @@ function renderDataHealth() {
     `<span class="status-pill ok">${END_TREATMENTS.length} end treatments</span>`,
     `<span class="status-pill warn">${missingBarrierMedia} missing media</span>`,
     `<span class="status-pill warn">${missingBarrierLinks + missingEtLinks} missing tech links</span>`,
-    `<span class="status-pill note">${savedCount} saved · ${recentCount} recent</span>`
+    `<span class="status-pill note">${savedCount} saved Â· ${recentCount} recent</span>`
   ].join(' ');
 }
 
@@ -7857,7 +8032,7 @@ function renderLongitudinalView() {
     for (const len of availLengths) {
       const units = Math.floor(remaining / len);
       if (units > 0) {
-        breakdown.push(`${units} × ${len.toFixed(2)}m`);
+        breakdown.push(`${units} Ã— ${len.toFixed(2)}m`);
         totalUnits += units;
         remaining -= units * len;
       }
@@ -8049,12 +8224,12 @@ function renderSavedScenarios() {
     return `
       <div class="scenario-card">
         <h5>${escapeHTML(scenario.name)}</h5>
-        <div class="scenario-meta">${escapeHTML(scenario.barrierName)} • ${escapeHTML(scenario.supplier || '')}</div>
+        <div class="scenario-meta">${escapeHTML(scenario.barrierName)} â€¢ ${escapeHTML(scenario.supplier || '')}</div>
         <div class="scenario-meta">Saved: ${escapeHTML(savedDate)}</div>
         <div class="scenario-metrics">
-          Impact: ${formatNumber(scenario.mass, 0)} kg @ ${formatNumber(scenarioDesignSpeed, 0)} km/h, ${formatNumber(scenario.angle, 0)}°<br>
-          Design defl: ${formatNumber(summary.designDeflection, 3)} m • WW: ${formatNumber(summary.designWorkingWidth, 3)} m<br>
-          Units: ${formatNumber(summary.units, 0)} • Site width: ${siteWidthText}
+          Impact: ${formatNumber(scenario.mass, 0)} kg @ ${formatNumber(scenarioDesignSpeed, 0)} km/h, ${formatNumber(scenario.angle, 0)}Â°<br>
+          Design defl: ${formatNumber(summary.designDeflection, 3)} m â€¢ WW: ${formatNumber(summary.designWorkingWidth, 3)} m<br>
+          Units: ${formatNumber(summary.units, 0)} â€¢ Site width: ${siteWidthText}
         </div>
         <div class="scenario-actions">
           <button class="btn btn-auto" onclick="loadScenario(${index})">Load</button>
@@ -8578,7 +8753,7 @@ function printReport() {
     <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #d9dbe1; padding-bottom:8px; margin-bottom:12px;">
       <div>
         <div style="font-weight:800; color:#0f172a; font-size:1rem;">${title}</div>
-        <div style="color:#475569; font-size:0.9rem;">${projName} · ${loc}</div>
+        <div style="color:#475569; font-size:0.9rem;">${projName} Â· ${loc}</div>
       </div>
       <div style="text-align:right; color:#475569; font-size:0.9rem;">
         <div>Job ${jobNum}</div>
@@ -8602,7 +8777,7 @@ function printReport() {
   const etCount = endTreatmentEndsMode === 'both' ? 2 : 1;
   const totalLenCalc = (Number.isFinite(designLenNum) ? designLenNum : 0) + (Number.isFinite(etLenNum) ? etLenNum * etCount : 0);
   const totalLenText = Number.isFinite(totalLenCalc) && totalLenCalc > 0 ? `${totalLenCalc.toFixed(2)} m` : '-';
-  const endLenText = Number.isFinite(etLenNum) ? `${etLenNum.toFixed(2)} m (×${etCount})` : '-';
+  const endLenText = Number.isFinite(etLenNum) ? `${etLenNum.toFixed(2)} m (Ã—${etCount})` : '-';
   const friction = val('inFriction') || '-';
 
   const baseDefl = text('resBaseDefl') || '-';
@@ -8719,7 +8894,7 @@ function printReport() {
       <div style="border:1px solid #e2e8f0; border-radius:10px; padding:10px;">
         <div style="font-weight:700; color:#0f172a;">Impact Inputs</div>
         <div style="color:#475569;">Mass: ${mass} kg</div>
-        <div style="color:#475569;">Angle: ${angle}°</div>
+        <div style="color:#475569;">Angle: ${angle}Â°</div>
         <div style="color:#475569;">Design Speed: ${designSpeed || siteSpeed || '-'} km/h</div>
       </div>
       <div style="border:1px solid #e2e8f0; border-radius:10px; padding:10px;">
@@ -8920,7 +9095,7 @@ async function handlePDFUpload(event) {
     
     const statusDiv = document.getElementById('pdfUploadStatus');
     statusDiv.style.display = 'block';
-    statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>⏳ Processing PDF...</strong> Please wait while we extract the risk assessment data.</p>';
+    statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>â³ Processing PDF...</strong> Please wait while we extract the risk assessment data.</p>';
     
     try {
         // Read file as ArrayBuffer
@@ -8953,7 +9128,7 @@ async function handlePDFUpload(event) {
                 );
             });
             
-            statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>✅ Success!</strong> Imported ${parsedData.length} risk factor(s) from the PDF. Check browser console (F12) for detailed parsing information.</p>`;
+            statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>âœ… Success!</strong> Imported ${parsedData.length} risk factor(s) from the PDF. Check browser console (F12) for detailed parsing information.</p>`;
             
             // Update summary
             updateRiskSummary();
@@ -8964,11 +9139,11 @@ async function handlePDFUpload(event) {
             }, 5000);
         } else {
             statusDiv.innerHTML = `
-                <p style="margin:0; color:var(--warning-color); margin-bottom:8px;"><strong>⚠️ No data found.</strong> The PDF doesn't appear to contain a standard risk assessment table.</p>
+                <p style="margin:0; color:var(--warning-color); margin-bottom:8px;"><strong>âš ï¸ No data found.</strong> The PDF doesn't appear to contain a standard risk assessment table.</p>
                 <details style="font-size:0.85rem; color:var(--text-sub);">
-                    <summary style="cursor:pointer; color:var(--primary); font-weight:600;">🔍 View Extracted Text Preview</summary>
+                    <summary style="cursor:pointer; color:var(--primary); font-weight:600;">ðŸ” View Extracted Text Preview</summary>
                     <div style="margin-top:8px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; max-height:200px; overflow-y:auto; font-family:monospace; font-size:0.75rem; white-space:pre-wrap;">${fullText.substring(0, 1000)}${fullText.length > 1000 ? '...\n\n[Text truncated. Check browser console (F12) for full content]' : ''}</div>
-                    <p style="margin-top:8px; font-size:0.8rem;">💡 <strong>Tip:</strong> Open browser console (press F12) to see detailed parsing debug information.</p>
+                    <p style="margin-top:8px; font-size:0.8rem;">ðŸ’¡ <strong>Tip:</strong> Open browser console (press F12) to see detailed parsing debug information.</p>
                 </details>
             `;
             console.log('Full extracted text:', fullText);
@@ -8976,7 +9151,7 @@ async function handlePDFUpload(event) {
         
     } catch (error) {
         console.error('PDF parsing error:', error);
-        statusDiv.innerHTML = '<p style="margin:0; color:var(--danger-color);"><strong>❌ Error!</strong> Failed to process the PDF. Please ensure it\'s a valid PDF file and try again.</p>';
+        statusDiv.innerHTML = '<p style="margin:0; color:var(--danger-color);"><strong>âŒ Error!</strong> Failed to process the PDF. Please ensure it\'s a valid PDF file and try again.</p>';
     }
     
     // Clear file input
@@ -8992,7 +9167,7 @@ async function handlePDFUpload(event) {
 
     const statusDiv = document.getElementById('pdfUploadStatus');
     statusDiv.style.display = 'block';
-    statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>⏳ Processing report...</strong> Please wait while we extract the risk register.</p>';
+    statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>â³ Processing report...</strong> Please wait while we extract the risk register.</p>';
 
     try {
       const htmlText = await file.text();
@@ -9013,14 +9188,14 @@ async function handlePDFUpload(event) {
           );
         });
 
-        statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>✅ Success!</strong> Imported ${parsedData.length} risk factor(s) from the report HTML.</p>`;
+        statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>âœ… Success!</strong> Imported ${parsedData.length} risk factor(s) from the report HTML.</p>`;
         updateRiskSummary();
         setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
       } else {
         statusDiv.innerHTML = `
-          <p style="margin:0; color:var(--warning-color); margin-bottom:8px;"><strong>⚠️ No data found.</strong> The report HTML doesn't appear to contain a risk register table.</p>
+          <p style="margin:0; color:var(--warning-color); margin-bottom:8px;"><strong>âš ï¸ No data found.</strong> The report HTML doesn't appear to contain a risk register table.</p>
           <details style="font-size:0.85rem; color:var(--text-sub);">
-            <summary style="cursor:pointer; color:var(--primary); font-weight:600;">🔍 View Extracted Text Preview</summary>
+            <summary style="cursor:pointer; color:var(--primary); font-weight:600;">ðŸ” View Extracted Text Preview</summary>
             <div style="margin-top:8px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; max-height:200px; overflow-y:auto; font-family:monospace; font-size:0.75rem; white-space:pre-wrap;">${htmlText.substring(0, 1000)}${htmlText.length > 1000 ? '...\n\n[Text truncated. Check browser console (F12) for full content]' : ''}</div>
           </details>
         `;
@@ -9028,7 +9203,7 @@ async function handlePDFUpload(event) {
       }
     } catch (error) {
       console.error('Report parsing error:', error);
-      statusDiv.innerHTML = '<p style="margin:0; color:var(--danger-color);"><strong>❌ Error!</strong> Failed to process the report file. Please ensure it\'s a valid HTML file and try again.</p>';
+      statusDiv.innerHTML = '<p style="margin:0; color:var(--danger-color);"><strong>âŒ Error!</strong> Failed to process the report file. Please ensure it\'s a valid HTML file and try again.</p>';
     }
 
     event.target.value = '';
@@ -9073,7 +9248,7 @@ async function handlePDFUpload(event) {
 
     const statusDiv = document.getElementById('pdfUploadStatus');
     statusDiv.style.display = 'block';
-    statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>⏳ Importing JSON...</strong> Please wait while we load your risk register.</p>';
+    statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>â³ Importing JSON...</strong> Please wait while we load your risk register.</p>';
 
     try {
       const text = await file.text();
@@ -9114,12 +9289,12 @@ async function handlePDFUpload(event) {
         );
       });
 
-      statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>✅ Success!</strong> Imported ${payload.risks.length} risk factor(s) from JSON.</p>`;
+      statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>âœ… Success!</strong> Imported ${payload.risks.length} risk factor(s) from JSON.</p>`;
       updateRiskSummary();
       setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
     } catch (error) {
       console.error('JSON import error:', error);
-      statusDiv.innerHTML = '<p style="margin:0; color:var(--danger-color);"><strong>❌ Error!</strong> Failed to import JSON. Please ensure it\'s a valid export from this tool.</p>';
+      statusDiv.innerHTML = '<p style="margin:0; color:var(--danger-color);"><strong>âŒ Error!</strong> Failed to import JSON. Please ensure it\'s a valid export from this tool.</p>';
     }
 
     event.target.value = '';
@@ -9749,3 +9924,5 @@ init();
 
 </body>
 </html>
+
+
