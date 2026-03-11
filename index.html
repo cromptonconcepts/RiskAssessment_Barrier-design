@@ -4477,6 +4477,36 @@ function cleanDescriptor(text) {
   return String(text || '').replace(/\s+/g, ' ').trim();
 }
 
+function isPlaceholderText(value) {
+  const text = String(value || '').trim();
+  return !text || /^(n\/?a|na|null|nil|none|#)$/i.test(text);
+}
+
+function normalizeExternalUrl(raw, { allowImage = false } = {}) {
+  const text = String(raw || '').trim();
+  if (isPlaceholderText(text)) return null;
+
+  if (/^[a-zA-Z]:\\/.test(text) || /^\\\\/.test(text) || /^file:\/\//i.test(text)) {
+    return null;
+  }
+
+  let candidate = text;
+  if (/^www\./i.test(candidate)) {
+    candidate = `https://${candidate}`;
+  }
+
+  try {
+    const parsed = new URL(candidate);
+    if (!/^https?:$/i.test(parsed.protocol)) return null;
+    if (!allowImage && /\.(png|jpe?g|gif|webp|svg)($|\?)/i.test(parsed.pathname)) {
+      return parsed.toString();
+    }
+    return parsed.toString();
+  } catch (error) {
+    return null;
+  }
+}
+
 function buildDatabaseLookups(database) {
   const imageByName = {};
   const imageByGroup = {};
@@ -4640,11 +4670,11 @@ function buildBarrierRecords(database, lookups) {
       ww: numberDbCell(row[11]) ?? context.baseWW,
       width: numberDbCell(row[8]) ?? context.baseWidth,
       testLen: numberDbCell(row[9]) ?? context.baseTestLen,
-      link,
-      manufLink: specLink,
-      specLink,
-      siteLink,
-      image,
+      link: normalizeExternalUrl(link),
+      manufLink: normalizeExternalUrl(specLink),
+      specLink: normalizeExternalUrl(specLink),
+      siteLink: normalizeExternalUrl(siteLink),
+      image: normalizeExternalUrl(image, { allowImage: true }),
       isMatrix: /highwayguard/i.test(name),
       availableLengths: availableLengths.length ? availableLengths : context.baseLengths,
       unitWeight: unitWeight.length ? unitWeight : context.baseWeights,
@@ -4713,13 +4743,15 @@ function buildEndTreatmentRecords(database) {
       testLen: numberDbCell(row[9]),
       spacing: textDbCell(row[4]) || context.spacing || null,
       pinType: textDbCell(row[5]) || context.pinType || null,
-      link: textDbCell(row[14]) || context.link || null,
-      manufLink: textDbCell(row[15]) || context.manufLink || null,
-      siteLink: context.siteLink || manufacturerSiteMap[supplier] || null,
+      link: normalizeExternalUrl(textDbCell(row[14]) || context.link || null),
+      manufLink: normalizeExternalUrl(textDbCell(row[15]) || context.manufLink || null),
+      siteLink: normalizeExternalUrl(context.siteLink || manufacturerSiteMap[supplier] || null),
       tmrConditions: textDbCell(row[16]) || null
     };
 
-    if (imageMap[record.name]) record.image = imageMap[record.name];
+    if (imageMap[record.name]) {
+      record.image = normalizeExternalUrl(imageMap[record.name], { allowImage: true });
+    }
     records.push(record);
     id += 1;
   }
@@ -4756,12 +4788,12 @@ let recentSelections = [];
 function resolveImage(name) {
   const direct = imageMap[name];
   if (direct) {
-    return direct;
+    return normalizeExternalUrl(direct, { allowImage: true });
   }
 
   const alias = imageAliases[name];
   if (alias && imageMap[alias]) {
-    return imageMap[alias];
+    return normalizeExternalUrl(imageMap[alias], { allowImage: true });
   }
 
   return null;
@@ -4771,11 +4803,11 @@ function resolveManufacturerSite(item) {
   if (!item) return null;
 
   if (manufacturerSiteByName[item.name]) {
-    return manufacturerSiteByName[item.name];
+    return normalizeExternalUrl(manufacturerSiteByName[item.name]);
   }
 
   if (manufacturerSiteMap[item.supplier]) {
-    return manufacturerSiteMap[item.supplier];
+    return normalizeExternalUrl(manufacturerSiteMap[item.supplier]);
   }
 
   return null;
@@ -4845,7 +4877,7 @@ barriers.forEach(b => {
   const name = b.name.trim();
   
   if (specMap[name]) {
-    b.specLink = specMap[name];
+    b.specLink = normalizeExternalUrl(specMap[name]);
   }
   
   // Exact match for image
@@ -6470,7 +6502,7 @@ function toggleFavFilter() {
 
 function extractMaterials(barrierName) {
   const materials = [];
-  const nameLower = barrierName.toLowerCase();
+  const nameLower = String(barrierName || '').toLowerCase();
   if (nameLower.includes('steel')) materials.push('Steel');
   if (nameLower.includes('concrete')) materials.push('Concrete');
   if (nameLower.includes('plastic')) materials.push('Plastic');
@@ -6482,7 +6514,7 @@ function extractMaterials(barrierName) {
 
 function extractCategories(barrierName) {
   const categories = [];
-  const nameLower = barrierName.toLowerCase();
+  const nameLower = String(barrierName || '').toLowerCase();
   if (nameLower.includes('precast') || nameLower.includes('concrete barrier')) categories.push('Precast');
   if (nameLower.includes('safety barrier') || nameLower.includes('rail')) categories.push('Rail Barrier');
   if (nameLower.includes('crash cushion') || nameLower.includes('terminal')) categories.push('Terminal');
@@ -6493,7 +6525,7 @@ function extractCategories(barrierName) {
 
 function extractFeatures(barrier) {
   const features = [];
-  const nameLower = barrier.name.toLowerCase();
+  const nameLower = String((barrier && barrier.name) || '').toLowerCase();
   if (nameLower.includes('mds')) features.push('Minimal Deflection');
   if (nameLower.includes('lds')) features.push('Low Deflection');
   if (barrier.isMatrix) features.push('Matrix Barrier');
@@ -6627,7 +6659,7 @@ function filterBarriers() {
     const nameField = document.getElementById('barrierNameSearch');
     
     const widthValueRaw = widthField ? widthField.value : '';
-    const nameSearch = nameField ? nameField.value.toLowerCase().trim() : '';
+    const nameSearch = nameField ? String(nameField.value || '').toLowerCase().trim() : '';
 
     const hasWidth = widthValueRaw !== '' && !isNaN(parseFloat(widthValueRaw));
     const filtersActive = hasWidth;
@@ -6648,8 +6680,10 @@ function filterBarriers() {
     
     // Name Filter
     if (nameSearch !== '') {
-        const matchName = b.name.toLowerCase().includes(nameSearch);
-        const matchSupplier = b.supplier.toLowerCase().includes(nameSearch);
+        const nameText = String(b.name || '').toLowerCase();
+        const supplierText = String(b.supplier || '').toLowerCase();
+        const matchName = nameText.includes(nameSearch);
+        const matchSupplier = supplierText.includes(nameSearch);
         if (!matchName && !matchSupplier) return false;
     }
 
@@ -6683,7 +6717,7 @@ function filterBarriers() {
 
     // Supplier Filter
     if (activeFilters.supplier.length > 0) {
-      const supplierName = (b.supplier || '').trim();
+      const supplierName = String(b.supplier || '').trim();
       const matchesSupplier = activeFilters.supplier.includes(supplierName);
       if (!matchesSupplier) return false;
     }
@@ -6722,6 +6756,9 @@ function filterBarriers() {
   }
   
   gridEl.innerHTML = filtered.map(b => {
+      const safeName = String(b.name || 'Unnamed item');
+      const safeSupplier = String(b.supplier || 'Unknown supplier');
+      const safeImage = normalizeExternalUrl(b.image, { allowImage: true });
       const isChecked = compareSelections.includes(b.id);
       const isFav = favoriteBarriers.includes(b.id);
       const tlText = (b.tl || 'N/A').toString();
@@ -6748,10 +6785,10 @@ function filterBarriers() {
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:16px; margin-bottom:12px;">
-          ${b.image ? `<img src="${b.image}" alt="${b.name}" style="width:72px; height:72px; object-fit:contain; flex-shrink:0; border-radius:6px; background:#f8fafc; padding:4px; border:1px solid #e2e8f0;">` : `<div class="thumb-placeholder">No media</div>`}
+          ${safeImage ? `<img src="${safeImage}" alt="${safeName}" style="width:72px; height:72px; object-fit:contain; flex-shrink:0; border-radius:6px; background:#f8fafc; padding:4px; border:1px solid #e2e8f0;">` : `<div class="thumb-placeholder">No media</div>`}
           <div style="flex:1;">
-            <div class="barrier-title">${b.name}</div>
-            <div class="barrier-supplier">${b.supplier || ''}</div>
+            <div class="barrier-title">${safeName}</div>
+            <div class="barrier-supplier">${safeSupplier}</div>
           </div>
         </div>
 
@@ -6923,14 +6960,17 @@ function selectBarrier(id, type) {
         console.log('selectedBarrier:', selectedBarrier.name, 'has image:', selectedBarrier.image ? 'YES' : 'NO');
         
         // Prepare search query
-        const queryText = selectedBarrier.supplier + " " + selectedBarrier.name + " safety barrier";
+        const safeSupplier = String(selectedBarrier.supplier || '');
+        const safeName = String(selectedBarrier.name || '');
+        const queryText = `${safeSupplier} ${safeName} safety barrier`;
         const query = encodeURIComponent(queryText);
         const searchUrl = `https://www.google.com/search?tbm=isch&q=${query}`;
         
         if (extraSearchLink) extraSearchLink.href = searchUrl;
 
-        if (selectedBarrier.image) {
-             imgBtn.href = selectedBarrier.image;
+           const selectedImage = normalizeExternalUrl(selectedBarrier.image, { allowImage: true });
+           if (selectedImage) {
+             imgBtn.href = selectedImage;
              imgBtn.title = "View Full Image";
              imgBtn.target = "_blank";
              imgBtn.style.display = 'flex';
@@ -6945,13 +6985,13 @@ function selectBarrier(id, type) {
              const img = new Image();
              img.onload = function() {
                  console.log('Image loaded successfully:', selectedBarrier.name);
-                 imgBtn.innerHTML = `<img src="${selectedBarrier.image}" alt="${selectedBarrier.name}" style="width:100%; height:auto; max-height:300px; object-fit:contain; border-radius:6px; display:block;">`;
+               imgBtn.innerHTML = `<img src="${selectedImage}" alt="${safeName}" style="width:100%; height:auto; max-height:300px; object-fit:contain; border-radius:6px; display:block;">`;
              };
              img.onerror = function() {
-                 console.error('Image failed to load:', selectedBarrier.image);
-                 imgBtn.innerHTML = `<div style="text-align:center; color:#ef4444;"><div style="font-size:2rem; margin-bottom:8px;">⚠️</div><div>Image failed to load</div><div style="font-size:0.75rem; color:#64748b; margin-top:4px;">URL: ${selectedBarrier.image}</div></div>`;
+               console.error('Image failed to load:', selectedImage);
+               imgBtn.innerHTML = `<div style="text-align:center; color:#ef4444;"><div style="font-size:2rem; margin-bottom:8px;">⚠️</div><div>Image failed to load</div></div>`;
              };
-             img.src = selectedBarrier.image;
+             img.src = selectedImage;
 
              // Show "Search Google" link below image
              if(extraSearchBox) extraSearchBox.style.display = 'block';
@@ -6970,7 +7010,7 @@ function selectBarrier(id, type) {
                 <div class="image-icon">📷</div>
                 <div class="image-text">Find Images</div>
                 <div style="font-size:0.7rem; color:#64748b; margin-top:4px; text-align:center;">
-                    Search: <span id="searchQueryDisplay">${selectedBarrier.supplier} ${selectedBarrier.name}</span>
+                    Search: <span id="searchQueryDisplay">${safeSupplier} ${safeName}</span>
                 </div>
             `;
             
@@ -6983,15 +7023,16 @@ function selectBarrier(id, type) {
     const techFrame = document.getElementById('techSheetFrame');
     const techWrap = document.getElementById('techSheetPreview');
     const techEmpty = document.getElementById('techSheetEmpty');
-    if(selectedBarrier.link && selectedBarrier.link !== '') {
-      linkBtn.href = selectedBarrier.link;
+    const techLink = normalizeExternalUrl(selectedBarrier.link);
+    if(techLink) {
+      linkBtn.href = techLink;
       linkBtn.style.display = 'flex';
 
       // Render the inline preview before calculation runs
       if (techWrap && techFrame) {
         techWrap.style.display = 'block';
         techEmpty.style.display = 'none';
-        techFrame.src = selectedBarrier.link;
+        techFrame.src = techLink;
       }
     } else {
       linkBtn.style.display = 'none';
@@ -7003,8 +7044,8 @@ function selectBarrier(id, type) {
     }
 
     const specBtn = document.getElementById('manuSpecLink');
-    const sLink = selectedBarrier.specLink || selectedBarrier.manufLink;
-    if(sLink && sLink !== '') {
+    const sLink = normalizeExternalUrl(selectedBarrier.specLink || selectedBarrier.manufLink);
+    if(sLink) {
       specBtn.href = sLink;
       specBtn.style.display = 'flex';
     } else {
@@ -7023,9 +7064,9 @@ function selectBarrier(id, type) {
 
     const linkHealth = document.getElementById('linkHealthNote');
     if (linkHealth) {
-      const hasTech = !!selectedBarrier.link;
-      const hasSpec = !!(selectedBarrier.specLink || selectedBarrier.manufLink);
-      const siteUrl = resolveManufacturerSite(selectedBarrier);
+      const hasTech = !!techLink;
+      const hasSpec = !!sLink;
+      const siteUrl = normalizeExternalUrl(resolveManufacturerSite(selectedBarrier));
       if (hasTech || hasSpec || siteUrl) {
         const parts = [];
         if (hasTech) parts.push('Austroads tech link');
@@ -7092,8 +7133,9 @@ function reloadTechSheetPreview() {
   if (!selectedBarrier) return;
   const techFrame = document.getElementById('techSheetFrame');
   const techEmpty = document.getElementById('techSheetEmpty');
-  if (selectedBarrier.link && techFrame) {
-    techFrame.src = selectedBarrier.link;
+  const techLink = normalizeExternalUrl(selectedBarrier.link);
+  if (techLink && techFrame) {
+    techFrame.src = techLink;
     if (techEmpty) techEmpty.style.display = 'none';
   } else if (techEmpty) {
     techEmpty.style.display = 'block';
@@ -7103,7 +7145,7 @@ function reloadTechSheetPreview() {
 function openTechSheetFullscreen() {
   if (!selectedBarrier) return;
   const techFrame = document.getElementById('techSheetFrame');
-  const link = selectedBarrier.link;
+  const link = normalizeExternalUrl(selectedBarrier.link);
   if (techFrame && techFrame.requestFullscreen) {
     techFrame.requestFullscreen().catch(() => {
       if (link) window.open(link, '_blank');
@@ -8807,7 +8849,7 @@ function renderEndTreatments(filterText = '') {
 
     const list = END_TREATMENTS.filter(e =>
       (showAll || !selectedBarrier || allowedNames.includes(e.name)) &&
-      (e.name.toLowerCase().includes(term) || e.supplier.toLowerCase().includes(term))
+      (String(e.name || '').toLowerCase().includes(term) || String(e.supplier || '').toLowerCase().includes(term))
     );
     
     if (list.length === 0) {
@@ -8858,8 +8900,9 @@ function selectEndTreatment(id) {
 
         // Tech Sheet Link
         const techBtn = document.getElementById('etTechSheetLink');
-        if (selectedEndTreatment.link) {
-            techBtn.href = selectedEndTreatment.link;
+        const etTechLink = normalizeExternalUrl(selectedEndTreatment.link);
+        if (etTechLink) {
+          techBtn.href = etTechLink;
             techBtn.style.display = 'inline-flex';
         } else {
             techBtn.style.display = 'none';
@@ -8867,8 +8910,9 @@ function selectEndTreatment(id) {
 
         // Manufacturer Link
         const manufBtn = document.getElementById('etManufSheetLink');
-        if (selectedEndTreatment.manufLink) {
-            manufBtn.href = selectedEndTreatment.manufLink;
+        const etManufLink = normalizeExternalUrl(selectedEndTreatment.manufLink);
+        if (etManufLink) {
+          manufBtn.href = etManufLink;
             manufBtn.style.display = 'inline-flex';
         } else {
             manufBtn.style.display = 'none';
