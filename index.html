@@ -2588,6 +2588,7 @@
   </div>
 </div>
 
+  <script src="barrier-data.js"></script>
 <script>
 // DATA
 
@@ -3291,7 +3292,10 @@ function getBarrierApprovalCode(barrier) {
 
 function getAllowedEndTreatmentNamesForBarrier(barrier) {
   const code = getBarrierApprovalCode(barrier);
-  return code ? (BARRIER_END_TREATMENT_NAMES[code] || []) : [];
+  if (!code) return [];
+
+  const labels = BARRIER_END_TREATMENT_SPEC[code] || BARRIER_END_TREATMENT_SPEC[code.toUpperCase()] || [];
+  return Array.from(new Set(labels.map(resolveCanonicalEndTreatmentName).filter(Boolean)));
 }
 
 const highwayGuardMatrix = {
@@ -4414,6 +4418,337 @@ const manufacturerSiteByName = {
   "Smart Cushion SCI100GM": "https://lbaustralia.com.au/products/smart-cushion-speed-dependent-crash-attenuator/",
   "Hercules Crash Cushion": "https://www.safedirection.com.au/products/guardrail-products/road-barriers/crash-cushions/hercules/"
 };
+
+function replaceArrayContents(target, nextItems) {
+  target.length = 0;
+  nextItems.forEach(item => target.push(item));
+}
+
+function mergeMap(target, source) {
+  Object.entries(source || {}).forEach(([key, value]) => {
+    if (!key || value === null || value === undefined || value === '') return;
+    target[key] = value;
+  });
+}
+
+function cleanDbCell(value) {
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'string') {
+    const cleaned = value.replace(/_x000D_/gi, ' ').replace(/\r?\n+/g, ' ').replace(/\s+/g, ' ').trim();
+    return cleaned || null;
+  }
+  return value;
+}
+
+function textDbCell(value) {
+  const cleaned = cleanDbCell(value);
+  if (cleaned === null || cleaned === undefined || cleaned === '') return null;
+  return String(cleaned).trim();
+}
+
+function numberDbCell(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  const text = textDbCell(value);
+  if (!text || /^(n\/?a|na|nil)$/i.test(text)) return null;
+  const numeric = Number(text.replace(/,/g, ''));
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function listDbNumbers(value) {
+  const text = textDbCell(value);
+  if (!text) return [];
+  return Array.from(new Set(
+    text
+      .split(/[\/,]/)
+      .map(part => Number(part.trim()))
+      .filter(num => Number.isFinite(num))
+  ));
+}
+
+function normalizeDbKey(value) {
+  return String(value || '')
+    .replace(/[\u2013\u2014]/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+function cleanDescriptor(text) {
+  return String(text || '').replace(/\s+/g, ' ').trim();
+}
+
+function buildDatabaseLookups(database) {
+  const imageByName = {};
+  const imageByGroup = {};
+  const specByName = {};
+  const specByGroup = {};
+  const linkByName = {};
+  const siteByGroup = {};
+
+  const sheet1 = Array.isArray(database && database['Sheet1']) ? database['Sheet1'] : [];
+  for (let i = 1; i < sheet1.length; i += 1) {
+    const row = sheet1[i] || [];
+    const name = textDbCell(row[0]);
+    if (!name) continue;
+
+    const key = normalizeDbKey(name);
+    const image = textDbCell(row[1]);
+    const link = textDbCell(row[2]);
+    const spec = textDbCell(row[4]);
+
+    if (image) imageByName[key] = image;
+    if (link) linkByName[key] = link;
+    if (spec) specByName[key] = spec;
+  }
+
+  const sheet4 = Array.isArray(database && database['Sheet4']) ? database['Sheet4'] : [];
+  for (let i = 1; i < sheet4.length; i += 1) {
+    const row = sheet4[i] || [];
+    const group = textDbCell(row[0]);
+    const site = textDbCell(row[1]);
+    if (!group || !site) continue;
+    siteByGroup[normalizeDbKey(group)] = site;
+  }
+
+  return { imageByName, imageByGroup, specByName, specByGroup, linkByName, siteByGroup };
+}
+
+function createBarrierVariantName(baseName, row, context, usedNames) {
+  const descriptors = [];
+  const tl = cleanDescriptor(textDbCell(row[2]) || '');
+  const spacing = textDbCell(row[4]);
+  const lengths = listDbNumbers(row[13]);
+  const baseSpacing = context ? textDbCell(context.baseSpacing) : null;
+  const baseTl = cleanDescriptor(context && context.baseTl ? context.baseTl : '');
+  const baseLengths = context && Array.isArray(context.baseLengths) ? context.baseLengths : [];
+
+  if (/asphalt installation/i.test(tl)) {
+    descriptors.push('Asphalt installation');
+  } else if (/concrete installation/i.test(tl)) {
+    descriptors.push('Concrete installation');
+  }
+
+  if (!descriptors.length && lengths.length === 1 && (!baseLengths.length || lengths[0] !== baseLengths[0])) {
+    descriptors.push(`${lengths[0]} m unit`);
+  }
+
+  if (spacing && /^\d+(\.\d+)?$/.test(spacing) && spacing !== baseSpacing) {
+    descriptors.push(`${spacing} m spacing`);
+  }
+
+  if (tl && tl !== baseTl) {
+    const alreadyCovered = descriptors.some(desc => normalizeDbKey(desc) === normalizeDbKey(tl));
+    if (!alreadyCovered && !descriptors.some(desc => /installation/i.test(desc) && /installation/i.test(tl))) {
+      descriptors.push(tl);
+    }
+  }
+
+  let name = descriptors.length ? `${baseName} (${descriptors.join(', ')})` : baseName;
+  let dedupe = 2;
+  while (usedNames.has(normalizeDbKey(name))) {
+    name = `${baseName} (${descriptors.concat(`Variant ${dedupe}`).join(', ')})`;
+    dedupe += 1;
+  }
+  return name;
+}
+
+function buildBarrierRecords(database, lookups) {
+  const rows = Array.isArray(database && database['Barrier data']) ? database['Barrier data'] : [];
+  const records = [];
+  const usedNames = new Set();
+  let context = null;
+  let id = 1;
+
+  for (let i = 1; i < rows.length; i += 1) {
+    const row = rows[i] || [];
+    const shortName = textDbCell(row[0]);
+    const fullName = textDbCell(row[1]);
+    const tl = cleanDescriptor(textDbCell(row[2]) || '');
+    if (!tl) continue;
+
+    if (shortName || fullName) {
+      const baseName = fullName || shortName;
+      const groupName = shortName || fullName;
+      const baseKey = normalizeDbKey(baseName);
+      const groupKey = normalizeDbKey(groupName);
+      const directImage = textDbCell(row[19]) || lookups.imageByName[baseKey] || null;
+      const directSpec = textDbCell(row[18]) || lookups.specByName[baseKey] || null;
+      const directLink = textDbCell(row[17]) || lookups.linkByName[baseKey] || null;
+      const siteLink = lookups.siteByGroup[groupKey] || null;
+
+      if (directImage) {
+        lookups.imageByName[baseKey] = directImage;
+        lookups.imageByGroup[groupKey] = directImage;
+      }
+      if (directSpec) {
+        lookups.specByName[baseKey] = directSpec;
+        lookups.specByGroup[groupKey] = directSpec;
+      }
+      if (directLink) {
+        lookups.linkByName[baseKey] = directLink;
+      }
+
+      context = {
+        shortName: groupName,
+        baseName,
+        supplier: textDbCell(row[15]),
+        baseTl: tl,
+        baseSpacing: textDbCell(row[4]),
+        baseLengths: listDbNumbers(row[13]),
+        baseWeights: listDbNumbers(row[14]),
+        baseTestSpeed: numberDbCell(row[7]),
+        baseWidth: numberDbCell(row[8]),
+        baseTestLen: numberDbCell(row[9]),
+        baseDefl: numberDbCell(row[10]),
+        baseWW: numberDbCell(row[11]),
+        baseSideSlope: numberDbCell(row[12]),
+        basePinType: textDbCell(row[5]),
+        baseTmrSpeedCondition: textDbCell(row[6]),
+        baseTmrConditions: textDbCell(row[20]) || textDbCell(row[6]),
+        link: directLink,
+        specLink: directSpec,
+        image: directImage,
+        siteLink,
+        type: textDbCell(row[3])
+      };
+    }
+
+    if (!context || /not rated/i.test(tl)) continue;
+
+    const name = fullName || shortName
+      ? context.baseName
+      : createBarrierVariantName(context.baseName, row, context, usedNames);
+    const nameKey = normalizeDbKey(name);
+    const groupKey = normalizeDbKey(context.shortName);
+    const image = textDbCell(row[19]) || lookups.imageByName[nameKey] || lookups.imageByName[normalizeDbKey(context.baseName)] || lookups.imageByGroup[groupKey] || context.image || null;
+    const specLink = textDbCell(row[18]) || lookups.specByName[nameKey] || lookups.specByName[normalizeDbKey(context.baseName)] || lookups.specByGroup[groupKey] || context.specLink || null;
+    const link = textDbCell(row[17]) || lookups.linkByName[nameKey] || lookups.linkByName[normalizeDbKey(context.baseName)] || context.link || null;
+    const supplier = textDbCell(row[15]) || context.supplier || null;
+    const siteLink = lookups.siteByGroup[groupKey] || context.siteLink || manufacturerSiteMap[supplier] || null;
+    const availableLengths = listDbNumbers(row[13]);
+    const unitWeight = listDbNumbers(row[14]);
+    const record = {
+      id,
+      type: 'barrier',
+      name,
+      shortName: context.shortName,
+      supplier,
+      tl,
+      fullType: textDbCell(row[3]) || context.type || null,
+      testSpeed: numberDbCell(row[7]) ?? context.baseTestSpeed,
+      defl: numberDbCell(row[10]) ?? context.baseDefl,
+      ww: numberDbCell(row[11]) ?? context.baseWW,
+      width: numberDbCell(row[8]) ?? context.baseWidth,
+      testLen: numberDbCell(row[9]) ?? context.baseTestLen,
+      link,
+      manufLink: specLink,
+      specLink,
+      siteLink,
+      image,
+      isMatrix: /highwayguard/i.test(name),
+      availableLengths: availableLengths.length ? availableLengths : context.baseLengths,
+      unitWeight: unitWeight.length ? unitWeight : context.baseWeights,
+      anchorSpacing: textDbCell(row[4]) || null,
+      pinType: textDbCell(row[5]) || context.basePinType || null,
+      tmrSpeedCondition: textDbCell(row[6]) || context.baseTmrSpeedCondition || null,
+      tmrConditions: textDbCell(row[20]) || textDbCell(row[6]) || context.baseTmrConditions || null,
+      sideSlopeLimit: numberDbCell(row[12]) ?? context.baseSideSlope
+    };
+
+    if (!Number.isFinite(record.testLen) || !Number.isFinite(record.width)) continue;
+    usedNames.add(nameKey);
+    records.push(record);
+    id += 1;
+  }
+
+  return records.map((record, index) => ({ ...record, id: index + 1 }));
+}
+
+function buildEndTreatmentRecords(database) {
+  const rows = Array.isArray(database && database['End treatment']) ? database['End treatment'] : [];
+  const records = [];
+  let context = null;
+  let id = 1;
+
+  for (let i = 1; i < rows.length; i += 1) {
+    const row = rows[i] || [];
+    const name = textDbCell(row[1]);
+    const tl = cleanDescriptor(textDbCell(row[2]) || '');
+    if (!tl) continue;
+
+    if (name) {
+      const supplier = textDbCell(row[13]);
+      const manufLink = textDbCell(row[15]);
+      context = {
+        name,
+        supplier,
+        fullType: textDbCell(row[3]),
+        spacing: textDbCell(row[4]),
+        pinType: textDbCell(row[5]),
+        link: textDbCell(row[14]),
+        manufLink,
+        siteLink: manufacturerSiteByName[name] || manufacturerSiteMap[supplier] || (/^https?:/i.test(manufLink || '') && !/\.pdf($|\?)/i.test(manufLink) ? manufLink : null)
+      };
+    }
+
+    if (!context) continue;
+
+    const fullType = textDbCell(row[3]) || context.fullType || null;
+    let type = fullType || 'Other';
+    if (/redirective/i.test(fullType || '')) type = 'Redirective';
+    else if (/gating/i.test(fullType || '')) type = 'Gating';
+
+    const supplier = textDbCell(row[13]) || context.supplier || null;
+    const record = {
+      id: id,
+      name: context.name,
+      supplier,
+      type,
+      fullType,
+      tl,
+      testSpeed: numberDbCell(row[7]),
+      defl: textDbCell(row[10]) || 'N/A',
+      ww: textDbCell(row[11]) || 'N/A',
+      width: numberDbCell(row[8]),
+      testLen: numberDbCell(row[9]),
+      spacing: textDbCell(row[4]) || context.spacing || null,
+      pinType: textDbCell(row[5]) || context.pinType || null,
+      link: textDbCell(row[14]) || context.link || null,
+      manufLink: textDbCell(row[15]) || context.manufLink || null,
+      siteLink: context.siteLink || manufacturerSiteMap[supplier] || null,
+      tmrConditions: textDbCell(row[16]) || null
+    };
+
+    if (imageMap[record.name]) record.image = imageMap[record.name];
+    records.push(record);
+    id += 1;
+  }
+
+  return records;
+}
+
+function hydrateUpdatedDatabase() {
+  const database = window.BARRIER_DATABASE && window.BARRIER_DATABASE.data;
+  if (!database) return;
+
+  const lookups = buildDatabaseLookups(database);
+  const nextBarriers = buildBarrierRecords(database, lookups);
+  const nextEndTreatments = buildEndTreatmentRecords(database);
+
+  if (nextBarriers.length) {
+    replaceArrayContents(barriers, nextBarriers);
+    mergeMap(specMap, Object.fromEntries(nextBarriers.filter(item => item.specLink).map(item => [item.name, item.specLink])));
+    mergeMap(imageMap, Object.fromEntries(nextBarriers.filter(item => item.image).map(item => [item.name, item.image])));
+    mergeMap(manufacturerSiteByName, Object.fromEntries(nextBarriers.filter(item => item.siteLink).map(item => [item.name, item.siteLink])));
+  }
+
+  if (nextEndTreatments.length) {
+    replaceArrayContents(END_TREATMENTS, nextEndTreatments);
+    mergeMap(manufacturerSiteByName, Object.fromEntries(nextEndTreatments.filter(item => item.siteLink).map(item => [item.name, item.siteLink])));
+  }
+}
+
+hydrateUpdatedDatabase();
 
 const RECENT_STORAGE_KEY = 'deflection-recents-v1';
 let recentSelections = [];
