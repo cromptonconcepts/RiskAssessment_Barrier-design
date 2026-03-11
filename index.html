@@ -2352,6 +2352,7 @@
                 </label>
             </div>
             <div id="etScopeNote" style="margin:-10px 0 14px 0; color:#64748b; font-size:0.9rem;"></div>
+            <div id="etMappingDetails" style="display:none; margin:0 0 14px 0; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; color:#334155; font-size:0.9rem; line-height:1.45;"></div>
             
             <div id="selectedEtDisplay" style="display:none; margin-bottom:20px; padding:15px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px;">
                 <div style="font-weight:700; font-size:1.1em; margin-bottom:5px;" id="etNameSelect"></div>
@@ -3108,7 +3109,8 @@ const BARRIER_END_TREATMENT_SPEC = {
     "LEGACY: ABSORB 350 Plastic Terminal",
     "ABSORB-M Crash Cushion",
     "Universal Tau-M Crash Cushion",
-    "QUADGUARD M10 CZ Crash Cushion"
+    "QUADGUARD M10 CZ Crash Cushion",
+    "Minimum distance to excavation (m)"
   ],
   "211201-TCU-BG800-Safety-Barrier-Temporary": [
     "LEGACY: UNIVERSAL TAU-II Crash Cushion",
@@ -3118,7 +3120,8 @@ const BARRIER_END_TREATMENT_SPEC = {
     "SMART Crash Cushion",
     "ABSORB-M Crash Cushion",
     "Universal Tau-M Crash Cushion",
-    "QUADGUARD M10 CZ Crash Cushion"
+    "QUADGUARD M10 CZ Crash Cushion",
+    "Minimum installation length"
   ],
   "211201-TCU-DEFENDER-100-FS-Safety-Barrier-Temporary": [
     "LEGACY: UNIVERSAL TAU-II Crash Cushion",
@@ -3165,14 +3168,10 @@ const BARRIER_END_TREATMENT_SPEC = {
     "QUADGUARD M10 CZ Crash Cushion"
   ],
   "220314-TCU-3.6-M-JJ-Hooks-Safety-Barrier-Temporary": [
-    "SMART Crash Cushion",
-    "UNIVERSAL TAU-M Crash Cushion",
-    "QUADGUARD M10 CZ Crash Cushion",
-    "SLED Plastic Water Filled Crash Cushion",
     "ABSORB-M Crash Cushion",
+    "SLED Plastic Water Filled Crash Cushion",
     "ArmorBuffa Crash Cushion",
-    "LEGACY: ABSORB 350 Plastic Terminal",
-    "LEGACY: QUADGUARD CZ Crash Cushion"
+    "LEGACY: ABSORB 350 Plastic Terminal"
   ],
   "220314-TCU-JJ-HOOKS-MASH-Safety-Barrier-Temporary": [
     "SMART Crash Cushion",
@@ -3187,7 +3186,6 @@ const BARRIER_END_TREATMENT_SPEC = {
   "220322-TCU-Rebloc-80SAH_12_8B-Safety-Barrier": ["SMART Crash Cushion"],
   "220616-TCU-Rebloc-120FA_6_FS-Safety-Barrier": ["SMART Crash Cushion"],
   "220902-TCU-Rebloc-80SAH_12-Safety-Barrier": ["SMART Crash Cushion"],
-  "221201-TCU-Rebloc-80SAH_4-Safety-Barrier-Temporary": ["SMART Crash Cushion"],
   "220908-TCU-HIGHWAYGUARD-Safety-Barrier-Temporary": [
     "QUADGUARD M10 CZ Crash Cushion",
     "UNIVERSAL TAU-M Crash Cushion",
@@ -3195,6 +3193,7 @@ const BARRIER_END_TREATMENT_SPEC = {
     "LEGACY: QUADGUARD CZ Crash Cushion",
     "LEGACY: UNIVERSAL TAU-II Crash Cushion"
   ],
+  "221201-TCU-Rebloc-80SAH_4-Safety-Barrier-Temporary": ["SMART Crash Cushion"],
   "230601-TCU-HIGHWAYGUARD-MDS-Safety-Barrier-Temporary": [
     "QUADGUARD M10 CZ Crash Cushion",
     "UNIVERSAL TAU-M Crash Cushion",
@@ -3296,6 +3295,16 @@ function getAllowedEndTreatmentNamesForBarrier(barrier) {
 
   const labels = BARRIER_END_TREATMENT_SPEC[code] || BARRIER_END_TREATMENT_SPEC[code.toUpperCase()] || [];
   return Array.from(new Set(labels.map(resolveCanonicalEndTreatmentName).filter(Boolean)));
+}
+
+function getMappedEndTreatmentSpecForBarrier(barrier) {
+  const code = getBarrierApprovalCode(barrier);
+  if (!code) return { code: '', labels: [] };
+  const labels = BARRIER_END_TREATMENT_SPEC[code] || BARRIER_END_TREATMENT_SPEC[code.toUpperCase()] || [];
+  return {
+    code,
+    labels: Array.isArray(labels) ? labels : []
+  };
 }
 
 const highwayGuardMatrix = {
@@ -6669,11 +6678,16 @@ function filterBarriers() {
 
     const widthLimit = siteWidth;
     
-    // Decide source array
-    const sourceArray = currentStage1Tab === 'terminal' ? END_TREATMENTS : barriers;
+    // Decide source array and protect against malformed runtime state
+    const sourceArrayRaw = currentStage1Tab === 'terminal' ? END_TREATMENTS : barriers;
+    const sourceArray = Array.isArray(sourceArrayRaw) ? sourceArrayRaw : [];
+    const safeCompareSelections = Array.isArray(compareSelections) ? compareSelections : [];
+    const safeFavoriteBarriers = Array.isArray(favoriteBarriers) ? favoriteBarriers : [];
 
   // Filter
   const filtered = sourceArray.filter(b => {
+    if (!b || typeof b !== 'object') return false;
+
     if (currentStage1Tab === 'barrier') {
         if (b.type !== 'barrier') return false;
     } 
@@ -6735,7 +6749,7 @@ function filterBarriers() {
     
     // Favorites Filter
     if (activeFilters.favorites) {
-        if (!favoriteBarriers.includes(b.id)) return false;
+      if (!safeFavoriteBarriers.includes(b.id)) return false;
     }
 
     if (filtersActive) {
@@ -6759,8 +6773,8 @@ function filterBarriers() {
       const safeName = String(b.name || 'Unnamed item');
       const safeSupplier = String(b.supplier || 'Unknown supplier');
       const safeImage = normalizeExternalUrl(b.image, { allowImage: true });
-      const isChecked = compareSelections.includes(b.id);
-      const isFav = favoriteBarriers.includes(b.id);
+      const isChecked = safeCompareSelections.includes(b.id);
+      const isFav = safeFavoriteBarriers.includes(b.id);
       const tlText = (b.tl || 'N/A').toString();
       const deflVal = Number.isFinite(b.defl) ? b.defl : (parseFloat(b.defl) || null);
       const wwVal = Number.isFinite(b.ww) ? b.ww : (parseFloat(b.ww) || null);
@@ -6817,7 +6831,11 @@ function filterBarriers() {
       </div>
     `}).join('');
 
-    renderQuickPicks();
+    try {
+      renderQuickPicks();
+    } catch (quickPickError) {
+      console.warn('Quick picks render skipped due to error:', quickPickError);
+    }
   } catch (error) {
     console.error('Error in filterBarriers:', error);
     const gridEl = document.getElementById('barrierGrid');
@@ -8831,9 +8849,11 @@ function renderEndTreatments(filterText = '') {
     const showAllToggle = document.getElementById('etShowAllToggle');
     const showAll = !!(showAllToggle && showAllToggle.checked);
     const scopeNote = document.getElementById('etScopeNote');
+    const mappingDetails = document.getElementById('etMappingDetails');
 
     const term = (document.getElementById('etSearch').value || filterText).toLowerCase();
     const allowedNames = showAll ? [] : getAllowedEndTreatmentNamesForBarrier(selectedBarrier);
+    const mappedSpec = getMappedEndTreatmentSpecForBarrier(selectedBarrier);
 
     if (scopeNote) {
       if (showAll) {
@@ -8844,6 +8864,27 @@ function renderEndTreatments(filterText = '') {
         scopeNote.innerText = 'No specific mapping found for this barrier. Use "Show all" to see available end treatments.';
       } else {
         scopeNote.innerText = 'Select a barrier to see mapped end treatments, or use Show all.';
+      }
+    }
+
+    if (mappingDetails) {
+      if (selectedBarrier && mappedSpec.code && mappedSpec.labels.length > 0) {
+        const listItems = mappedSpec.labels
+          .map(item => String(item || '').trim())
+          .filter(item => item.length > 0)
+          .map(item => `<li>${escapeHTML(item)}</li>`)
+          .join('');
+        mappingDetails.style.display = 'block';
+        mappingDetails.innerHTML = `
+          <div style="font-weight:700; color:#0f172a; margin-bottom:6px;">Mapped rule list (${escapeHTML(mappedSpec.code)})</div>
+          <ol style="margin:0; padding-left:18px;">${listItems}</ol>
+        `;
+      } else if (selectedBarrier) {
+        mappingDetails.style.display = 'block';
+        mappingDetails.innerHTML = '<div style="font-weight:700; color:#0f172a; margin-bottom:6px;">Mapped rule list</div><div>No mapping found for this selected barrier code.</div>';
+      } else {
+        mappingDetails.style.display = 'none';
+        mappingDetails.innerHTML = '';
       }
     }
 
