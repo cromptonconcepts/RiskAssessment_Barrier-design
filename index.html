@@ -9713,6 +9713,61 @@ async function handlePDFUpload(event) {
     }
   }
 
+  function parseRiskScoreValue(value, fallback = '3') {
+    if (value === null || value === undefined) return fallback;
+    const text = String(value).trim();
+    if (/^[1-5]$/.test(text)) return text;
+
+    const bracket = text.match(/\(([1-5])\)/);
+    if (bracket) return bracket[1];
+
+    const normalized = text.toLowerCase();
+    if (normalized.includes('rare') || normalized.includes('insignificant')) return '1';
+    if (normalized.includes('unlikely') || normalized.includes('minor')) return '2';
+    if (normalized.includes('possible') || normalized.includes('moderate')) return '3';
+    if (normalized.includes('likely') || normalized.includes('major')) return '4';
+    if (normalized.includes('almost certain') || normalized.includes('catastrophic')) return '5';
+    return fallback;
+  }
+
+  function normalizeImportedControls(risk) {
+    const allowedTypes = ['Elimination', 'Substitution', 'Engineering', 'Administrative', 'PPE'];
+
+    if (Array.isArray(risk.controls) && risk.controls.length > 0) {
+      return risk.controls
+        .filter(c => c && (c.type || c.category) && c.description)
+        .map(c => {
+          const rawType = c.type || c.category;
+          const type = allowedTypes.includes(rawType) ? rawType : 'Administrative';
+          return { type, description: String(c.description || '').trim() };
+        })
+        .filter(c => c.description);
+    }
+
+    if (risk.controlCategories && typeof risk.controlCategories === 'object') {
+      const out = [];
+      allowedTypes.forEach(type => {
+        const items = risk.controlCategories[type];
+        if (Array.isArray(items)) {
+          items.forEach(text => {
+            const desc = String(text || '').trim();
+            if (desc) out.push({ type, description: desc });
+          });
+        }
+      });
+      if (out.length > 0) return out;
+    }
+
+    if (Array.isArray(risk.mitigations) && risk.mitigations.length > 0) {
+      return risk.mitigations
+        .map(text => String(text || '').trim())
+        .filter(Boolean)
+        .map(description => ({ type: 'Administrative', description }));
+    }
+
+    return [];
+  }
+
   /**
    * Import risk selections pushed from riskpool.html via localStorage
    */
@@ -9744,16 +9799,16 @@ async function handlePDFUpload(event) {
     clearRiskTable();
 
     payload.risks.forEach(risk => {
-      const controls = Array.isArray(risk.controls) ? risk.controls : [];
+      const controls = normalizeImportedControls(risk);
       addRiskRowWithData(
         risk.hazard || risk.name || '',
         risk.impact || risk.mechanism || '',
-        risk.initLikelihood || '3',
-        risk.initConsequence || '3',
+        parseRiskScoreValue(risk.initLikelihood || risk.initialLikelihood, '3'),
+        parseRiskScoreValue(risk.initConsequence || risk.initialConsequence, '3'),
         controls,
-        risk.resLikelihood || '2',
-        risk.resConsequence || '2',
-        risk.owner || 'Project Engineer'
+        parseRiskScoreValue(risk.resLikelihood || risk.residualLikelihood, '2'),
+        parseRiskScoreValue(risk.resConsequence || risk.residualConsequence, '2'),
+        risk.owner || risk.riskOwner || 'Project Engineer'
       );
     });
 

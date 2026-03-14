@@ -148,6 +148,7 @@
     <script>
         // --- DEEP ANALYSIS DATA SEEDING WITH FULL RISK REGISTER FIELDS ---
         const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
+        const CONTROL_TYPES = ['Elimination', 'Substitution', 'Engineering', 'Administrative', 'PPE'];
         const riskPool = [];
 
         const spaNames = [
@@ -382,10 +383,75 @@
             return base;
         }
 
+        function classifyMitigationType(mitigationText, catID, index) {
+            const text = String(mitigationText || '').toLowerCase();
+            if (/\bppe\b|helmet|hi-vis|gloves|respirator|eye protection|boots/.test(text)) return 'PPE';
+            if (/substitut|replace|alternative|alternate/.test(text)) return 'Substitution';
+            if (/eliminat|remove|prohibit|ban|avoid|exclude/.test(text)) return 'Elimination';
+            if (/install|barrier|redesign|geometry|widen|upgrade|anchor|terminal|device|physical|engineering/.test(text)) return 'Engineering';
+            if (/plan|brief|training|monitor|inspect|audit|schedule|procedure|permit|supervis|controller|enforce/.test(text)) return 'Administrative';
+
+            if (catID === 'BDR' || catID === 'ETT' || catID === 'SPA') {
+                return index === 0 ? 'Engineering' : 'Administrative';
+            }
+            return 'Administrative';
+        }
+
+        function ensureTypedControls(record) {
+            if (Array.isArray(record.controls) && record.controls.length > 0) {
+                return record.controls
+                    .filter(c => c && c.type && c.description)
+                    .map(c => ({
+                        type: CONTROL_TYPES.includes(c.type) ? c.type : 'Administrative',
+                        description: String(c.description || '').trim()
+                    }))
+                    .filter(c => c.description.length > 0);
+            }
+
+            const mitigations = Array.isArray(record.mitigations) ? record.mitigations : [];
+            return mitigations.map((m, index) => ({
+                type: classifyMitigationType(m, record.catID, index),
+                description: m
+            }));
+        }
+
+        function toRiskScore(value, fallback = '3') {
+            if (value === null || value === undefined) return fallback;
+            const text = String(value).trim();
+            if (/^[1-5]$/.test(text)) return text;
+            const bracket = text.match(/\(([1-5])\)/);
+            if (bracket) return bracket[1];
+
+            const lowered = text.toLowerCase();
+            if (lowered.includes('rare') || lowered.includes('insignificant')) return '1';
+            if (lowered.includes('unlikely') || lowered.includes('minor')) return '2';
+            if (lowered.includes('possible') || lowered.includes('moderate')) return '3';
+            if (lowered.includes('likely') || lowered.includes('major')) return '4';
+            if (lowered.includes('almost certain') || lowered.includes('catastrophic')) return '5';
+            return fallback;
+        }
+
+        function buildControlCategories(controls) {
+            const grouped = {
+                Elimination: [],
+                Substitution: [],
+                Engineering: [],
+                Administrative: [],
+                PPE: []
+            };
+
+            controls.forEach(c => {
+                const type = CONTROL_TYPES.includes(c.type) ? c.type : 'Administrative';
+                if (c.description) grouped[type].push(c.description);
+            });
+
+            return grouped;
+        }
+
         function createDetailedRisk(cat, hazard, index) {
             const id = `${cat.pre}-${String(index + 1).padStart(3, '0')}`;
             const defaults = getCategoryDefaults(cat.id, cat.name);
-            return {
+            const risk = {
                 id,
                 catID: cat.id,
                 category: cat.name,
@@ -403,6 +469,9 @@
                 action: `Complete design and field verification for \"${hazard}\" and close actions in the project risk register.`,
                 reference: defaults.reference
             };
+            risk.controls = ensureTypedControls(risk);
+            risk.controlCategories = buildControlCategories(risk.controls);
+            return risk;
         }
 
         function populatePool() {
@@ -417,7 +486,12 @@
             categories.forEach(cat => {
                 cat.list.forEach((hazard, index) => {
                     const generated = createDetailedRisk(cat, hazard, index);
-                    riskPool.push(detailedOverridesById[generated.id] || generated);
+                    const merged = detailedOverridesById[generated.id]
+                        ? { ...generated, ...detailedOverridesById[generated.id] }
+                        : generated;
+                    merged.controls = ensureTypedControls(merged);
+                    merged.controlCategories = buildControlCategories(merged.controls);
+                    riskPool.push(merged);
                 });
             });
 
@@ -531,13 +605,20 @@
                     hazard: s.hazard,
                     mechanism: s.mechanism,
                     impact: s.impact,
+                    initLikelihood: toRiskScore(s.initialLikelihood, '3'),
+                    initConsequence: toRiskScore(s.initialConsequence, '3'),
                     initialLikelihood: s.initialLikelihood,
                     initialConsequence: s.initialConsequence,
                     initialRisk: s.initialRisk,
+                    controls: ensureTypedControls(s),
+                    controlCategories: buildControlCategories(ensureTypedControls(s)),
                     mitigations: Array.isArray(s.mitigations) ? s.mitigations : [],
+                    resLikelihood: toRiskScore(s.residualLikelihood, '2'),
+                    resConsequence: toRiskScore(s.residualConsequence, '2'),
                     residualLikelihood: s.residualLikelihood,
                     residualConsequence: s.residualConsequence,
                     residualRisk: s.residualRisk,
+                    owner: s.riskOwner,
                     riskOwner: s.riskOwner,
                     action: s.action,
                     reference: s.reference
@@ -552,12 +633,45 @@
             
             let badgeColor = r.catID === 'SPA' ? 'bg-purple-500' : r.catID === 'BDR' ? 'bg-orange-500' : r.catID === 'TMG' ? 'bg-emerald-500' : 'bg-blue-500';
 
-            const mitigationsHTML = r.mitigations.map((m, index) => 
-                `<li class="flex gap-3 text-slate-700 text-sm leading-relaxed pb-3 border-b border-indigo-100 last:border-0 last:pb-0">
-                    <span class="font-black text-indigo-400 select-none">${index + 1}.</span>
-                    <span>${m}</span>
-                </li>`
-            ).join('');
+            const typedControls = ensureTypedControls(r);
+            const groupedControls = buildControlCategories(typedControls);
+            const typeColors = {
+                Elimination: { box: 'bg-rose-50 border-rose-100', chip: 'bg-rose-100 text-rose-700', num: 'text-rose-500' },
+                Substitution: { box: 'bg-amber-50 border-amber-100', chip: 'bg-amber-100 text-amber-700', num: 'text-amber-500' },
+                Engineering: { box: 'bg-blue-50 border-blue-100', chip: 'bg-blue-100 text-blue-700', num: 'text-blue-500' },
+                Administrative: { box: 'bg-indigo-50 border-indigo-100', chip: 'bg-indigo-100 text-indigo-700', num: 'text-indigo-500' },
+                PPE: { box: 'bg-emerald-50 border-emerald-100', chip: 'bg-emerald-100 text-emerald-700', num: 'text-emerald-500' }
+            };
+
+            const categorizedControlsHTML = CONTROL_TYPES
+                .map(type => {
+                    const items = groupedControls[type] || [];
+                    if (!items.length) return '';
+                    const palette = typeColors[type] || typeColors.Administrative;
+                    const itemsHtml = items.map((item, index) => `
+                        <li class="flex gap-3 text-slate-700 text-sm leading-relaxed pb-2 border-b border-white/70 last:border-0 last:pb-0">
+                            <span class="font-black ${palette.num} select-none">${index + 1}.</span>
+                            <span>${item}</span>
+                        </li>
+                    `).join('');
+
+                    return `
+                        <div class="p-4 rounded-2xl border ${palette.box}">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded ${palette.chip}">${type}</span>
+                                <span class="text-[10px] font-bold text-slate-500">${items.length} control${items.length === 1 ? '' : 's'}</span>
+                            </div>
+                            <ul class="space-y-2">${itemsHtml}</ul>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            const controlsSectionHTML = categorizedControlsHTML || `
+                <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50 text-sm text-slate-600">
+                    No categorized controls available for this risk.
+                </div>
+            `;
 
             const content = document.getElementById('details-content');
             content.innerHTML = `
@@ -599,9 +713,9 @@
                 
                 <div class="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 mb-6">
                     <h4 class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-4"><i class="fas fa-shield-alt mr-2"></i>Comprehensive Risk Controls (Mitigations)</h4>
-                    <ul class="space-y-3">
-                        ${mitigationsHTML}
-                    </ul>
+                    <div class="space-y-3">
+                        ${controlsSectionHTML}
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
