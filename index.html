@@ -1082,6 +1082,7 @@
     <script>
       const AUTH_SESSION_KEY = 'crompton_risk_auth';
       const AUTH_ROLE_KEY = 'crompton_risk_auth_role';
+      const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
       let currentUserRole = '';
 
       const STAGE_IDS = ['stage1', 'stage2', 'stage3', 'stage4', 'stage5', 'stage7'];
@@ -1501,8 +1502,8 @@
             <div style="margin-bottom:20px; padding:16px; background:var(--primary-light); border-radius:8px; border:1px solid var(--primary);">
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                     <div style="flex:1; min-width:250px;">
-                        <h4 style="margin:0 0 4px 0; color:var(--primary); font-size:1rem;">📄 Import Risk Assessment from PDF</h4>
-                        <p style="margin:0 0 8px 0; font-size:0.85rem; color:var(--text-sub);">Upload your risk assessment PDF or a previously generated report HTML to automatically populate the table below.</p>
+                        <h4 style="margin:0 0 4px 0; color:var(--primary); font-size:1rem;">📄 Import/Export Risks</h4>
+                        <p style="margin:0 0 8px 0; font-size:0.85rem; color:var(--text-sub);">Upload risk assessment JSON file or generate from the riskpool.</p>
                         <details style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
                             <summary style="cursor:pointer; color:var(--primary); font-weight:600;">ℹ️ Formatting Requirements</summary>
                             <ul style="margin:8px 0 0 20px; padding:0; line-height:1.6;">
@@ -1527,6 +1528,9 @@
                           </button>
                           <button class="btn btn-outline" onclick="document.getElementById('riskJsonUploadInput').click()" style="white-space:nowrap;">
                             📥 Load Risk JSON
+                          </button>
+                          <button id="openRiskPoolBtn" class="btn btn-outline" type="button" onclick="openRiskPoolLink()" style="white-space:nowrap;">
+                            🔗 Select Risks From Risk Pool
                           </button>
                           <button class="btn btn-outline" onclick="exportRiskRegisterJson()" style="white-space:nowrap;">
                             💾 Export Risk JSON
@@ -1768,6 +1772,30 @@
                 Continue to Barrier Selection →
             </button>
         </div>
+    </div>
+
+    <div id="riskPoolModal" class="report-modal no-print" aria-hidden="true">
+      <div class="report-modal-panel" style="width:min(960px, 96vw);">
+        <div class="report-modal-toolbar">
+          <div>
+            <div class="report-modal-title">Risk Pool</div>
+            <div id="riskPoolSubtitle" style="font-size:0.82rem; color:#64748b; margin-top:2px;">Select risks to load into the register.</div>
+          </div>
+          <div class="report-modal-actions">
+            <button type="button" class="btn btn-outline" onclick="selectAllRiskPoolRisks()">Select All</button>
+            <button type="button" class="btn btn-outline" onclick="clearAllRiskPoolRisks()">Clear All</button>
+            <button type="button" class="btn" onclick="applySelectedRiskPoolRisks()">Load Selected Risks</button>
+            <button type="button" class="btn btn-outline" onclick="closeRiskPoolModal()">Close</button>
+          </div>
+        </div>
+        <div class="report-edit-surface" style="padding:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
+            <div style="font-size:0.9rem; color:#334155; font-weight:700;">Available Risks</div>
+            <div id="riskPoolCount" style="font-size:0.82rem; color:#0f172a; background:#eff6ff; border:1px solid #bfdbfe; padding:6px 10px; border-radius:999px;">0 selected</div>
+          </div>
+          <div id="riskPoolList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:10px;"></div>
+        </div>
+      </div>
     </div>
 
     <!-- STAGE 2: Barrier Selection -->
@@ -5421,6 +5449,8 @@ const riskNotesTemplates = {
 };
 
 let riskRowCounter = 0;
+  let selectedRiskPoolDesignType = '';
+  let selectedRiskPoolIndexes = [];
 
 // Initialize risk assessment table
 function initRiskAssessment() {
@@ -5443,7 +5473,7 @@ function initRiskAssessment() {
     if (reviewedByBarrier) {
         document.getElementById('reviewedBy').value = reviewedByBarrier;
     }
-    
+
     // Don't populate risks on initial load - wait for design type selection
     updateRiskSummary();
 }
@@ -5454,7 +5484,6 @@ function handleDesignTypeChange() {
     const otherContainer = document.getElementById('otherDesignTypeContainer');
     const infoDiv = document.getElementById('designTypeInfo');
     const infoParagraph = infoDiv.querySelector('p');
-    
     // Show/hide 'other' specification field
     if (designType === 'other') {
         otherContainer.style.display = 'block';
@@ -5463,7 +5492,7 @@ function handleDesignTypeChange() {
         document.getElementById('otherDesignType').value = '';
     }
     
-    // Show info message and populate risks
+      // Show info message and prepare risk pool
     if (designType) {
         infoDiv.style.display = 'block';
         
@@ -5472,31 +5501,26 @@ function handleDesignTypeChange() {
         
         switch(designType) {
             case 'swept-paths':
-                infoText = '✓ Pre-populating common risks for Swept Paths Design (footpath encroachment, traffic islands, wide turns, overhead clearance, sight distances). You can edit or add more risks as needed.';
+            infoText = '✓ Swept Paths Risk Pool ready.';
                 riskCount = riskTemplates['swept-paths'].length;
                 break;
             case 'barrier':
-                infoText = '✓ Pre-populating common risks for Barrier Design (deflection containment, installation errors, impacts, end terminals, working width, displacement). You can edit or add more risks as needed.';
+            infoText = '✓ Barrier Design Risk Pool ready.';
                 riskCount = riskTemplates['barrier'].length;
                 break;
             case 'other':
-                infoText = '✓ Pre-populating general traffic management risks. Please specify your design type above and customize the risks as needed.';
+            infoText = '✓ General Traffic Management Risk Pool ready.';
                 riskCount = riskTemplates['other'].length;
                 break;
         }
         
-        infoParagraph.textContent = `${infoText} (${riskCount} risks loaded)`;
-        
-        // Clear existing risks and populate based on selection
-        const tableBody = document.getElementById('riskTableBody');
-        tableBody.innerHTML = '';
-        riskRowCounter = 0;
-        
-        const selectedTemplate = riskTemplates[designType] || [];
-        selectedTemplate.forEach((factor) => {
-            addRiskRowWithData(factor.name, factor.impact, factor.initialLikelihood, factor.initialConsequence, 
-                              factor.controls, factor.residualLikelihood, factor.residualConsequence, factor.owner);
-        });
+        const loadedCount = document.querySelectorAll('#riskTableBody tr').length;
+        infoParagraph.textContent = `${infoText} ${riskCount} risks available. Use "Select Risks From Risk Pool" to choose and load them into the register.${loadedCount > 0 ? ` (${loadedCount} currently loaded)` : ''}`;
+
+        if (selectedRiskPoolDesignType !== designType) {
+          selectedRiskPoolDesignType = designType;
+          selectedRiskPoolIndexes = [];
+        }
         
         // Populate common notes for the selected design type
         const notesTemplate = riskNotesTemplates[designType] || [];
@@ -5505,12 +5529,166 @@ function handleDesignTypeChange() {
         notesTemplate.forEach(noteText => {
             addRiskNote(noteText);
         });
-        
-        updateRiskSummary();
     } else {
         infoDiv.style.display = 'none';
+        closeRiskPoolModal();
+        selectedRiskPoolDesignType = '';
+        selectedRiskPoolIndexes = [];
     }
 }
+
+    function getDesignTypeLabel(designType) {
+      if (designType === 'swept-paths') return 'Swept Paths Design';
+      if (designType === 'barrier') return 'Barrier Design';
+      if (designType === 'other') return 'Other Design';
+      return 'Risk Pool';
+    }
+
+    function openRiskPoolModal() {
+      const designType = document.getElementById('designType')?.value;
+      if (!designType) {
+        alert('Please select a design type first.');
+        return;
+      }
+
+      const pool = riskTemplates[designType] || [];
+      if (selectedRiskPoolDesignType !== designType || selectedRiskPoolIndexes.length === 0) {
+        selectedRiskPoolDesignType = designType;
+        selectedRiskPoolIndexes = pool.map((_, index) => index);
+      }
+
+      const modal = document.getElementById('riskPoolModal');
+      if (!modal) return;
+
+      renderRiskPoolList();
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeRiskPoolModal() {
+      const modal = document.getElementById('riskPoolModal');
+      if (!modal) return;
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function renderRiskPoolList() {
+      const designType = document.getElementById('designType')?.value;
+      const list = document.getElementById('riskPoolList');
+      const subtitle = document.getElementById('riskPoolSubtitle');
+      if (!designType || !list) return;
+
+      const pool = riskTemplates[designType] || [];
+      if (subtitle) {
+        subtitle.textContent = `${getDesignTypeLabel(designType)}: select one or more risks to load.`;
+      }
+
+      if (pool.length === 0) {
+        list.innerHTML = '<div style="padding:12px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; color:#475569;">No risks found for this design type.</div>';
+        updateRiskPoolCount();
+        return;
+      }
+
+      const selectedSet = new Set(selectedRiskPoolIndexes);
+      list.innerHTML = pool.map((risk, index) => {
+        const checked = selectedSet.has(index) ? 'checked' : '';
+        const controlsCount = Array.isArray(risk.controls) ? risk.controls.length : 0;
+        return `
+          <label style="display:flex; flex-direction:column; gap:8px; padding:12px; border:1px solid #cbd5e1; border-radius:10px; background:#ffffff; cursor:pointer;">
+            <div style="display:flex; align-items:flex-start; gap:8px;">
+              <input type="checkbox" ${checked} onchange="toggleRiskPoolRisk(${index}, this.checked)" style="margin-top:3px; width:16px; height:16px;">
+              <div style="font-weight:700; color:#0f172a; line-height:1.35;">${risk.name || 'Untitled risk'}</div>
+            </div>
+            <div style="font-size:0.82rem; color:#475569;">${risk.impact || 'No impact description provided.'}</div>
+            <div style="font-size:0.78rem; color:#64748b;">Initial ${risk.initialLikelihood || '-'}x${risk.initialConsequence || '-'} | Residual ${risk.residualLikelihood || '-'}x${risk.residualConsequence || '-'} | ${controlsCount} controls</div>
+          </label>
+        `;
+      }).join('');
+
+      updateRiskPoolCount();
+    }
+
+    function toggleRiskPoolRisk(index, isChecked) {
+      if (isChecked) {
+        if (!selectedRiskPoolIndexes.includes(index)) {
+          selectedRiskPoolIndexes.push(index);
+        }
+      } else {
+        selectedRiskPoolIndexes = selectedRiskPoolIndexes.filter(i => i !== index);
+      }
+      updateRiskPoolCount();
+    }
+
+    function updateRiskPoolCount() {
+      const designType = document.getElementById('designType')?.value;
+      const pool = riskTemplates[designType] || [];
+      const countEl = document.getElementById('riskPoolCount');
+      if (!countEl) return;
+      countEl.textContent = `${selectedRiskPoolIndexes.length} selected of ${pool.length}`;
+    }
+
+    function selectAllRiskPoolRisks() {
+      const designType = document.getElementById('designType')?.value;
+      const pool = riskTemplates[designType] || [];
+      selectedRiskPoolIndexes = pool.map((_, index) => index);
+      renderRiskPoolList();
+    }
+
+    function clearAllRiskPoolRisks() {
+      selectedRiskPoolIndexes = [];
+      renderRiskPoolList();
+    }
+
+    function applySelectedRiskPoolRisks() {
+      const designType = document.getElementById('designType')?.value;
+      if (!designType) {
+        alert('Please select a design type first.');
+        return;
+      }
+
+      if (selectedRiskPoolIndexes.length === 0) {
+        alert('Select at least one risk from the Risk Pool.');
+        return;
+      }
+
+      const tableBody = document.getElementById('riskTableBody');
+      if (tableBody && tableBody.querySelectorAll('tr').length > 0) {
+        const confirmReplace = confirm('This will replace the current risk register rows. Continue?');
+        if (!confirmReplace) return;
+      }
+
+      const pool = riskTemplates[designType] || [];
+      const uniqueIndexes = Array.from(new Set(selectedRiskPoolIndexes)).sort((a, b) => a - b);
+
+      if (tableBody) {
+        tableBody.innerHTML = '';
+      }
+      riskRowCounter = 0;
+
+      uniqueIndexes.forEach(index => {
+        const factor = pool[index];
+        if (!factor) return;
+        addRiskRowWithData(
+          factor.name,
+          factor.impact,
+          factor.initialLikelihood,
+          factor.initialConsequence,
+          factor.controls,
+          factor.residualLikelihood,
+          factor.residualConsequence,
+          factor.owner
+        );
+      });
+
+      const infoDiv = document.getElementById('designTypeInfo');
+      const infoParagraph = infoDiv ? infoDiv.querySelector('p') : null;
+      if (infoParagraph) {
+        infoParagraph.textContent = `✓ Loaded ${uniqueIndexes.length} selected risk(s) from the ${getDesignTypeLabel(designType)} Risk Pool into the register.`;
+      }
+
+      updateRiskSummary();
+      closeRiskPoolModal();
+    }
 
 // Add risk row with data (Updated for new columns)
 function addRiskRowWithData(name, impact, initLikelihood, initConsequence, controls, resLikelihood, resConsequence, owner) {
@@ -6433,6 +6611,15 @@ function init() {
 
   checkUrlParams();
   renderMatrixLegend(null);
+
+  // Check for risk pool transfers when page is opened/refocused
+  tryImportRiskPoolSelection(true);
+  window.addEventListener('focus', () => tryImportRiskPoolSelection(true));
+  window.addEventListener('storage', (event) => {
+    if (event.key === RISK_POOL_TRANSFER_KEY) {
+      tryImportRiskPoolSelection(true);
+    }
+  });
 }
 
 function deriveRequiredTL(speed) {
@@ -9467,6 +9654,81 @@ async function handlePDFUpload(event) {
     }
 
     event.target.value = '';
+  }
+
+  /**
+   * Open risk pool page in a new tab/window
+   */
+  function openRiskPoolLink() {
+    const poolUrl = 'riskpool.html';
+    window.open(poolUrl, '_blank', 'noopener');
+
+    const statusDiv = document.getElementById('pdfUploadStatus');
+    if (statusDiv) {
+      statusDiv.style.display = 'block';
+      statusDiv.innerHTML = '<p style="margin:0; color:var(--primary);"><strong>ℹ️ Risk Pool opened.</strong> Select risks there, then click "Send to Risk Register" to load them here.</p>';
+    }
+  }
+
+  /**
+   * Import risk selections pushed from riskpool.html via localStorage
+   */
+  function tryImportRiskPoolSelection(silent = true) {
+    const raw = localStorage.getItem(RISK_POOL_TRANSFER_KEY);
+    if (!raw) return false;
+
+    let payload;
+    try {
+      payload = JSON.parse(raw);
+    } catch (error) {
+      console.error('Risk pool transfer parse error:', error);
+      localStorage.removeItem(RISK_POOL_TRANSFER_KEY);
+      return false;
+    }
+
+    if (!payload || !Array.isArray(payload.risks) || payload.risks.length === 0) {
+      localStorage.removeItem(RISK_POOL_TRANSFER_KEY);
+      return false;
+    }
+
+    const tableBody = document.getElementById('riskTableBody');
+    const existingRows = tableBody ? tableBody.querySelectorAll('tr').length : 0;
+    if (existingRows > 0) {
+      const shouldReplace = confirm('Import selected risks from Risk Pool and replace current register rows?');
+      if (!shouldReplace) return false;
+    }
+
+    clearRiskTable();
+
+    payload.risks.forEach(risk => {
+      const controls = Array.isArray(risk.controls) ? risk.controls : [];
+      addRiskRowWithData(
+        risk.hazard || risk.name || '',
+        risk.impact || risk.mechanism || '',
+        risk.initLikelihood || '3',
+        risk.initConsequence || '3',
+        controls,
+        risk.resLikelihood || '2',
+        risk.resConsequence || '2',
+        risk.owner || 'Project Engineer'
+      );
+    });
+
+    updateRiskSummary();
+    localStorage.removeItem(RISK_POOL_TRANSFER_KEY);
+
+    const statusDiv = document.getElementById('pdfUploadStatus');
+    if (statusDiv) {
+      statusDiv.style.display = 'block';
+      statusDiv.innerHTML = `<p style="margin:0; color:var(--success-color);"><strong>✅ Success!</strong> Imported ${payload.risks.length} risk factor(s) from Risk Pool.</p>`;
+      setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+    }
+
+    if (!silent) {
+      alert(`Imported ${payload.risks.length} risk(s) from Risk Pool.`);
+    }
+
+    return true;
   }
 
   /**
