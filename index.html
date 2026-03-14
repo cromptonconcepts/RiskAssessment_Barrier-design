@@ -1083,6 +1083,7 @@
       const AUTH_SESSION_KEY = 'crompton_risk_auth';
       const AUTH_ROLE_KEY = 'crompton_risk_auth_role';
       const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
+      const REPORT_SERVICE_BASE_URL = 'http://127.0.0.1:8060';
       let currentUserRole = '';
 
       const STAGE_IDS = ['stage1', 'stage2', 'stage3', 'stage4', 'stage5', 'stage7'];
@@ -1768,6 +1769,12 @@
             <button class="btn btn-outline internal-only" onclick="generateRiskReport()">
                 📄 Generate Risk Assessment Report
             </button>
+          <button class="btn btn-outline internal-only" onclick="openPythonRiskReport('detailed')">
+            🐍 Detailed Python Report
+          </button>
+          <button class="btn btn-outline internal-only" onclick="openPythonRiskReport('short')">
+            🐍 Python Short Report
+          </button>
             <button class="btn navigation-allowed" onclick="proceedToBarrierSelection()">
                 Continue to Barrier Selection →
             </button>
@@ -2613,6 +2620,25 @@
     </div>
     <div class="report-edit-surface">
       <div id="editableReportContent" class="report-edit-content" contenteditable="true"></div>
+    </div>
+  </div>
+</div>
+
+<div id="pythonSetupModal" role="dialog" aria-modal="true" aria-label="Python Report Setup Instructions" class="no-print" style="display:none; position:fixed; inset:0; background:rgba(15, 23, 42, 0.68); z-index:100001; padding:18px; overflow:auto;">
+  <div style="max-width:900px; margin:0 auto; background:#fff; border-radius:12px; border:1px solid #dbe2ea; box-shadow:0 16px 40px rgba(0,0,0,0.24); padding:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
+      <h2 style="margin:0; color:#0f2f32;">Python Report Setup Required</h2>
+      <button id="closePythonSetupBtn" type="button" class="btn btn-outline" style="background:#b91c1c; color:#fff; border-color:#b91c1c;" onclick="closePythonSetupModal()">Close</button>
+    </div>
+    <p id="pythonSetupReason" style="margin-top:0; color:#475569;">Python report service is not reachable.</p>
+    <div id="pythonSetupGuide" style="margin:0 0 10px 0; padding:10px 12px; border:1px solid #dbe2ea; border-radius:8px; background:#f8fafc; color:#334155;"></div>
+    <p style="margin-bottom:8px; color:#334155;"><strong>Step 3: Run these commands in Terminal/Command Prompt:</strong></p>
+    <pre id="pythonSetupCommands" style="white-space:pre-wrap; word-break:break-word; margin:0; padding:12px; border:1px solid #dbe2ea; border-radius:8px; background:#f8fafc; color:#0f172a; font-family:Consolas, 'Courier New', monospace; font-size:13px;"></pre>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:12px; flex-wrap:wrap;">
+      <a id="downloadPythonBtn" href="https://apps.microsoft.com/detail/9NCVDN91XZQP" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="background:#1d4ed8; color:#fff; border-color:#1d4ed8; text-decoration:none;">Get Python from Microsoft Store</a>
+      <a id="downloadReportServiceBtn" href="https://raw.githubusercontent.com/crsanju/Cromton-Traffic-Impact-Asssessment/main/report_service.py" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="background:#0f766e; color:#fff; border-color:#0f766e; text-decoration:none;">Download Report-Service</a>
+      <button id="copyPythonSetupBtn" type="button" class="btn btn-outline" style="background:#166534; color:#fff; border-color:#166534;" onclick="copyPythonSetupCommands()">Copy Commands</button>
+      <button id="pythonSetupOkBtn" type="button" class="btn" onclick="closePythonSetupModal()">OK</button>
     </div>
   </div>
 </div>
@@ -6620,6 +6646,23 @@ function init() {
       tryImportRiskPoolSelection(true);
     }
   });
+
+  setupPythonSetupModal();
+}
+
+function setupPythonSetupModal() {
+  const modal = document.getElementById('pythonSetupModal');
+  if (!modal) return;
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closePythonSetupModal();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.style.display !== 'none') {
+      closePythonSetupModal();
+    }
+  });
 }
 
 function deriveRequiredTL(speed) {
@@ -9870,6 +9913,208 @@ async function handlePDFUpload(event) {
       };
     }).filter(r => r.hazard || r.impact || r.initLikelihood || r.initConsequence || r.owner);
   }
+
+  function summarizeRiskLevels(risks) {
+    const counts = { Low: 0, Medium: 0, High: 0, Critical: 0 };
+    (risks || []).forEach((risk) => {
+      const initSeverity = calculateRisk(risk.initLikelihood, risk.initConsequence);
+      const resSeverity = calculateRisk(risk.resLikelihood, risk.resConsequence);
+      if (initSeverity && counts[initSeverity] !== undefined) counts[initSeverity] += 1;
+      if (resSeverity && counts[resSeverity] !== undefined) counts[resSeverity] += 1;
+    });
+    return counts;
+  }
+
+  function getRiskNotesTextForPython() {
+    if (typeof getRiskNotesForReport === 'function') {
+      const notes = getRiskNotesForReport();
+      if (Array.isArray(notes) && notes.length) {
+        return notes.map(n => `- ${n.text || ''}`).join('\n');
+      }
+    }
+    return '';
+  }
+
+  function buildRiskPythonReportPayload(mode = 'detailed') {
+    const risks = buildRiskRegisterSnapshot();
+    const projectName = document.getElementById('riskProjectName')?.value || 'Untitled Project';
+    const location = document.getElementById('riskLocation')?.value || 'Not specified';
+    const reportDate = document.getElementById('riskDate')?.value || new Date().toISOString().slice(0, 10);
+    const docRef = document.getElementById('riskDocRef')?.value || '';
+    const refDrawings = document.getElementById('riskRefDrawings')?.value || '';
+    const designType = document.getElementById('designType')?.value || '';
+    const otherDesign = document.getElementById('otherDesignType')?.value || '';
+    const summaryText = (document.getElementById('riskSummary')?.innerText || '').trim();
+    const notesText = getRiskNotesTextForPython();
+    const signoff = {
+      prepared_by: document.getElementById('preparedBy')?.value || '',
+      prepared_date: document.getElementById('preparedDate')?.value || '',
+      reviewed_by: document.getElementById('reviewedBy')?.value || '',
+      reviewed_date: document.getElementById('reviewedDate')?.value || '',
+      approved_by: document.getElementById('approvedBy')?.value || '',
+      approved_date: document.getElementById('approvedDate')?.value || ''
+    };
+
+    return {
+      project: {
+        name: projectName,
+        location,
+        report_date: reportDate,
+        prepared_by: signoff.prepared_by || 'Risk Assessment App',
+        doc_ref: docRef,
+        reference_drawings: refDrawings
+      },
+      inputs: {
+        design_type: designType,
+        other_design_type: otherDesign,
+        total_risks: risks.length
+      },
+      results: {
+        summary_text: summaryText,
+        risk_level_totals: summarizeRiskLevels(risks)
+      },
+      notes: notesText,
+      signoff,
+      report_variant: mode === 'short' ? 'short' : 'detailed',
+      risks,
+      raw_js_results: {
+        project_name: projectName,
+        design_type: designType,
+        risks_count: risks.length
+      }
+    };
+  }
+
+  function closePythonSetupModal() {
+    const modal = document.getElementById('pythonSetupModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  async function copyPythonSetupCommands() {
+    const commandsEl = document.getElementById('pythonSetupCommands');
+    const text = String(commandsEl?.textContent || '').trim();
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('Python setup commands copied.');
+    } catch (_) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      alert('Python setup commands copied.');
+    }
+  }
+
+  function showPythonRiskReportSetupInstructions(reasonText = '') {
+    const reason = reasonText || 'Python report service is not reachable.';
+    const serviceFolderHint = 'C:\\TIA-Python-Report-Service';
+    const reportServiceDownloadUrl = 'https://raw.githubusercontent.com/crsanju/Cromton-Traffic-Impact-Asssessment/main/report_service.py';
+
+    const guideSteps = [
+      'Keep this app page open.',
+      'Click Copy Commands below.',
+      'Install Python if required.',
+      `Create and move to folder ${serviceFolderHint}.`,
+      'Download report_service.py if missing, then install dependencies.',
+      'Run uvicorn and keep terminal open.',
+      'Return and click Python Risk Report again.'
+    ];
+
+    const guide = [
+      '<ol style="margin:0; padding-left:20px; line-height:1.55;">',
+      ...guideSteps.map((step) => `<li style="margin:0 0 4px 0;">${step}</li>`),
+      '</ol>'
+    ].join('');
+
+    const commands = [
+      '# If Python is not installed, install from Microsoft Store: https://apps.microsoft.com/detail/9NCVDN91XZQP',
+      `mkdir "${serviceFolderHint}"`,
+      `cd /d "${serviceFolderHint}"`,
+      'dir report_service*',
+      '# If report_service.py is missing, run this command to download it automatically:',
+      `powershell -Command "Invoke-WebRequest -Uri '${reportServiceDownloadUrl}' -OutFile 'report_service.py'"`,
+      'python -m venv .venv',
+      '.\\.venv\\Scripts\\activate',
+      'python -m pip install --upgrade pip',
+      'python -m pip install fastapi uvicorn python-docx jinja2 pydantic',
+      'python -m uvicorn --app-dir . report_service:app --host 127.0.0.1 --port 8060'
+    ].join('\n');
+
+    const modal = document.getElementById('pythonSetupModal');
+    const reasonEl = document.getElementById('pythonSetupReason');
+    const guideEl = document.getElementById('pythonSetupGuide');
+    const commandsEl = document.getElementById('pythonSetupCommands');
+    if (reasonEl) reasonEl.textContent = reason;
+    if (guideEl) guideEl.innerHTML = guide;
+    if (commandsEl) commandsEl.textContent = commands;
+    if (modal) modal.style.display = 'block';
+  }
+
+  async function isPythonRiskReportServiceAvailable(timeoutMs = 1800) {
+    try {
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+      const response = await fetch(`${REPORT_SERVICE_BASE_URL}/health`, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: controller ? controller.signal : undefined
+      });
+      if (timer) clearTimeout(timer);
+      if (!response.ok) return false;
+      const health = await response.json();
+      return String(health && health.status || '').toLowerCase() === 'ok';
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function openPythonRiskReport(mode = 'detailed') {
+    const normalizedMode = String(mode || 'detailed').toLowerCase() === 'short' ? 'short' : 'detailed';
+    const payload = buildRiskPythonReportPayload(normalizedMode);
+    const baseTitle = (payload && payload.project && payload.project.name) || 'Risk Assessment Report';
+    const title = normalizedMode === 'short'
+      ? `${baseTitle} - Short Report`
+      : `${baseTitle} - Detailed Report`;
+
+    const serviceAvailable = await isPythonRiskReportServiceAvailable();
+    if (!serviceAvailable) {
+      showPythonRiskReportSetupInstructions('Python report service is offline.');
+      return;
+    }
+
+    let response;
+    try {
+      response = await fetch(`${REPORT_SERVICE_BASE_URL}/report/draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, payload })
+      });
+    } catch (_) {
+      showPythonRiskReportSetupInstructions('Python report service request failed.');
+      return;
+    }
+
+    if (!response.ok) {
+      showPythonRiskReportSetupInstructions(`Python report service error (${response.status}).`);
+      return;
+    }
+
+    const data = await response.json();
+    const editorPath = String((data && data.editor_url) || '');
+    if (!editorPath) {
+      showPythonRiskReportSetupInstructions('Python editor URL was not returned by the service.');
+      return;
+    }
+
+    const editorUrl = new URL(editorPath, REPORT_SERVICE_BASE_URL).toString();
+    window.open(editorUrl, '_blank', 'noopener');
+  }
+
+  window.openPythonRiskReport = openPythonRiskReport;
 
 /**
  * Extract PDF text preserving row/column spacing as much as possible

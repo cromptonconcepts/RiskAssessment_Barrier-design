@@ -11,11 +11,11 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .risk-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-left-width: 6px; }
         .risk-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .category-SPA { border-left-color: #8b5cf6; } /* Swept Path - Purple */
-        .category-BDR { border-left-color: #f97316; } /* Barrier - Orange */
-        .category-TMG { border-left-color: #10b981; } /* Traffic Guidance - Green */
-        .category-ETT { border-left-color: #0ea5e9; } /* TTM Eng - Blue */
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .category-SPA { border-left-color: #8b5cf6; } 
+        .category-BDR { border-left-color: #f97316; } 
+        .category-TMG { border-left-color: #10b981; } 
+        .category-ETT { border-left-color: #0ea5e9; } 
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .badge-count { animation: pulse 2s infinite; }
@@ -24,29 +24,28 @@
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-900">
 
-    <!-- Sticky Navigation -->
     <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200">
         <div class="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="bg-slate-900 text-white p-3 rounded-2xl shadow-lg">
-                    <i class="fas fa-microchip text-xl"></i>
+                    <i class="fas fa-layer-group text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900">Risk Pool Database</h1>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Global Engineering Standard Registry</p>
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900">Comprehensive Risk Pool</h1>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Deep Analysis Database</p>
                 </div>
             </div>
 
             <div class="flex-1 max-w-2xl mx-12 hidden lg:block">
                 <div class="relative">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="master-search" placeholder="Search 250+ risks by keyword, hazard, or reference..." class="w-full bg-slate-100 border-none rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-slate-900 text-sm transition-all">
+                    <input type="text" id="master-search" placeholder="Search detailed hazards, mechanisms, or mitigations..." class="w-full bg-slate-100 border-none rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-slate-900 text-sm transition-all">
                 </div>
             </div>
 
             <div class="flex items-center gap-4">
                 <button id="cart-toggle" class="relative bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3">
-                    <i class="fas fa-clipboard-list"></i>
+                    <i class="fas fa-clipboard-check"></i>
                     <span>Selection Pool</span>
                     <span id="cart-count" class="bg-blue-500 text-white text-[10px] w-6 h-6 flex items-center justify-center rounded-full badge-count">0</span>
                 </button>
@@ -56,71 +55,51 @@
 
     <main class="max-w-[1600px] mx-auto px-6 py-8 flex flex-col lg:flex-row gap-8">
         
-        <!-- Sidebar Filters -->
         <aside class="w-full lg:w-72 flex flex-col gap-6">
             <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Risk Categories</h3>
                 <nav class="flex flex-col gap-2" id="category-nav">
-                    <button data-cat="all" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-900 text-white font-bold text-sm transition">
+                    <button data-cat="all" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-900 text-white font-bold text-sm transition shadow-lg">
                         <span>All Risks</span>
-                        <span class="text-[10px] opacity-60" id="count-all">250+</span>
+                        <span class="text-[10px] opacity-60" id="count-all">0</span>
                     </button>
                     <button data-cat="SPA" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-truck-moving text-purple-500"></i><span>Swept Path</span></div>
-                        <span class="text-[10px] opacity-60">60+</span>
                     </button>
                     <button data-cat="BDR" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-road-barrier text-orange-500"></i><span>Barrier Design</span></div>
-                        <span class="text-[10px] opacity-60">65+</span>
                     </button>
                     <button data-cat="TMG" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-traffic-light text-emerald-500"></i><span>Traffic Guidance</span></div>
-                        <span class="text-[10px] opacity-60">60+</span>
                     </button>
                     <button data-cat="ETT" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-compass text-blue-500"></i><span>TTM Engineering</span></div>
-                        <span class="text-[10px] opacity-60">65+</span>
                     </button>
                 </nav>
             </div>
-
-            <div class="bg-indigo-600 p-6 rounded-3xl text-white shadow-xl shadow-indigo-200">
-                <h4 class="font-black text-lg mb-2">Build Your Report</h4>
-                <p class="text-indigo-100 text-xs leading-relaxed mb-6">Select risks from the database and use the "Selection Pool" to export them as pre-formatted text for your Risk Assessment Tool.</p>
-                <div class="flex items-center gap-3 text-xs font-bold bg-indigo-500/40 p-3 rounded-xl">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Default Likelihood: Possible</span>
-                </div>
-            </div>
         </aside>
 
-        <!-- Main Risk Grid -->
         <section class="flex-1">
             <div class="flex items-center justify-between mb-8">
                 <div>
                     <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight" id="active-cat-title">Master Engineering Pool</h2>
                     <p class="text-slate-500 text-sm font-medium mt-1" id="results-meta">Displaying all indexed hazards</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button id="multi-add" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition">Add All Visible</button>
-                </div>
+                <button id="multi-add" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition">Add All Visible to Pool</button>
             </div>
 
-            <div id="risk-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                <!-- Cards injected by JS -->
-            </div>
+            <div id="risk-grid" class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                </div>
 
             <div id="empty-state" class="hidden flex flex-col items-center justify-center py-32 text-center">
                 <div class="bg-slate-200 w-24 h-24 rounded-full flex items-center justify-center mb-6">
                     <i class="fas fa-search-minus text-3xl text-slate-400"></i>
                 </div>
                 <h3 class="text-xl font-bold text-slate-800">No matching hazards found</h3>
-                <p class="text-slate-500 max-w-xs">Try searching for broader terms like "Barrier", "Turn", or "Visibility".</p>
             </div>
         </section>
     </main>
 
-    <!-- Side Drawer for Selection Pool -->
     <div id="drawer-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] opacity-0 pointer-events-none transition-opacity duration-300"></div>
     <div id="drawer" class="fixed top-0 right-0 h-full w-full max-w-xl bg-white z-[70] translate-x-full transition-transform duration-500 shadow-2xl flex flex-col">
         <div class="p-8 border-b border-slate-100 flex justify-between items-center">
@@ -133,162 +112,123 @@
             </button>
         </div>
 
-        <div id="cart-items" class="flex-1 overflow-y-auto p-8 space-y-4 custom-scrollbar">
-            <!-- Selected items -->
-        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-8 space-y-4 custom-scrollbar"></div>
 
         <div class="p-8 bg-slate-50 border-t border-slate-200">
-            <div class="flex flex-col gap-4">
-                <button id="send-to-register" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black text-lg hover:bg-emerald-700 shadow-xl transition flex items-center justify-center gap-3">
-                    <i class="fas fa-link"></i>
-                    <span>Send to Risk Register</span>
-                </button>
+            <div class="flex flex-col gap-3">
                 <button id="export-text" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-lg hover:bg-slate-800 shadow-xl transition flex items-center justify-center gap-3">
                     <i class="fas fa-copy"></i>
-                    <span>Copy Selection to Clipboard</span>
+                    <span>Copy Full Register Text</span>
                 </button>
-                <button id="clear-all" class="w-full py-2 text-sm font-bold text-slate-400 hover:text-red-500 transition">
+                <button id="clear-all" class="w-full py-2 mt-2 text-sm font-bold text-slate-400 hover:text-red-500 transition">
                     Clear Selection Pool
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Notification -->
+    <div id="details-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl transform transition-all p-8 md:p-10 relative custom-scrollbar">
+            <button onclick="closeDetails()" class="absolute top-6 right-6 bg-slate-100 p-2 rounded-xl text-slate-500 hover:bg-slate-200 transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div id="details-content"></div>
+        </div>
+    </div>
+
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 translate-y-10 transition-all duration-300 flex items-center gap-4">
         <i class="fas fa-check-circle text-emerald-400 text-lg"></i>
-        <span id="toast-msg" class="font-bold text-sm tracking-tight">Risk added to pool</span>
+        <span id="toast-msg" class="font-bold text-sm tracking-tight">Notification</span>
     </div>
 
     <script>
-        // --- MASTER DATA SEEDING (250+ entries) ---
-        const riskPool = [];
-
-        // 1. SWEPT PATH ANALYSIS (SPA) - 60+ Items
-        const spaNames = [
-            "Structural Column Collision", "Tail-Swing into Pedestrian Zone", "Vertical Crest Grounding (Low Clearance)",
-            "Opposing Lane Encroachment on Entry", "Cyclist Squeeze at Corner Entry", "Mirror Strike on Overhead Assets",
-            "Front Overhang Strike at Loading Bay", "Multi-Axle Tire Scrub Damage", "Articulated Jack-Knife on Reverse",
-            "Cul-de-sac Radius Failure for Waste Truck", "Fire Appliance Outrigger Deployment Gap", "Bus Stop Pull-in Alignment Failure",
-            "Utility Box Proximity Collision", "Sight Line Blockage by Vehicle Body", "Intersection Clearance Delay (Overlength)",
-            "Bridge Abutment Scrape", "Driveway Undercarriage Scraping", "Roundabout Central Apron Overrun",
-            "Gas Meter Impact on Commercial Turn", "Loading Dock Canopy Vertical Strike", "Left-Hook Conflict with Cycle Path",
-            "Tight Radius Pavement Delamination", "Trailer Oscillation Lane Encroachment", "Blind-side Merging Failure (Visibility)",
-            "Emergency Bay Entry Failure (Width)", "Over-height Load Bridge Impact", "Median Strip Mounting",
-            "Wheel-trap in Non-Directional Grates", "Signage Post Obstruction (Mirror Hit)", "Off-tracking in Multi-lane Roundabouts",
-            "B-Double Fuel Point Egress Failure", "Temporary Barrier Encroachment on Path", "Garbage Hopper Overhang into Parking",
-            "Bus Mirror vs Waiting Passenger", "Tractor-Trailer Kingpin Stress (Radius)", "Crane Counterweight Tail-swing",
-            "Spoon Drain Grounding (Vertical)", "Caravan Reverse Jack-Knife", "Forklift Rear-Swing Aisle Strike",
-            "Street Furniture Clearance Failure", "Snow Bank Encroachment on Swept Path", "Tactile Ground Surface Indicator (TGSI) Overrun",
-            "Variable Message Sign (VMS) Obstruction", "VehicleBody vs Toll Booth Clearance", "Oversize Load Escort Blindspot",
-            "Drive-thru Order Window Clearance", "Cattle Trailer Stability on Cross-slope", "Log-truck Rear Swing in Forest Access",
-            "Low-loader Belly-strike on Level Crossing", "Narrow Laneway Wing-mirror Strike", "Vehicle Turn over Drainage Grate",
-            "Articulated Bus Bellows Over-extension", "Reverse Parallel Park Body Collision", "Car Transporter Ramp Transition Scrape",
-            "Emergency Helicopter Pad Ground Access", "Airport Tug Encroachment on Taxiway", "Port Container Handler Reach Conflict",
-            "Mobile Library Outrigger Footprint", "Food Truck Window Encroachment", "Concrete Pump Outrigger Stability Space"
+        // --- DEEP ANALYSIS DATA SEEDING WITH FULL RISK REGISTER FIELDS ---
+        const riskPool = [
+            {
+                id: "SPA-001", catID: "SPA", category: "Swept Path Analysis",
+                hazard: "Opposing Lane Encroachment on Intersection Entry",
+                mechanism: "Design vehicle's rear axles track inside the turn radius, forcing the cab or trailer into opposing lanes of traffic. Exacerbated by acute intersection angles and restricted road widths.",
+                impact: "Head-on collision with opposing traffic, traffic network gridlock, damage to third-party vehicles, and potential for severe injury.",
+                initialLikelihood: "Likely (4)",
+                initialConsequence: "Major (4)",
+                initialRisk: "High (16)",
+                mitigations: [
+                    "Widen the intersection bell-mouth to accommodate the full swept path envelope without crossing the centerline.",
+                    "Recess the holding line (stop bar) for opposing traffic by 5-10 meters to provide clearance for turning heavy vehicles.",
+                    "Implement a localized road widening or median island modification to increase the physical turning radius.",
+                    "Install 'No Left/Right Turn for Heavy Vehicles' regulatory signage if an alternative suitable route exists.",
+                    "Utilize mountable kerbs and hardened aprons on the inside radius to allow safe over-tracking."
+                ],
+                residualLikelihood: "Unlikely (2)",
+                residualConsequence: "Moderate (3)",
+                residualRisk: "Medium (6)",
+                riskOwner: "Traffic Engineer / Principal Contractor",
+                action: "Incorporate geometric changes into Issued For Construction (IFC) drawings and update Traffic Management Plan (TMP).",
+                reference: "Austroads Guide to Road Design Part 4: Intersections and Crossings"
+            },
+            {
+                id: "SPA-002", catID: "SPA", category: "Swept Path Analysis",
+                hazard: "Tail-Swing Pedestrian Zone Strike",
+                mechanism: "The rear overhang of heavy vehicles (especially buses and semi-trailers) sweeps over footpaths or pedestrian refuges during tight maneuvers.",
+                impact: "Severe injury or fatality to pedestrians in the swing zone. Major structural damage to street furniture (poles, bins, fencing).",
+                initialLikelihood: "Possible (3)",
+                initialConsequence: "Catastrophic (5)",
+                initialRisk: "High (15)",
+                mitigations: [
+                    "Increase the corner radius to reduce the severity of the turn angle and subsequent tail-swing arc.",
+                    "Relocate pedestrian crossings, waiting zones, or bus stops outside the calculated tail-swing envelope.",
+                    "Install physical barriers (e.g., pedestrian fencing or bollards) to prevent pedestrians from standing in the swing zone."
+                ],
+                residualLikelihood: "Rare (1)",
+                residualConsequence: "Major (4)",
+                residualRisk: "Low (4)",
+                riskOwner: "Project Manager",
+                action: "Review pedestrian desire lines and install physical containment barriers prior to site establishment.",
+                reference: "AS 2890.2: Off-street commercial vehicle facilities"
+            },
+            {
+                id: "BDR-001", catID: "BDR", category: "Road Safety Barrier Design",
+                hazard: "Dynamic Deflection into Active Workzone",
+                mechanism: "Vehicle impact on a temporary barrier system causes the barrier to deflect dynamically into the protected work area.",
+                impact: "Striking workers, plant, or dropping into an excavation, leading to severe injury, fatality, or major project delays.",
+                initialLikelihood: "Possible (3)",
+                initialConsequence: "Catastrophic (5)",
+                initialRisk: "Extreme (15)",
+                mitigations: [
+                    "Ensure the lateral clearance between the barrier and the work zone/excavation exceeds the tested dynamic deflection of the chosen system.",
+                    "Upgrade to a stiffer barrier system (e.g., from water-filled plastic to steel, or from free-standing concrete to pinned concrete).",
+                    "Implement speed limit reductions on the approach and adjacent to the barrier to lower impact energy.",
+                    "Schedule works located within the deflection zone during off-peak periods under full lane or road closures."
+                ],
+                residualLikelihood: "Unlikely (2)",
+                residualConsequence: "Major (4)",
+                residualRisk: "Medium (8)",
+                riskOwner: "Safety Manager / Traffic Engineer",
+                action: "Verify barrier deflection specs against site constraints and adjust working footprint.",
+                reference: "AS/NZS 3845.1: Road safety barrier systems"
+            },
+            {
+                id: "TMG-001", catID: "TMG", category: "Traffic Management (Guidance)",
+                hazard: "End-of-Queue Rear-End Collision",
+                mechanism: "Traffic queuing from a lane closure or stop-go operation extends beyond the advanced warning signage.",
+                impact: "High-speed rear-end collision, multi-vehicle pileup, severe injuries to road users and localized traffic gridlock.",
+                initialLikelihood: "Likely (4)",
+                initialConsequence: "Major (4)",
+                initialRisk: "High (16)",
+                mitigations: [
+                    "Deploy active Variable Message Signs (VMS) well upstream of the maximum calculated queue length.",
+                    "Utilize a shadow vehicle with a Truck Mounted Attenuator (TMA) stationed at the rear of the queue, moving backward as the queue extends.",
+                    "Calculate queue lengths using shock wave theory and position advanced warning signs accordingly."
+                ],
+                residualLikelihood: "Unlikely (2)",
+                residualConsequence: "Moderate (3)",
+                residualRisk: "Medium (6)",
+                riskOwner: "Traffic Control Supervisor",
+                action: "Brief traffic controllers on queue monitoring and TMA repositioning triggers.",
+                reference: "MUTCD Part 3 / Austroads Guide to Temporary Traffic Management"
+            }
         ];
 
-        // 2. ROAD SAFETY BARRIER DESIGN (BDR) - 65+ Items
-        const bdrNames = [
-            "Dynamic Deflection into Active Workzone", "Terminal Gating (Spearing) into Hazard", "Drainage Scupper Obstruction (Hydroplaning)",
-            "Motorcyclist Post Impact (Limb Injury)", "Curb-induced Vehicle Vaulting", "Rigid-to-Semi-Rigid Pocketing Failure",
-            "Shallow Angle Vehicle Bounce-back", "Bridge Deck Attachment Pull-out", "Unshielded Culvert Headwall Gap",
-            "Barrier Height Loss from Overlay", "Soft Soil Post Rotation", "Glare Screen Sight Distance Obstruction",
-            "Reverse Direction Hit Snagging", "Bridge Expansion Joint Wheel Trap", "Anchor Hardware Vandalism/Theft",
-            "Maintenance Access Gap Restriction", "Mismatched System Connectivity Gap", "Sign Post Snagging during Deflection",
-            "Inadequate Setback Nuisance Hits", "Low Angle Reflection Distraction", "High Containment Penetration (Heavy Hit)",
-            "Embankment Slope Instability", "Terminal Anchor Block Uplift", "Joint Rattling Noise Pollution",
-            "Timber Post Rot/Split Failure", "Splice Bolt Fatigue/Torque Loss", "Sight Distance Blockage on Curves",
-            "Wildlife Entrapment/Barrier Crossing", "Snow Load Barrier Overturning", "Cable Barrier Tension Thermal Loss",
-            "Pedestrian Trip Hazard on Support Feet", "Work-light Shadowing behind Barriers", "Ice Retention in Barrier Shade",
-            "Leaf Litter Debris Fire Hazard", "Impact Attenuator Reset Delay", "Coastal Salt-Air Corrosion",
-            "Temporary Barrier Wind-tipping", "Bollard Launching Projectile Risk", "Secondary Impact Rebound Path",
-            "Inadequate Run-out Length (LoN)", "Quality Audit Installation Non-compliance", "Frost Heave Post Displacement",
-            "UV Degradation of Plastic Barriers", "Hydrant Access Obstruction", "Temp-to-Perm Transition Gap",
-            "Wire Rope Tangling (Bikers)", "Concrete Spalling into Lane", "Non-redirective Cushion Placement",
-            "High Center of Gravity Roll-over", "Aesthetic Cladding Snagging", "Delineator Loss from Barrier Body",
-            "Barrier Foundation Scour (Erosion)", "Post-in-Sleeve Loose Fit", "Barrier Post Proximity to High-Volt Cable",
-            "Narrow Shoulder Squeeze (Emergency)", "Temporary Barrier Water Leakage", "Barrier End Flare Over-steepness",
-            "Vibration-induced Barrier 'Walking'", "Night-time Reflectivity Degradation", "Bridge Scupper Backflow on Barrier",
-            "Inadequate Clearance to Lighting Poles", "Barrier-behind-Barrier Pocketing", "Impact Pulse Acceleration (G-force)",
-            "Temporary Barrier Pin Shear Failure", "Barrier-mounted Fence Wind-loading"
-        ];
-
-        // 3. TRAFFIC MANAGEMENT GUIDANCE (TMG) - 60+ Items
-        const tmgNames = [
-            "Signage Glare/Readability Loss", "Conflicting Old/New Line Markings", "End-of-Queue Rear-end Collision",
-            "Pedestrian DDA Width Failure", "Night-time Lighting Blinding Drivers", "Worker-on-foot Site Intrusion",
-            "Aggressive Driver Taper Intrusion", "Signage Base Wind Displacement", "Information Overload (Sign Clutter)",
-            "Inadequate Sight Distance to Taper", "VMS Framing Timing Confusion", "Portable Signal Sync Failure",
-            "Pedestrian/Cycle Mix Conflict", "TMA (Attenuator) Strike Protection", "Delineator Knock-down (Wind Gusts)",
-            "Inadequate Buffer Zone Length", "Site Entry/Exit Merge Collision", "Controller Fatigue/Human Error",
-            "Unauthorized Access at Work-gate", "Side-road Guidance Neglect", "Dust/Debris Visibility Obscurity",
-            "Bollard Spacing Lane Squeeze", "Emergency Corridor Blockage", "Bus Route Diversion Confusion",
-            "Tactile Mat Displacement (Trip)", "Signage Post Projection Hazard", "Night-shift Re-entry Error",
-            "Rain-slicked Temporary Markings", "Fog-line Visibility Loss", "Cyclist 'Doring' from Work-Trucks",
-            "Wrong-way Driving in 1-Way Setup", "Shadow Vehicle Placement Error", "Flagman Positioning Risk",
-            "Handheld Radio Dead-spots", "Workzone Speeding (Enforcement)", "Mud Tracking onto Live Lanes",
-            "Inadequate Lighting at Lane-shift", "Hoarding Stability Failure", "Scaffolding Proximity to Traffic",
-            "Unmanned Worksite Vandalism", "Portable Barrier Gaps (Walking)", "TMA Roll-ahead Distance Error",
-            "Signage Height for Truck Cabs", "Work-zone Queuing into Junctions", "Pilot Vehicle Lag Time",
-            "Excessive Travel Delay Complaints", "Signal Timing Phase Mismatch", "Temporary Walkway Slip Risk",
-            "Inadequate Clearance for Wide-loads", "Directional Signage Ambiguity", "Contractor Mirror-blindspot Hit",
-            "Signage Face Degradation (Old)", "Inadequate Mounting Height (AOP)", "Traffic Cone Ballast Leak",
-            "Workzone Entrance Tail-gating", "Guidance Loss in Heavy Rain", "Inconsistent Speed Transitions",
-            "Pedestrian Crossing Closure Delay", "Worker Egress Visibility Gap", "Public Phone/Asset Obstruction"
-        ];
-
-        // 4. TTM ENGINEERING (ETT) - 65+ Items
-        const ettNames = [
-            "Pavement Shear Failure (Side-track)", "Intersection SISD Sight Blockage", "Geometric Crossover Kink",
-            "Hydraulic Ponding (Barrier Block)", "Utility Sign-post Strike (DBYD)", "Variable Speed Limit Mismatch",
-            "Shoulder Load-bearing Failure", "Superelevation Reversal (Rollover)", "Signal Detector Loop Fault",
-            "Worksite Egress Acceleration Gap", "Utility Cable Post-driving Hit", "Lighting Column Shadow Zone",
-            "Bridge Expansion Plate Shift", "Acoustic Wall Sound Leakage", "Vertical Clearance Survey Error",
-            "Temporary Culvert Scour/Washout", "Crossover Pavement Friction Loss", "Gully Grate Surcharge (Flooding)",
-            "Structural Overload of Temp Bridge", "Foundation Settlement (Fill Track)", "Inadequate Horizontal Clearance",
-            "Lane-width Squeeze (Truck Off-track)", "Crossover Gradient Grounding", "Temp Lighting Post Wind-load",
-            "Drainage Flow Path Interruption", "Construction Vibration Slope Slump", "Temporary Retaining Wall Tilt",
-            "Inadequate Taper Formula (Speed)", "Shoulder Rumble-strip Encroachment", "Geometric Sharpness (Centrifugal)",
-            "Temporary Barrier Anchor Shear", "Pavement-marking Grind Scarring", "Hydroplaning Risk on Temp Surface",
-            "Signal Phasing Gap (All-red)", "Underground Fiber Cut (Piling)", "Work-access Deceleration Lane",
-            "Temporary Median Opening Risk", "Pedestrian Barrier Stability (Wind)", "Dust Control Water-run-off",
-            "Inadequate Maintenance Turn-outs", "Crossover Line-of-sight Obstruction", "Trench Shoring Vibrational Failure",
-            "Over-excavation Barrier Slump", "Temporary Road Cross-fall Error", "Subgrade Softening (Rain)",
-            "Bitumen Stripping on Crossover", "Narrow Bridge Wing-wall Hit", "Crossover Night-visibility (Glint)",
-            "Temporary Culvert Blockage (Debris)", "Utility Trench Settlement (Dip)", "Worksite Boundary Hoarding Blow",
-            "Inadequate Lighting Lux Levels", "Signal Head Aiming Confusion", "Temporary Speed Hump Grounding",
-            "Survey Marker Misalignment", "DDA Ramp Gradient Compliance", "Service Access Manhole Trip",
-            "Noise Barrier Wind-whistling", "Temporary Guardrail Height Loss", "Concrete Curing Lane-closure Delay",
-            "Side-track Kerb Climbing Hit", "Inadequate Clearance to Live Rail", "Crane Load Over-swing Traffic",
-            "Pavement Rutting on Heavy Route", "Temporary Guardrail End-terminal"
-        ];
-
-        function populatePool() {
-            const categories = [
-                { id: 'SPA', name: 'Swept Path Analysis', list: spaNames, pre: 'SPA', color: 'purple' },
-                { id: 'BDR', name: 'Road Safety Barrier Design', list: bdrNames, pre: 'BDR', color: 'orange' },
-                { id: 'TMG', name: 'Traffic Management (Guidance)', list: tmgNames, pre: 'TMG', color: 'emerald' },
-                { id: 'ETT', name: 'Engineering Design for TTM', list: ettNames, pre: 'ETT', color: 'blue' }
-            ];
-
-            categories.forEach(cat => {
-                cat.list.forEach((name, index) => {
-                    riskPool.push({
-                        id: `${cat.pre}-${String(index + 1).padStart(3, '0')}`,
-                        catID: cat.id,
-                        category: cat.name,
-                        hazard: name,
-                        mechanism: `Potential for ${name.toLowerCase()} due to inadequate engineering controls, geometric constraints, or failure of existing site protocols.`,
-                        mitigation: `Engineering review required to verify ${cat.name} standards compliance. Implement physical controls, redesign layout, or provide secondary safety systems (e.g., barriers, TMAs, signage).`,
-                        reference: `Austroads Guide to Road Design / AS Standards`
-                    });
-                });
-            });
-        }
-
-        // --- APP LOGIC ---
-        const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
         let selectionPool = [];
         let activeFilter = 'all';
 
@@ -301,34 +241,48 @@
             const query = masterSearch.value.toLowerCase();
             const filtered = riskPool.filter(r => {
                 const matchesCat = activeFilter === 'all' || r.catID === activeFilter;
-                const matchesSearch = r.hazard.toLowerCase().includes(query) || 
-                                     r.id.toLowerCase().includes(query) ||
-                                     r.mechanism.toLowerCase().includes(query);
-                return matchesCat && matchesSearch;
+                const searchString = `${r.hazard} ${r.mechanism} ${r.mitigations.join(' ')}`.toLowerCase();
+                return matchesCat && searchString.includes(query);
             });
 
             grid.innerHTML = '';
             document.getElementById('empty-state').classList.toggle('hidden', filtered.length > 0);
-            document.getElementById('results-meta').innerText = `Displaying ${filtered.length} hazards`;
+            document.getElementById('results-meta').innerText = `Displaying ${filtered.length} high-fidelity hazards`;
 
             filtered.forEach(r => {
                 const isSelected = selectionPool.some(s => s.id === r.id);
                 const card = document.createElement('div');
-                card.className = `risk-card bg-white p-6 rounded-3xl border border-slate-200 shadow-sm cursor-pointer category-${r.catID} ${isSelected ? 'ring-4 ring-slate-900/5 bg-slate-50' : ''}`;
+                card.className = `risk-card flex flex-col justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm cursor-pointer category-${r.catID} ${isSelected ? 'ring-4 ring-slate-900/5 bg-slate-50' : ''}`;
                 card.onclick = () => toggleSelection(r.id);
+
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">${r.id}</span>
-                        <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-200 text-transparent'}">
-                            <i class="fas fa-check text-xs"></i>
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">${r.id}</span>
+                            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-200 text-transparent'}">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-tight">${r.category}</p>
+                        <h3 class="font-bold text-slate-900 leading-tight text-lg mb-3">${r.hazard}</h3>
+                        <p class="text-xs text-slate-500 line-clamp-2 mb-4 italic">${r.impact}</p>
+                        
+                        <div class="flex gap-4 mt-4">
+                            <div class="flex-1 bg-red-50 p-3 rounded-xl border border-red-100">
+                                <p class="text-[9px] font-black text-red-500 uppercase mb-1">Initial Risk</p>
+                                <p class="text-sm font-bold text-red-700">${r.initialRisk}</p>
+                            </div>
+                            <div class="flex-1 bg-green-50 p-3 rounded-xl border border-green-100">
+                                <p class="text-[9px] font-black text-green-600 uppercase mb-1">Residual Risk</p>
+                                <p class="text-sm font-bold text-green-700">${r.residualRisk}</p>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-tight">${r.category}</p>
-                    <h3 class="font-bold text-slate-900 leading-tight text-lg mb-3">${r.hazard}</h3>
-                    <p class="text-xs text-slate-500 line-clamp-2 mb-4 italic">${r.mechanism}</p>
-                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Primary Mitigation</p>
-                        <p class="text-xs text-slate-700 font-semibold leading-relaxed">${r.mitigation}</p>
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500"><i class="fas fa-shield-alt mr-1"></i> ${r.mitigations.length} Controls</span>
+                        <button onclick="showDetails('${r.id}', event)" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl flex items-center gap-2">
+                            <i class="fas fa-expand-arrows-alt"></i> Full Profile
+                        </button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -343,9 +297,8 @@
                 selectionPool.splice(idx, 1);
             } else {
                 selectionPool.push(risk);
-                showToast(`Added to Pool: ${risk.hazard.substring(0, 20)}...`);
+                showToast(`Added: ${risk.hazard.substring(0, 20)}...`);
             }
-            
             updatePoolUI();
             renderGrid();
         }
@@ -353,31 +306,106 @@
         function updatePoolUI() {
             cartCount.innerText = selectionPool.length;
             cartItems.innerHTML = '';
-            
-            if (selectionPool.length === 0) {
-                cartItems.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-20 opacity-20">
-                        <i class="fas fa-folder-open text-5xl mb-4"></i>
-                        <p class="font-black">POOL IS EMPTY</p>
-                    </div>
-                `;
-                return;
-            }
+            if (selectionPool.length === 0) return;
 
             selectionPool.forEach(s => {
                 const item = document.createElement('div');
                 item.className = "bg-white p-5 rounded-2xl border border-slate-200 flex justify-between items-start gap-4 shadow-sm";
                 item.innerHTML = `
                     <div class="flex-1">
-                        <p class="text-[9px] font-black text-slate-400 uppercase">${s.id} | ${s.category}</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase">${s.id}</p>
                         <h4 class="font-bold text-slate-900 text-sm mt-1">${s.hazard}</h4>
                     </div>
-                    <button onclick="toggleSelection('${s.id}')" class="text-slate-300 hover:text-red-500 transition">
+                    <button onclick="toggleSelection('${s.id}')" class="text-slate-300 hover:text-red-500 transition mt-1">
                         <i class="fas fa-times-circle text-lg"></i>
                     </button>
                 `;
                 cartItems.appendChild(item);
             });
+        }
+
+        function showDetails(id, event) {
+            if(event) event.stopPropagation();
+            const r = riskPool.find(x => x.id === id);
+            if(!r) return;
+            
+            let badgeColor = r.catID === 'SPA' ? 'bg-purple-500' : r.catID === 'BDR' ? 'bg-orange-500' : r.catID === 'TMG' ? 'bg-emerald-500' : 'bg-blue-500';
+
+            const mitigationsHTML = r.mitigations.map((m, index) => 
+                `<li class="flex gap-3 text-slate-700 text-sm leading-relaxed pb-3 border-b border-indigo-100 last:border-0 last:pb-0">
+                    <span class="font-black text-indigo-400 select-none">${index + 1}.</span>
+                    <span>${m}</span>
+                </li>`
+            ).join('');
+
+            const content = document.getElementById('details-content');
+            content.innerHTML = `
+                <div class="mb-4">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-white ${badgeColor} px-3 py-1.5 rounded-lg shadow-sm">${r.id} | ${r.category}</span>
+                </div>
+                <h2 class="text-3xl font-black text-slate-900 mb-6 leading-tight">${r.hazard}</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2"><i class="fas fa-bolt mr-2 text-slate-400"></i>Failure Mechanism</h4>
+                        <p class="text-slate-700 text-sm leading-relaxed">${r.mechanism}</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2"><i class="fas fa-exclamation-triangle mr-2 text-slate-400"></i>Impact & Consequence</h4>
+                        <p class="text-slate-700 text-sm leading-relaxed">${r.impact}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-red-50/50 p-5 rounded-2xl border border-red-100">
+                        <h4 class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-4">Initial Risk Rating</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-600">Likelihood:</span> <span class="font-bold text-slate-800">${r.initialLikelihood}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-600">Consequence:</span> <span class="font-bold text-slate-800">${r.initialConsequence}</span></div>
+                            <div class="flex justify-between pt-2 border-t border-red-100"><span class="text-slate-600 font-bold">Initial Risk:</span> <span class="font-black text-red-600">${r.initialRisk}</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50/50 p-5 rounded-2xl border border-green-100">
+                        <h4 class="text-[10px] font-black text-green-600 uppercase tracking-widest mb-4">Residual Risk Rating</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-600">Likelihood:</span> <span class="font-bold text-slate-800">${r.residualLikelihood}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-600">Consequence:</span> <span class="font-bold text-slate-800">${r.residualConsequence}</span></div>
+                            <div class="flex justify-between pt-2 border-t border-green-100"><span class="text-slate-600 font-bold">Residual Risk:</span> <span class="font-black text-green-600">${r.residualRisk}</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 mb-6">
+                    <h4 class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-4"><i class="fas fa-shield-alt mr-2"></i>Comprehensive Risk Controls (Mitigations)</h4>
+                    <ul class="space-y-3">
+                        ${mitigationsHTML}
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"><i class="fas fa-user-hard-hat mr-2"></i>Risk Owner</h4>
+                        <p class="text-slate-800 text-sm font-bold">${r.riskOwner}</p>
+                    </div>
+                    <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"><i class="fas fa-tasks mr-2"></i>Action Required</h4>
+                        <p class="text-slate-800 text-sm font-bold">${r.action}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
+                    <button onclick="closeDetails()" class="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition text-center">Close Window</button>
+                    <button onclick="toggleSelection('${r.id}'); closeDetails();" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 shadow-lg transition flex items-center justify-center gap-2">
+                        ${selectionPool.some(s => s.id === r.id) ? '<i class="fas fa-minus"></i> Remove from Selection' : '<i class="fas fa-plus"></i> Add to Selection'}
+                    </button>
+                </div>
+            `;
+            document.getElementById('details-modal').classList.remove('hidden');
+        }
+
+        function closeDetails() {
+            document.getElementById('details-modal').classList.add('hidden');
         }
 
         function showToast(msg) {
@@ -389,7 +417,7 @@
 
         // --- HANDLERS ---
         masterSearch.addEventListener('input', renderGrid);
-
+        
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.cat-btn').forEach(b => {
@@ -412,7 +440,10 @@
             document.getElementById('drawer-backdrop').classList.add('opacity-0', 'pointer-events-none');
         };
 
-        document.getElementById('drawer-backdrop').onclick = () => document.getElementById('drawer-close').click();
+        document.getElementById('drawer-backdrop').onclick = () => {
+            document.getElementById('drawer-close').click();
+            closeDetails();
+        };
 
         document.getElementById('clear-all').onclick = () => {
             selectionPool = [];
@@ -420,50 +451,14 @@
             renderGrid();
         };
 
-        document.getElementById('send-to-register').onclick = () => {
-            if (selectionPool.length === 0) {
-                showToast('Selection Pool is empty');
-                return;
-            }
-
-            const payload = {
-                version: 1,
-                source: 'riskpool.html',
-                exportedAt: new Date().toISOString(),
-                risks: selectionPool.map(s => ({
-                    id: s.id,
-                    category: s.category,
-                    hazard: s.hazard,
-                    impact: s.mechanism,
-                    controls: [
-                        { type: 'Administrative', description: s.mitigation }
-                    ],
-                    initLikelihood: '3',
-                    initConsequence: '3',
-                    resLikelihood: '2',
-                    resConsequence: '2',
-                    owner: 'Project Engineer'
-                }))
-            };
-
-            try {
-                localStorage.setItem(RISK_POOL_TRANSFER_KEY, JSON.stringify(payload));
-                showToast(`Sent ${selectionPool.length} risk(s) to Risk Register`);
-                setTimeout(() => {
-                    window.close();
-                }, 600);
-            } catch (error) {
-                console.error('Failed to send to risk register:', error);
-                showToast('Failed to send selection to register');
-            }
-        };
-
+        // EXPORT TEXT WITH ALL REQUIRED REGISTER FIELDS
         document.getElementById('export-text').onclick = () => {
             if (selectionPool.length === 0) return;
             
             const text = selectionPool.map(s => {
-                return `--- RISK ENTRY ---\nCATEGORY: ${s.category}\nHAZARD: ${s.hazard}\nMECHANISM: ${s.mechanism}\nMITIGATION: ${s.mitigation}\nREFERENCE: ${s.reference}\nLIKELIHOOD: 3 (Possible)\nCONSEQUENCE: 3 (Moderate)\n`;
-            }).join('\n');
+                const mitigationsText = s.mitigations.map((m, i) => `  ${i + 1}. ${m}`).join('\n');
+                return `Hazard / Risk: ${s.hazard}\nImpact / Consequence: ${s.impact}\nLikelihood (Initial): ${s.initialLikelihood}\nConsequence (Initial): ${s.initialConsequence}\nInitial Risk: ${s.initialRisk}\nRisk Controls:\n${mitigationsText}\nLikelihood (Residual): ${s.residualLikelihood}\nConsequence (Residual): ${s.residualConsequence}\nResidual Risk: ${s.residualRisk}\nRisk Owner: ${s.riskOwner}\nAction: ${s.action}\n-----------------------------------------`;
+            }).join('\n\n');
             
             const el = document.createElement('textarea');
             el.value = text;
@@ -472,7 +467,7 @@
             document.execCommand('copy');
             document.body.removeChild(el);
             
-            showToast("Selection Copied! Paste into Tool.");
+            showToast("Full Register Text Copied to Clipboard!");
             setTimeout(() => document.getElementById('drawer-close').click(), 1000);
         };
 
@@ -480,7 +475,7 @@
             const query = masterSearch.value.toLowerCase();
             const filtered = riskPool.filter(r => {
                 const matchesCat = activeFilter === 'all' || r.catID === activeFilter;
-                const matchesSearch = r.hazard.toLowerCase().includes(query);
+                const matchesSearch = `${r.hazard} ${r.mechanism} ${r.mitigations.join(' ')}`.toLowerCase().includes(query);
                 return matchesCat && matchesSearch;
             });
             
@@ -493,7 +488,6 @@
         };
 
         // Initialize
-        populatePool();
         renderGrid();
         document.getElementById('count-all').innerText = riskPool.length;
     </script>
