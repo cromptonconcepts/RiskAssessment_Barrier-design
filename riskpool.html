@@ -116,6 +116,10 @@
 
         <div class="p-8 bg-slate-50 border-t border-slate-200">
             <div class="flex flex-col gap-3">
+                <button id="export-main" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black text-lg hover:bg-emerald-700 shadow-xl transition flex items-center justify-center gap-3">
+                    <i class="fas fa-share-square"></i>
+                    <span>Export to Main File</span>
+                </button>
                 <button id="export-text" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-lg hover:bg-slate-800 shadow-xl transition flex items-center justify-center gap-3">
                     <i class="fas fa-copy"></i>
                     <span>Copy Full Register Text</span>
@@ -143,91 +147,282 @@
 
     <script>
         // --- DEEP ANALYSIS DATA SEEDING WITH FULL RISK REGISTER FIELDS ---
-        const riskPool = [
-            {
+        const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
+        const riskPool = [];
+
+        const spaNames = [
+            "Structural Column Collision", "Tail-Swing into Pedestrian Zone", "Vertical Crest Grounding (Low Clearance)",
+            "Opposing Lane Encroachment on Entry", "Cyclist Squeeze at Corner Entry", "Mirror Strike on Overhead Assets",
+            "Front Overhang Strike at Loading Bay", "Multi-Axle Tire Scrub Damage", "Articulated Jack-Knife on Reverse",
+            "Cul-de-sac Radius Failure for Waste Truck", "Fire Appliance Outrigger Deployment Gap", "Bus Stop Pull-in Alignment Failure",
+            "Utility Box Proximity Collision", "Sight Line Blockage by Vehicle Body", "Intersection Clearance Delay (Overlength)",
+            "Bridge Abutment Scrape", "Driveway Undercarriage Scraping", "Roundabout Central Apron Overrun",
+            "Gas Meter Impact on Commercial Turn", "Loading Dock Canopy Vertical Strike", "Left-Hook Conflict with Cycle Path",
+            "Tight Radius Pavement Delamination", "Trailer Oscillation Lane Encroachment", "Blind-side Merging Failure (Visibility)",
+            "Emergency Bay Entry Failure (Width)", "Over-height Load Bridge Impact", "Median Strip Mounting",
+            "Wheel-trap in Non-Directional Grates", "Signage Post Obstruction (Mirror Hit)", "Off-tracking in Multi-lane Roundabouts",
+            "B-Double Fuel Point Egress Failure", "Temporary Barrier Encroachment on Path", "Garbage Hopper Overhang into Parking",
+            "Bus Mirror vs Waiting Passenger", "Tractor-Trailer Kingpin Stress (Radius)", "Crane Counterweight Tail-swing",
+            "Spoon Drain Grounding (Vertical)", "Caravan Reverse Jack-Knife", "Forklift Rear-Swing Aisle Strike",
+            "Street Furniture Clearance Failure", "Snow Bank Encroachment on Swept Path", "Tactile Ground Surface Indicator (TGSI) Overrun",
+            "Variable Message Sign (VMS) Obstruction", "VehicleBody vs Toll Booth Clearance", "Oversize Load Escort Blindspot",
+            "Drive-thru Order Window Clearance", "Cattle Trailer Stability on Cross-slope", "Log-truck Rear Swing in Forest Access",
+            "Low-loader Belly-strike on Level Crossing", "Narrow Laneway Wing-mirror Strike", "Vehicle Turn over Drainage Grate",
+            "Articulated Bus Bellows Over-extension", "Reverse Parallel Park Body Collision", "Car Transporter Ramp Transition Scrape",
+            "Emergency Helicopter Pad Ground Access", "Airport Tug Encroachment on Taxiway", "Port Container Handler Reach Conflict",
+            "Mobile Library Outrigger Footprint", "Food Truck Window Encroachment", "Concrete Pump Outrigger Stability Space"
+        ];
+
+        const bdrNames = [
+            "Dynamic Deflection into Active Workzone", "Terminal Gating (Spearing) into Hazard", "Drainage Scupper Obstruction (Hydroplaning)",
+            "Motorcyclist Post Impact (Limb Injury)", "Curb-induced Vehicle Vaulting", "Rigid-to-Semi-Rigid Pocketing Failure",
+            "Shallow Angle Vehicle Bounce-back", "Bridge Deck Attachment Pull-out", "Unshielded Culvert Headwall Gap",
+            "Barrier Height Loss from Overlay", "Soft Soil Post Rotation", "Glare Screen Sight Distance Obstruction",
+            "Reverse Direction Hit Snagging", "Bridge Expansion Joint Wheel Trap", "Anchor Hardware Vandalism/Theft",
+            "Maintenance Access Gap Restriction", "Mismatched System Connectivity Gap", "Sign Post Snagging during Deflection",
+            "Inadequate Setback Nuisance Hits", "Low Angle Reflection Distraction", "High Containment Penetration (Heavy Hit)",
+            "Embankment Slope Instability", "Terminal Anchor Block Uplift", "Joint Rattling Noise Pollution",
+            "Timber Post Rot/Split Failure", "Splice Bolt Fatigue/Torque Loss", "Sight Distance Blockage on Curves",
+            "Wildlife Entrapment/Barrier Crossing", "Snow Load Barrier Overturning", "Cable Barrier Tension Thermal Loss",
+            "Pedestrian Trip Hazard on Support Feet", "Work-light Shadowing behind Barriers", "Ice Retention in Barrier Shade",
+            "Leaf Litter Debris Fire Hazard", "Impact Attenuator Reset Delay", "Coastal Salt-Air Corrosion",
+            "Temporary Barrier Wind-tipping", "Bollard Launching Projectile Risk", "Secondary Impact Rebound Path",
+            "Inadequate Run-out Length (LoN)", "Quality Audit Installation Non-compliance", "Frost Heave Post Displacement",
+            "UV Degradation of Plastic Barriers", "Hydrant Access Obstruction", "Temp-to-Perm Transition Gap",
+            "Wire Rope Tangling (Bikers)", "Concrete Spalling into Lane", "Non-redirective Cushion Placement",
+            "High Center of Gravity Roll-over", "Aesthetic Cladding Snagging", "Delineator Loss from Barrier Body",
+            "Barrier Foundation Scour (Erosion)", "Post-in-Sleeve Loose Fit", "Barrier Post Proximity to High-Volt Cable",
+            "Narrow Shoulder Squeeze (Emergency)", "Temporary Barrier Water Leakage", "Barrier End Flare Over-steepness",
+            "Vibration-induced Barrier 'Walking'", "Night-time Reflectivity Degradation", "Bridge Scupper Backflow on Barrier",
+            "Inadequate Clearance to Lighting Poles", "Barrier-behind-Barrier Pocketing", "Impact Pulse Acceleration (G-force)",
+            "Temporary Barrier Pin Shear Failure", "Barrier-mounted Fence Wind-loading"
+        ];
+
+        const tmgNames = [
+            "Signage Glare/Readability Loss", "Conflicting Old/New Line Markings", "End-of-Queue Rear-end Collision",
+            "Pedestrian DDA Width Failure", "Night-time Lighting Blinding Drivers", "Worker-on-foot Site Intrusion",
+            "Aggressive Driver Taper Intrusion", "Signage Base Wind Displacement", "Information Overload (Sign Clutter)",
+            "Inadequate Sight Distance to Taper", "VMS Framing Timing Confusion", "Portable Signal Sync Failure",
+            "Pedestrian/Cycle Mix Conflict", "TMA (Attenuator) Strike Protection", "Delineator Knock-down (Wind Gusts)",
+            "Inadequate Buffer Zone Length", "Site Entry/Exit Merge Collision", "Controller Fatigue/Human Error",
+            "Unauthorized Access at Work-gate", "Side-road Guidance Neglect", "Dust/Debris Visibility Obscurity",
+            "Bollard Spacing Lane Squeeze", "Emergency Corridor Blockage", "Bus Route Diversion Confusion",
+            "Tactile Mat Displacement (Trip)", "Signage Post Projection Hazard", "Night-shift Re-entry Error",
+            "Rain-slicked Temporary Markings", "Fog-line Visibility Loss", "Cyclist 'Doring' from Work-Trucks",
+            "Wrong-way Driving in 1-Way Setup", "Shadow Vehicle Placement Error", "Flagman Positioning Risk",
+            "Handheld Radio Dead-spots", "Workzone Speeding (Enforcement)", "Mud Tracking onto Live Lanes",
+            "Inadequate Lighting at Lane-shift", "Hoarding Stability Failure", "Scaffolding Proximity to Traffic",
+            "Unmanned Worksite Vandalism", "Portable Barrier Gaps (Walking)", "TMA Roll-ahead Distance Error",
+            "Signage Height for Truck Cabs", "Work-zone Queuing into Junctions", "Pilot Vehicle Lag Time",
+            "Excessive Travel Delay Complaints", "Signal Timing Phase Mismatch", "Temporary Walkway Slip Risk",
+            "Inadequate Clearance for Wide-loads", "Directional Signage Ambiguity", "Contractor Mirror-blindspot Hit",
+            "Signage Face Degradation (Old)", "Inadequate Mounting Height (AOP)", "Traffic Cone Ballast Leak",
+            "Workzone Entrance Tail-gating", "Guidance Loss in Heavy Rain", "Inconsistent Speed Transitions",
+            "Pedestrian Crossing Closure Delay", "Worker Egress Visibility Gap", "Public Phone/Asset Obstruction"
+        ];
+
+        const ettNames = [
+            "Pavement Shear Failure (Side-track)", "Intersection SISD Sight Blockage", "Geometric Crossover Kink",
+            "Hydraulic Ponding (Barrier Block)", "Utility Sign-post Strike (DBYD)", "Variable Speed Limit Mismatch",
+            "Shoulder Load-bearing Failure", "Superelevation Reversal (Rollover)", "Signal Detector Loop Fault",
+            "Worksite Egress Acceleration Gap", "Utility Cable Post-driving Hit", "Lighting Column Shadow Zone",
+            "Bridge Expansion Plate Shift", "Acoustic Wall Sound Leakage", "Vertical Clearance Survey Error",
+            "Temporary Culvert Scour/Washout", "Crossover Pavement Friction Loss", "Gully Grate Surcharge (Flooding)",
+            "Structural Overload of Temp Bridge", "Foundation Settlement (Fill Track)", "Inadequate Horizontal Clearance",
+            "Lane-width Squeeze (Truck Off-track)", "Crossover Gradient Grounding", "Temp Lighting Post Wind-load",
+            "Drainage Flow Path Interruption", "Construction Vibration Slope Slump", "Temporary Retaining Wall Tilt",
+            "Inadequate Taper Formula (Speed)", "Shoulder Rumble-strip Encroachment", "Geometric Sharpness (Centrifugal)",
+            "Temporary Barrier Anchor Shear", "Pavement-marking Grind Scarring", "Hydroplaning Risk on Temp Surface",
+            "Signal Phasing Gap (All-red)", "Underground Fiber Cut (Piling)", "Work-access Deceleration Lane",
+            "Temporary Median Opening Risk", "Pedestrian Barrier Stability (Wind)", "Dust Control Water-run-off",
+            "Inadequate Maintenance Turn-outs", "Crossover Line-of-sight Obstruction", "Trench Shoring Vibrational Failure",
+            "Over-excavation Barrier Slump", "Temporary Road Cross-fall Error", "Subgrade Softening (Rain)",
+            "Bitumen Stripping on Crossover", "Narrow Bridge Wing-wall Hit", "Crossover Night-visibility (Glint)",
+            "Temporary Culvert Blockage (Debris)", "Utility Trench Settlement (Dip)", "Worksite Boundary Hoarding Blow",
+            "Inadequate Lighting Lux Levels", "Signal Head Aiming Confusion", "Temporary Speed Hump Grounding",
+            "Survey Marker Misalignment", "DDA Ramp Gradient Compliance", "Service Access Manhole Trip",
+            "Noise Barrier Wind-whistling", "Temporary Guardrail Height Loss", "Concrete Curing Lane-closure Delay",
+            "Side-track Kerb Climbing Hit", "Inadequate Clearance to Live Rail", "Crane Load Over-swing Traffic",
+            "Pavement Rutting on Heavy Route", "Temporary Guardrail End-terminal"
+        ];
+
+        const detailedOverridesById = {
+            "SPA-001": {
                 id: "SPA-001", catID: "SPA", category: "Swept Path Analysis",
                 hazard: "Opposing Lane Encroachment on Intersection Entry",
-                mechanism: "Design vehicle's rear axles track inside the turn radius, forcing the cab or trailer into opposing lanes of traffic. Exacerbated by acute intersection angles and restricted road widths.",
-                impact: "Head-on collision with opposing traffic, traffic network gridlock, damage to third-party vehicles, and potential for severe injury.",
+                mechanism: "Design vehicle rear axles track inside the turn radius, forcing the cab or trailer into opposing lanes during constrained turns.",
+                impact: "Potential head-on collision with opposing traffic, severe injury, and major network disruption.",
                 initialLikelihood: "Likely (4)",
                 initialConsequence: "Major (4)",
                 initialRisk: "High (16)",
                 mitigations: [
-                    "Widen the intersection bell-mouth to accommodate the full swept path envelope without crossing the centerline.",
-                    "Recess the holding line (stop bar) for opposing traffic by 5-10 meters to provide clearance for turning heavy vehicles.",
-                    "Implement a localized road widening or median island modification to increase the physical turning radius.",
-                    "Install 'No Left/Right Turn for Heavy Vehicles' regulatory signage if an alternative suitable route exists.",
-                    "Utilize mountable kerbs and hardened aprons on the inside radius to allow safe over-tracking."
+                    "Widen intersection geometry to contain full swept path without crossing centerline.",
+                    "Reposition holding lines and conflict points to improve turning clearance.",
+                    "Install route and turn restrictions for oversize classes where geometric redesign is infeasible."
                 ],
                 residualLikelihood: "Unlikely (2)",
                 residualConsequence: "Moderate (3)",
                 residualRisk: "Medium (6)",
                 riskOwner: "Traffic Engineer / Principal Contractor",
-                action: "Incorporate geometric changes into Issued For Construction (IFC) drawings and update Traffic Management Plan (TMP).",
-                reference: "Austroads Guide to Road Design Part 4: Intersections and Crossings"
+                action: "Update IFC drawings and TMP with revised turning path controls.",
+                reference: "Austroads Guide to Road Design Part 4"
             },
-            {
-                id: "SPA-002", catID: "SPA", category: "Swept Path Analysis",
-                hazard: "Tail-Swing Pedestrian Zone Strike",
-                mechanism: "The rear overhang of heavy vehicles (especially buses and semi-trailers) sweeps over footpaths or pedestrian refuges during tight maneuvers.",
-                impact: "Severe injury or fatality to pedestrians in the swing zone. Major structural damage to street furniture (poles, bins, fencing).",
-                initialLikelihood: "Possible (3)",
-                initialConsequence: "Catastrophic (5)",
-                initialRisk: "High (15)",
-                mitigations: [
-                    "Increase the corner radius to reduce the severity of the turn angle and subsequent tail-swing arc.",
-                    "Relocate pedestrian crossings, waiting zones, or bus stops outside the calculated tail-swing envelope.",
-                    "Install physical barriers (e.g., pedestrian fencing or bollards) to prevent pedestrians from standing in the swing zone."
-                ],
-                residualLikelihood: "Rare (1)",
-                residualConsequence: "Major (4)",
-                residualRisk: "Low (4)",
-                riskOwner: "Project Manager",
-                action: "Review pedestrian desire lines and install physical containment barriers prior to site establishment.",
-                reference: "AS 2890.2: Off-street commercial vehicle facilities"
-            },
-            {
+            "BDR-001": {
                 id: "BDR-001", catID: "BDR", category: "Road Safety Barrier Design",
                 hazard: "Dynamic Deflection into Active Workzone",
-                mechanism: "Vehicle impact on a temporary barrier system causes the barrier to deflect dynamically into the protected work area.",
-                impact: "Striking workers, plant, or dropping into an excavation, leading to severe injury, fatality, or major project delays.",
+                mechanism: "Barrier impact deflection exceeds available offset and intrudes into protected work area.",
+                impact: "Worker strike or secondary collision leading to severe injury and project shutdown risk.",
                 initialLikelihood: "Possible (3)",
                 initialConsequence: "Catastrophic (5)",
                 initialRisk: "Extreme (15)",
                 mitigations: [
-                    "Ensure the lateral clearance between the barrier and the work zone/excavation exceeds the tested dynamic deflection of the chosen system.",
-                    "Upgrade to a stiffer barrier system (e.g., from water-filled plastic to steel, or from free-standing concrete to pinned concrete).",
-                    "Implement speed limit reductions on the approach and adjacent to the barrier to lower impact energy.",
-                    "Schedule works located within the deflection zone during off-peak periods under full lane or road closures."
+                    "Verify tested deflection envelope against available site offset.",
+                    "Upgrade to higher containment/stiffer system when offsets are constrained.",
+                    "Apply speed management and staging controls adjacent to barrier runs."
                 ],
                 residualLikelihood: "Unlikely (2)",
                 residualConsequence: "Major (4)",
                 residualRisk: "Medium (8)",
                 riskOwner: "Safety Manager / Traffic Engineer",
-                action: "Verify barrier deflection specs against site constraints and adjust working footprint.",
-                reference: "AS/NZS 3845.1: Road safety barrier systems"
+                action: "Validate barrier selection matrix and re-check offsets pre-installation.",
+                reference: "AS/NZS 3845.1"
             },
-            {
-                id: "TMG-001", catID: "TMG", category: "Traffic Management (Guidance)",
-                hazard: "End-of-Queue Rear-End Collision",
-                mechanism: "Traffic queuing from a lane closure or stop-go operation extends beyond the advanced warning signage.",
-                impact: "High-speed rear-end collision, multi-vehicle pileup, severe injuries to road users and localized traffic gridlock.",
+            "TMG-003": {
+                id: "TMG-003", catID: "TMG", category: "Traffic Management (Guidance)",
+                hazard: "End-of-Queue Rear-end Collision",
+                mechanism: "Queue extends beyond upstream warning and approaching traffic cannot brake in time.",
+                impact: "High-energy rear-end crashes and potential multi-vehicle pile-up.",
                 initialLikelihood: "Likely (4)",
                 initialConsequence: "Major (4)",
                 initialRisk: "High (16)",
                 mitigations: [
-                    "Deploy active Variable Message Signs (VMS) well upstream of the maximum calculated queue length.",
-                    "Utilize a shadow vehicle with a Truck Mounted Attenuator (TMA) stationed at the rear of the queue, moving backward as the queue extends.",
-                    "Calculate queue lengths using shock wave theory and position advanced warning signs accordingly."
+                    "Deploy upstream queue warning with dynamic message signs.",
+                    "Use TMA shadow vehicle and active queue monitoring protocols.",
+                    "Adjust staging to reduce queue growth during peak periods."
                 ],
                 residualLikelihood: "Unlikely (2)",
                 residualConsequence: "Moderate (3)",
                 residualRisk: "Medium (6)",
                 riskOwner: "Traffic Control Supervisor",
-                action: "Brief traffic controllers on queue monitoring and TMA repositioning triggers.",
-                reference: "MUTCD Part 3 / Austroads Guide to Temporary Traffic Management"
+                action: "Set queue trigger thresholds and response actions in TMP briefings.",
+                reference: "MUTCD Part 3 / Austroads Temporary Traffic Management"
             }
-        ];
+        };
+
+        function getCategoryDefaults(catID, categoryName) {
+            if (catID === 'SPA') {
+                return {
+                    initialLikelihood: "Possible (3)",
+                    initialConsequence: "Major (4)",
+                    initialRisk: "High (12)",
+                    residualLikelihood: "Unlikely (2)",
+                    residualConsequence: "Moderate (3)",
+                    residualRisk: "Medium (6)",
+                    riskOwner: "Design Lead / Traffic Engineer",
+                    reference: "Austroads Guide to Road Design"
+                };
+            }
+            if (catID === 'BDR') {
+                return {
+                    initialLikelihood: "Possible (3)",
+                    initialConsequence: "Catastrophic (5)",
+                    initialRisk: "Extreme (15)",
+                    residualLikelihood: "Unlikely (2)",
+                    residualConsequence: "Major (4)",
+                    residualRisk: "Medium (8)",
+                    riskOwner: "Barrier Designer / Safety Manager",
+                    reference: "AS/NZS 3845.1 Road safety barrier systems"
+                };
+            }
+            if (catID === 'TMG') {
+                return {
+                    initialLikelihood: "Likely (4)",
+                    initialConsequence: "Major (4)",
+                    initialRisk: "High (16)",
+                    residualLikelihood: "Unlikely (2)",
+                    residualConsequence: "Moderate (3)",
+                    residualRisk: "Medium (6)",
+                    riskOwner: "Traffic Control Supervisor",
+                    reference: "MUTCD / Austroads Temporary Traffic Management"
+                };
+            }
+            return {
+                initialLikelihood: "Possible (3)",
+                initialConsequence: "Major (4)",
+                initialRisk: "High (12)",
+                residualLikelihood: "Unlikely (2)",
+                residualConsequence: "Moderate (3)",
+                residualRisk: "Medium (6)",
+                riskOwner: "Project Engineer",
+                reference: `${categoryName} design standards and project specifications`
+            };
+        }
+
+        function buildMitigations(catID, categoryName, hazard) {
+            const base = [
+                `Undertake targeted ${categoryName.toLowerCase()} review for \"${hazard}\" with documented design assumptions.`,
+                "Implement physical and operational controls (geometry, barriers, signage, speed management, or staging) to remove or reduce conflict exposure.",
+                "Validate control effectiveness through design verification, field check, and pre-start briefing before live operations."
+            ];
+
+            if (catID === 'BDR') {
+                return [
+                    base[0],
+                    "Confirm containment class, working width/deflection envelope, and terminal treatment suitability for the site constraints.",
+                    base[2]
+                ];
+            }
+            if (catID === 'TMG') {
+                return [
+                    base[0],
+                    "Optimize warning, taper, and queue management with active monitoring and incident response triggers.",
+                    base[2]
+                ];
+            }
+            return base;
+        }
+
+        function createDetailedRisk(cat, hazard, index) {
+            const id = `${cat.pre}-${String(index + 1).padStart(3, '0')}`;
+            const defaults = getCategoryDefaults(cat.id, cat.name);
+            return {
+                id,
+                catID: cat.id,
+                category: cat.name,
+                hazard,
+                mechanism: `Potential for ${hazard.toLowerCase()} due to geometric constraints, operational interactions, or inadequate engineering controls within ${cat.name.toLowerCase()} scope.`,
+                impact: "Potential for injury, asset damage, project delay, and regulatory non-compliance if controls are not implemented.",
+                initialLikelihood: defaults.initialLikelihood,
+                initialConsequence: defaults.initialConsequence,
+                initialRisk: defaults.initialRisk,
+                mitigations: buildMitigations(cat.id, cat.name, hazard),
+                residualLikelihood: defaults.residualLikelihood,
+                residualConsequence: defaults.residualConsequence,
+                residualRisk: defaults.residualRisk,
+                riskOwner: defaults.riskOwner,
+                action: `Complete design and field verification for \"${hazard}\" and close actions in the project risk register.`,
+                reference: defaults.reference
+            };
+        }
+
+        function populatePool() {
+            riskPool.length = 0;
+            const categories = [
+                { id: 'SPA', name: 'Swept Path Analysis', list: spaNames, pre: 'SPA' },
+                { id: 'BDR', name: 'Road Safety Barrier Design', list: bdrNames, pre: 'BDR' },
+                { id: 'TMG', name: 'Traffic Management (Guidance)', list: tmgNames, pre: 'TMG' },
+                { id: 'ETT', name: 'Engineering Design for TTM', list: ettNames, pre: 'ETT' }
+            ];
+
+            categories.forEach(cat => {
+                cat.list.forEach((hazard, index) => {
+                    const generated = createDetailedRisk(cat, hazard, index);
+                    riskPool.push(detailedOverridesById[generated.id] || generated);
+                });
+            });
+
+            document.getElementById('count-all').innerText = riskPool.length;
+        }
 
         let selectionPool = [];
         let activeFilter = 'all';
@@ -322,6 +517,32 @@
                 `;
                 cartItems.appendChild(item);
             });
+        }
+
+        function buildTransferPayload() {
+            return {
+                version: 1,
+                source: 'riskpool',
+                exportedAt: new Date().toISOString(),
+                risks: selectionPool.map(s => ({
+                    id: s.id,
+                    catID: s.catID,
+                    category: s.category,
+                    hazard: s.hazard,
+                    mechanism: s.mechanism,
+                    impact: s.impact,
+                    initialLikelihood: s.initialLikelihood,
+                    initialConsequence: s.initialConsequence,
+                    initialRisk: s.initialRisk,
+                    mitigations: Array.isArray(s.mitigations) ? s.mitigations : [],
+                    residualLikelihood: s.residualLikelihood,
+                    residualConsequence: s.residualConsequence,
+                    residualRisk: s.residualRisk,
+                    riskOwner: s.riskOwner,
+                    action: s.action,
+                    reference: s.reference
+                }))
+            };
         }
 
         function showDetails(id, event) {
@@ -451,6 +672,37 @@
             renderGrid();
         };
 
+        document.getElementById('export-main').onclick = () => {
+            if (selectionPool.length === 0) {
+                showToast('Select at least one hazard before export');
+                return;
+            }
+
+            const payload = buildTransferPayload();
+            try {
+                localStorage.setItem(RISK_POOL_TRANSFER_KEY, JSON.stringify(payload));
+            } catch (err) {
+                console.error('Unable to store risk pool export payload.', err);
+                showToast('Export failed. Check browser storage permissions.');
+                return;
+            }
+
+            // Notify opener if available; main page also listens to storage/focus.
+            if (window.opener && !window.opener.closed) {
+                try {
+                    window.opener.postMessage({ type: 'risk-pool-exported' }, '*');
+                    window.opener.focus();
+                } catch (err) {
+                    console.warn('Could not notify opener window.', err);
+                }
+            }
+
+            showToast(`Exported ${selectionPool.length} risk${selectionPool.length === 1 ? '' : 's'} to main file`);
+            setTimeout(() => {
+                window.close();
+            }, 700);
+        };
+
         // EXPORT TEXT WITH ALL REQUIRED REGISTER FIELDS
         document.getElementById('export-text').onclick = () => {
             if (selectionPool.length === 0) return;
@@ -488,8 +740,8 @@
         };
 
         // Initialize
+        populatePool();
         renderGrid();
-        document.getElementById('count-all').innerText = riskPool.length;
     </script>
 </body>
 </html>
