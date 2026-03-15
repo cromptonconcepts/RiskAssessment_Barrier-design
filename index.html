@@ -5474,6 +5474,33 @@ const riskNotesTemplates = {
     ]
 };
 
+  function getScenarioNotesTemplate(scenarioType, context = {}) {
+    const base = riskNotesTemplates[scenarioType] || riskNotesTemplates.other || [];
+    const notes = [...base];
+
+    if (scenarioType === 'other' && context.otherDesignType) {
+      notes.unshift(`Scenario context: ${context.otherDesignType}. Controls and sequencing are to be verified against this specific work activity.`);
+    }
+
+    if (Array.isArray(context.categories) && context.categories.length > 1) {
+      notes.unshift(`Mixed-risk scenario: combined controls required across ${context.categories.join(', ')} categories. Verify interfaces between disciplines.`);
+    }
+
+    return notes;
+  }
+
+  function applyDefaultRiskNotesForScenario(scenarioType, context = {}) {
+    const notesTemplate = getScenarioNotesTemplate(scenarioType, context);
+    riskNotes = notesTemplate.map((text, index) => ({
+      id: `note_${index + 1}`,
+      number: index + 1,
+      text
+    }));
+    riskNoteCounter = riskNotes.length;
+    renderRiskNotes();
+    saveRiskNotes();
+  }
+
 let riskRowCounter = 0;
   let selectedRiskPoolDesignType = '';
   let selectedRiskPoolIndexes = [];
@@ -5548,12 +5575,8 @@ function handleDesignTypeChange() {
           selectedRiskPoolIndexes = [];
         }
         
-        // Populate common notes for the selected design type
-        const notesTemplate = riskNotesTemplates[designType] || [];
-        riskNotes = []; // Clear existing notes
-        riskNoteCounter = 0;
-        notesTemplate.forEach(noteText => {
-            addRiskNote(noteText);
+        applyDefaultRiskNotesForScenario(designType, {
+          otherDesignType: document.getElementById('otherDesignType')?.value || ''
         });
     } else {
         infoDiv.style.display = 'none';
@@ -5729,12 +5752,39 @@ function addRiskRowWithData(name, impact, initLikelihood, initConsequence, contr
     
     // Generate controls HTML
     const controlTypes = ['Elimination', 'Substitution', 'Engineering', 'Administrative', 'PPE'];
+    const normalizeControlType = (value) => {
+      const text = String(value || '').trim().toLowerCase();
+      if (text === 'elimination') return 'Elimination';
+      if (text === 'substitution') return 'Substitution';
+      if (text === 'engineering') return 'Engineering';
+      if (text === 'administrative') return 'Administrative';
+      if (text === 'ppe') return 'PPE';
+      return 'Administrative';
+    };
+    const normalizedControls = Array.isArray(controls)
+      ? controls
+        .map(c => {
+          if (typeof c === 'string') {
+            const desc = c.trim();
+            return desc ? { type: 'Administrative', description: desc } : null;
+          }
+          if (!c || typeof c !== 'object') return null;
+          const description = String(c.description || c.text || '').trim();
+          if (!description) return null;
+          return {
+            type: normalizeControlType(c.type || c.category),
+            description
+          };
+        })
+        .filter(Boolean)
+      : [];
+
     let controlsHTML = '<div style="display:flex; flex-direction:column; gap:6px;">';
     
     controlTypes.forEach(type => {
-        const existingControl = Array.isArray(controls) ? controls.find(c => c.type === type) : null;
-        const isChecked = existingControl ? 'checked' : '';
-        const description = existingControl ? existingControl.description : '';
+      const matchingControls = normalizedControls.filter(c => c.type === type);
+      const isChecked = matchingControls.length > 0 ? 'checked' : '';
+      const description = matchingControls.map(c => c.description).join('\n');
         
         controlsHTML += `
             <div style="display:flex; align-items:start; gap:6px; padding:4px; background:${isChecked ? '#f8fafc' : 'transparent'}; border-radius:4px;">
@@ -6612,6 +6662,17 @@ function init() {
   initializeFilterButtons();
   filterBarriers();
   loadSavedScenarios();
+  const otherDesignTypeField = document.getElementById('otherDesignType');
+  if (otherDesignTypeField) {
+    otherDesignTypeField.addEventListener('change', () => {
+      const designType = document.getElementById('designType')?.value;
+      if (designType === 'other') {
+        applyDefaultRiskNotesForScenario('other', {
+          otherDesignType: otherDesignTypeField.value || ''
+        });
+      }
+    });
+  }
   const stageDesignSpeedField = document.getElementById('siteSpeed');
   if (stageDesignSpeedField) {
     stageDesignSpeedField.addEventListener('input', syncDesignSpeedFromStage);
@@ -9812,6 +9873,25 @@ async function handlePDFUpload(event) {
       );
     });
 
+    const importedCategorySet = new Set(
+      payload.risks
+        .map(r => String(r.catID || '').trim())
+        .filter(Boolean)
+    );
+    const importedCategories = Array.from(importedCategorySet);
+    let scenarioType = document.getElementById('designType')?.value || 'other';
+    if (importedCategorySet.size === 1) {
+      if (importedCategorySet.has('SPA')) scenarioType = 'swept-paths';
+      else if (importedCategorySet.has('BDR')) scenarioType = 'barrier';
+      else scenarioType = 'other';
+    } else if (importedCategorySet.size > 1) {
+      scenarioType = 'other';
+    }
+
+    applyDefaultRiskNotesForScenario(scenarioType, {
+      categories: importedCategories
+    });
+
     updateRiskSummary();
     localStorage.removeItem(RISK_POOL_TRANSFER_KEY);
 
@@ -9899,13 +9979,13 @@ async function handlePDFUpload(event) {
       payload.risks.forEach(risk => {
         addRiskRowWithData(
           risk.hazard || '',
-          risk.impact || '',
-          risk.initLikelihood || '',
-          risk.initConsequence || '',
-          risk.controls || [],
-          risk.resLikelihood || '',
-          risk.resConsequence || '',
-          risk.owner || ''
+          risk.impact || risk.mechanism || '',
+          parseRiskScoreValue(risk.initLikelihood || risk.initialLikelihood, '3'),
+          parseRiskScoreValue(risk.initConsequence || risk.initialConsequence, '3'),
+          normalizeImportedControls(risk),
+          parseRiskScoreValue(risk.resLikelihood || risk.residualLikelihood, '2'),
+          parseRiskScoreValue(risk.resConsequence || risk.residualConsequence, '2'),
+          risk.owner || risk.riskOwner || ''
         );
       });
 

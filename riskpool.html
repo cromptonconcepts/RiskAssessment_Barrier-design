@@ -6,6 +6,7 @@
     <title>Engineering Risk & Mitigation Master Pool</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="datapol-data.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -44,6 +45,15 @@
             </div>
 
             <div class="flex items-center gap-4">
+                <button id="contribute-risk-btn" class="bg-white text-slate-700 border border-slate-300 px-4 py-3 rounded-xl font-bold hover:bg-slate-100 transition flex items-center gap-2">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Contribute Risk</span>
+                </button>
+                <button id="admin-review-btn" class="bg-amber-500 text-white px-4 py-3 rounded-xl font-bold hover:bg-amber-600 transition flex items-center gap-2">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admin Review</span>
+                    <span id="pending-count-badge" class="bg-white/25 text-white text-[10px] w-6 h-6 flex items-center justify-center rounded-full">0</span>
+                </button>
                 <button id="cart-toggle" class="relative bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition flex items-center gap-3">
                     <i class="fas fa-clipboard-check"></i>
                     <span>Selection Pool</span>
@@ -65,15 +75,19 @@
                     </button>
                     <button data-cat="SPA" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-truck-moving text-purple-500"></i><span>Swept Path</span></div>
+                        <span class="text-[10px] opacity-60" id="count-SPA">0</span>
                     </button>
                     <button data-cat="BDR" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-road-barrier text-orange-500"></i><span>Barrier Design</span></div>
+                        <span class="text-[10px] opacity-60" id="count-BDR">0</span>
                     </button>
                     <button data-cat="TMG" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-traffic-light text-emerald-500"></i><span>Traffic Guidance</span></div>
+                        <span class="text-[10px] opacity-60" id="count-TMG">0</span>
                     </button>
                     <button data-cat="ETT" class="cat-btn w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-100 text-slate-600 font-bold text-sm transition">
                         <div class="flex items-center gap-3"><i class="fas fa-compass text-blue-500"></i><span>TTM Engineering</span></div>
+                        <span class="text-[10px] opacity-60" id="count-ETT">0</span>
                     </button>
                 </nav>
             </div>
@@ -145,11 +159,112 @@
         <span id="toast-msg" class="font-bold text-sm tracking-tight">Notification</span>
     </div>
 
+    <div id="contribute-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl p-8 relative custom-scrollbar">
+            <button id="contribute-close" class="absolute top-5 right-5 bg-slate-100 p-2 rounded-xl text-slate-500 hover:bg-slate-200 transition">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Contribute A New Risk/Hazard</h3>
+            <p class="text-sm text-slate-500 mb-6">Submissions are stored as pending and marked Not Verified until approved by admin.</p>
+
+            <form id="contribute-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Category</label>
+                    <select id="cf-cat" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option value="SPA">Swept Path Analysis</option>
+                        <option value="BDR">Road Safety Barrier Design</option>
+                        <option value="TMG">Traffic Management (Guidance)</option>
+                        <option value="ETT">Engineering Design for TTM</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Submitted By</label>
+                    <input id="cf-by" type="text" placeholder="Name or team" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Hazard / Risk</label>
+                    <input id="cf-hazard" type="text" required class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Describe the specific hazard" />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Failure Mechanism</label>
+                    <textarea id="cf-mechanism" required rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="How this hazard can occur"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Impact / Consequence</label>
+                    <textarea id="cf-impact" required rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Likely impact if uncontrolled"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Initial Likelihood</label>
+                    <select id="cf-il" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Rare (1)</option><option>Unlikely (2)</option><option selected>Possible (3)</option><option>Likely (4)</option><option>Almost Certain (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Initial Consequence</label>
+                    <select id="cf-ic" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Insignificant (1)</option><option>Minor (2)</option><option selected>Moderate (3)</option><option>Major (4)</option><option>Catastrophic (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Residual Likelihood</label>
+                    <select id="cf-rl" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Rare (1)</option><option selected>Unlikely (2)</option><option>Possible (3)</option><option>Likely (4)</option><option>Almost Certain (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Residual Consequence</label>
+                    <select id="cf-rc" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Insignificant (1)</option><option>Minor (2)</option><option selected>Moderate (3)</option><option>Major (4)</option><option>Catastrophic (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Risk Owner</label>
+                    <input id="cf-owner" type="text" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Role or owner" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Reference</label>
+                    <input id="cf-ref" type="text" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Standard/guideline reference" />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Action Required</label>
+                    <textarea id="cf-action" rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Required actions"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Mitigations (one per line)</label>
+                    <textarea id="cf-mitigations" required rows="5" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="List controls/mitigations"></textarea>
+                </div>
+                <div class="md:col-span-2 flex justify-end gap-3 pt-2">
+                    <button type="button" id="contribute-cancel" class="px-5 py-3 rounded-xl border border-slate-300 font-bold text-slate-600">Cancel</button>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold">Submit For Admin Approval</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[95vh] overflow-y-auto shadow-2xl p-8 relative custom-scrollbar">
+            <button id="admin-close" class="absolute top-5 right-5 bg-slate-100 p-2 rounded-xl text-slate-500 hover:bg-slate-200 transition">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Admin Approval Queue</h3>
+            <p class="text-sm text-slate-500 mb-6">Pending community submitted hazards. Approve to add into verified database.</p>
+            <div id="admin-queue" class="space-y-4"></div>
+        </div>
+    </div>
+
     <script>
         // --- DEEP ANALYSIS DATA SEEDING WITH FULL RISK REGISTER FIELDS ---
         const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
         const CONTROL_TYPES = ['Elimination', 'Substitution', 'Engineering', 'Administrative', 'PPE'];
+        const CUSTOM_RISKS_PENDING_KEY = 'riskpool_custom_pending_v1';
+        const CUSTOM_RISKS_APPROVED_KEY = 'riskpool_custom_approved_v1';
+        const DATAPOL_FILE = 'datapol.json';
+        const WEB_RISK_DATA_FILE = 'web-risk-database.json';
+        const ADMIN_APPROVAL_PIN = '8080';
         const riskPool = [];
+        let pendingCustomRisks = [];
+        let approvedCustomRisks = [];
+        let adminMode = false;
 
         const spaNames = [
             "Structural Column Collision", "Tail-Swing into Pedestrian Zone", "Vertical Crest Grounding (Low Clearance)",
@@ -246,6 +361,64 @@
             "Side-track Kerb Climbing Hit", "Inadequate Clearance to Live Rail", "Crane Load Over-swing Traffic",
             "Pavement Rutting on Heavy Route", "Temporary Guardrail End-terminal"
         ];
+
+        // Additional risk themes informed by WHS and temporary traffic management guidance domains.
+        const spaNamesExpansion = [
+            "School Zone Turnpath Conflict", "Hospital Access Driveway Encroachment", "Depot Gate Turning Radius Deficiency",
+            "Constrained Left-in/Left-out Heavy Vehicle Sweep", "Rail Crossing Queue Trap During Turning", "Shared Zone Pedestrian Overtaking Conflict",
+            "Bus Depot Reverse Exit Blind Arc", "Quay-side Truck Tail-swing Overrun", "Intermodal Yard Corner Trailer Cut-in",
+            "Low-speed Roundabout Trailer Off-track Strike", "Dual Trailer Intersection Stacking Conflict", "Service Road Shoulder Drop-off During Turn",
+            "Culvert Headwall Proximity During Access Turn", "Gatehouse Queue Spillback Turning Blockage", "Warehouse Apron Reverse Alignment Failure",
+            "Emergency Access Route Tight Chicane Conflict", "Construction Compound Entry Apron Overrun", "Fuel Tanker Multi-point Turn Collision Risk",
+            "On-street Loading Bay Entry Side-swipe", "Driveway Exit Sightline Obscuration by Staged Vehicles", "Rural Intersection Gravel Shoulder Instability",
+            "Night Deliveries Tail-swing into Waiting Area", "Bridge Parapet Near-miss Due to Off-tracking", "Temporary Access Pad Edge Collapse During Turn",
+            "Median Opening Wrong Position for Design Vehicle", "Long Vehicle Queue Blocking Escape Path", "Carpark Ramp Transition Trailer Strike",
+            "High-Cube Trailer Overhang Conflict at Signal Pole", "Bus Depot Refuelling Island Encroachment", "Waste Transfer Station Turn Circle Deficiency"
+        ];
+
+        const bdrNamesExpansion = [
+            "Incorrect Barrier Alignment Through Horizontal Curve", "Working Width Clash with Pedestrian Detour", "End Terminal Buried by Temporary Fill",
+            "Unprotected Bridge Pier at Workzone Shift", "Barrier Delamination After Multiple Impacts", "Temporary Barrier Joint Pin Migration",
+            "Unstable Barrier on Milled Pavement Surface", "TMA Storage Position Exposes Live Lane", "Cushion Cartridge Expiry/Obsolescence",
+            "Inadequate Redirective Length Upstream", "Poor Transition to Existing Guardrail", "Anchor Slab Crack Propagation",
+            "Temporary Fence Tie-in Creates Snag Hazard", "Barrier Reflection Causes Night Driver Glare", "Drain Inlet Blockage Behind Barrier Line",
+            "Barrier Toe Undermining From Stormwater", "Incorrect Barrier Height Due to Uneven Camber", "Barrier Gap at Driveway Crossing",
+            "Temporary Median Barrier Creep Under Impact", "Impact Device Not Reset After Strike", "Crash Cushion Nose Misalignment",
+            "Barrier Segment Lift During Flood Event", "Overtightened Connection Causing Brittle Failure", "Aged Water-filled Unit UV Cracking",
+            "Misplaced Delineators Reduce Barrier Conspicuity", "Exposed Steel Edge on Damaged Segment", "Insufficient Flare Distance at Diverge",
+            "Barrier Behind Sign Support Conflict", "Barrier Toe Intrusion into Cyclist Bypass", "Heavy Vehicle Snag at Barrier Transition"
+        ];
+
+        const tmgNamesExpansion = [
+            "Queue Jumping Through Taper Area", "Conflicting Navigation App Route Through Closure", "Pedestrian Detour Non-compliance",
+            "Cyclist Merge at Lane Drop Conflict", "Late Merge Aggression Near Merge Point", "Portable VMS Power Failure",
+            "Sign Set-out Sequence Error", "Detour Route Overcapacity Gridlock", "Temporary Signal Lantern Visibility Loss",
+            "Unprotected Worker During Cone Pickup", "Controller Position Exposed to High-speed Traffic", "Crosswalk Closure Without Alternate Path",
+            "School Pick-up Peak Congestion Through Workzone", "Night Shift Noise Complaint Triggering Unplanned Changes", "Community Event Traffic Surge Conflict",
+            "Adverse Weather Sign Stability Failure", "Wrong Speed Board Placement", "Pilot Vehicle Radio Miscommunication",
+            "Lane Merge Length Below Standard", "Advanced Warning Sign Obstructed by Parked Vehicles", "Emergency Vehicle Priority Conflict",
+            "Taper Length Not Updated for Changed Speed", "Temporary Markings Mislead in Wet Conditions", "Detour Sign Vandalism",
+            "Fatigued Spotter Slow Response", "Unsecured Equipment Trailer in Clear Zone", "Pedestrian Crossing Marshal Absent",
+            "Site Exit Mud and Aggregate Spill", "Workzone Entry Lighting Failure", "Shift Change Traffic Controller Handover Gap"
+        ];
+
+        const ettNamesExpansion = [
+            "Temporary Road Geometry Design Error", "Insufficient Structural Capacity for Plant Crossing", "Drainage Inlet Level Difference Trip Risk",
+            "Subsurface Service Clash During Post Installation", "Incomplete Utility Pot-holing Before Excavation", "Temporary Pavement Edge Drop-off",
+            "Compaction Failure in Side Track", "Traffic Signal Temporary Pole Foundation Instability", "Inadequate Super-elevation Through Diversion",
+            "Temporary Lighting Glare to Oncoming Drivers", "Flood-prone Low Point on Diversion", "Retaining Structure Drainage Back-pressure",
+            "Bridge Joint Differential Settlement on Temporary Deck", "Temporary Kerb Unit Displacement", "Asphalt Bleeding on Detour Route",
+            "Overlay Thickness Causes Barrier Height Non-compliance", "Survey Control Error on Lane Shift", "Unverified Geotech for Temporary Embankment",
+            "Temporary Access Ramp Grade Non-compliance", "Failure of Erosion Control Near Live Lane", "Temporary Culvert Headwall Exposed Edge",
+            "Inadequate Staging of ITS Device Relocation", "Power Supply Failure for Workzone Lighting", "Temporary Footpath Crossfall Non-compliance",
+            "Temporary Sign Gantry Foundation Instability", "Silt Runoff Reduces Road Friction", "Water Cart Overspray Hydroplaning Risk",
+            "Unprotected Excavation Adjacent to Traffic", "Temporary Drain Bypass Pump Failure", "Bridge Pier Strike Envelope Not Protected"
+        ];
+
+        const spaNamesAll = [...spaNames, ...spaNamesExpansion];
+        const bdrNamesAll = [...bdrNames, ...bdrNamesExpansion];
+        const tmgNamesAll = [...tmgNames, ...tmgNamesExpansion];
+        const ettNamesAll = [...ettNames, ...ettNamesExpansion];
 
         const detailedOverridesById = {
             "SPA-001": {
@@ -474,13 +647,159 @@
             return risk;
         }
 
+        function riskBandFromScore(score) {
+            if (score >= 16) return 'Critical';
+            if (score >= 10) return 'High';
+            if (score >= 5) return 'Medium';
+            return 'Low';
+        }
+
+        function buildRiskTextFromPair(likelihoodText, consequenceText) {
+            const l = Number.parseInt(toRiskScore(likelihoodText, '3'), 10);
+            const c = Number.parseInt(toRiskScore(consequenceText, '3'), 10);
+            const score = l * c;
+            return `${riskBandFromScore(score)} (${score})`;
+        }
+
+        function readJsonArray(storageKey) {
+            try {
+                const raw = localStorage.getItem(storageKey);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (err) {
+                console.warn('Storage parse failed for', storageKey, err);
+                return [];
+            }
+        }
+
+        function saveCustomRiskStores() {
+            localStorage.setItem(CUSTOM_RISKS_PENDING_KEY, JSON.stringify(pendingCustomRisks));
+            localStorage.setItem(CUSTOM_RISKS_APPROVED_KEY, JSON.stringify(approvedCustomRisks));
+        }
+
+        function loadCustomRiskStores() {
+            pendingCustomRisks = readJsonArray(CUSTOM_RISKS_PENDING_KEY);
+            approvedCustomRisks = readJsonArray(CUSTOM_RISKS_APPROVED_KEY);
+        }
+
+        async function loadWebRiskDatabase() {
+            try {
+                const embeddedPayload = window.DATAPOL_SYNC_DATA;
+                let payload = embeddedPayload || null;
+
+                if (!payload) {
+                    const dataFiles = [DATAPOL_FILE, WEB_RISK_DATA_FILE];
+                    for (const file of dataFiles) {
+                        const response = await fetch(file, { cache: 'no-store' });
+                        if (!response.ok) continue;
+                        payload = await response.json();
+                        break;
+                    }
+                }
+
+                if (!payload) return;
+
+                const incoming = Array.isArray(payload)
+                    ? payload
+                    : (Array.isArray(payload.risks) ? payload.risks : []);
+
+                if (incoming.length === 0) return;
+
+                const seen = new Set([
+                    ...approvedCustomRisks.map(item => String(item.id || '')),
+                    ...pendingCustomRisks.map(item => String(item.id || ''))
+                ]);
+
+                let addedCount = 0;
+
+                incoming.forEach(item => {
+                    if (!item || !item.id || !item.catID || !item.hazard) return;
+                    const id = String(item.id);
+                    if (seen.has(id)) return;
+                    approvedCustomRisks.push({
+                        ...item,
+                        source: item.source || 'web-analysis'
+                    });
+                    seen.add(id);
+                    addedCount += 1;
+                });
+
+                if (addedCount > 0) {
+                    // Persist imported web records in the same approved store used by the existing flow.
+                    saveCustomRiskStores();
+                }
+            } catch (err) {
+                console.warn('Web risk database could not be loaded.', err);
+            }
+        }
+
+        function getCategoryMeta(catID) {
+            const maps = {
+                SPA: { id: 'SPA', name: 'Swept Path Analysis' },
+                BDR: { id: 'BDR', name: 'Road Safety Barrier Design' },
+                TMG: { id: 'TMG', name: 'Traffic Management (Guidance)' },
+                ETT: { id: 'ETT', name: 'Engineering Design for TTM' }
+            };
+            return maps[catID] || maps.ETT;
+        }
+
+        function getNextCommunityRiskId(catID) {
+            const prefix = `USR-${catID}`;
+            const all = [...approvedCustomRisks, ...pendingCustomRisks]
+                .map(r => String(r.id || ''))
+                .filter(id => id.startsWith(prefix));
+            const maxNum = all.reduce((acc, id) => {
+                const m = id.match(/(\d+)$/);
+                const n = m ? Number.parseInt(m[1], 10) : 0;
+                return Math.max(acc, Number.isFinite(n) ? n : 0);
+            }, 0);
+            return `${prefix}-${String(maxNum + 1).padStart(3, '0')}`;
+        }
+
+        function toDetailedCustomRisk(record, verified) {
+            const cat = getCategoryMeta(record.catID);
+            const defaults = getCategoryDefaults(cat.id, cat.name);
+            const base = {
+                id: record.id,
+                catID: cat.id,
+                category: cat.name,
+                hazard: record.hazard,
+                mechanism: record.mechanism,
+                impact: record.impact,
+                initialLikelihood: record.initialLikelihood || defaults.initialLikelihood,
+                initialConsequence: record.initialConsequence || defaults.initialConsequence,
+                initialRisk: buildRiskTextFromPair(record.initialLikelihood || defaults.initialLikelihood, record.initialConsequence || defaults.initialConsequence),
+                mitigations: Array.isArray(record.mitigations) ? record.mitigations : [],
+                residualLikelihood: record.residualLikelihood || defaults.residualLikelihood,
+                residualConsequence: record.residualConsequence || defaults.residualConsequence,
+                residualRisk: buildRiskTextFromPair(record.residualLikelihood || defaults.residualLikelihood, record.residualConsequence || defaults.residualConsequence),
+                riskOwner: record.riskOwner || defaults.riskOwner,
+                action: record.action || 'Admin review required before implementation.',
+                reference: record.reference || defaults.reference,
+                source: 'community',
+                submittedBy: record.submittedBy || 'Anonymous',
+                submittedAt: record.submittedAt || new Date().toISOString(),
+                verified
+            };
+            base.controls = ensureTypedControls(base);
+            base.controlCategories = buildControlCategories(base.controls);
+            return base;
+        }
+
+        function updatePendingCountBadge() {
+            const badge = document.getElementById('pending-count-badge');
+            if (!badge) return;
+            badge.innerText = pendingCustomRisks.length;
+            badge.classList.toggle('animate-pulse', pendingCustomRisks.length > 0);
+        }
+
         function populatePool() {
             riskPool.length = 0;
             const categories = [
-                { id: 'SPA', name: 'Swept Path Analysis', list: spaNames, pre: 'SPA' },
-                { id: 'BDR', name: 'Road Safety Barrier Design', list: bdrNames, pre: 'BDR' },
-                { id: 'TMG', name: 'Traffic Management (Guidance)', list: tmgNames, pre: 'TMG' },
-                { id: 'ETT', name: 'Engineering Design for TTM', list: ettNames, pre: 'ETT' }
+                { id: 'SPA', name: 'Swept Path Analysis', list: spaNamesAll, pre: 'SPA' },
+                { id: 'BDR', name: 'Road Safety Barrier Design', list: bdrNamesAll, pre: 'BDR' },
+                { id: 'TMG', name: 'Traffic Management (Guidance)', list: tmgNamesAll, pre: 'TMG' },
+                { id: 'ETT', name: 'Engineering Design for TTM', list: ettNamesAll, pre: 'ETT' }
             ];
 
             categories.forEach(cat => {
@@ -495,7 +814,30 @@
                 });
             });
 
+            approvedCustomRisks.forEach(item => {
+                riskPool.push(toDetailedCustomRisk(item, true));
+            });
+            pendingCustomRisks.forEach(item => {
+                riskPool.push(toDetailedCustomRisk(item, false));
+            });
+
+            const countByCat = { SPA: 0, BDR: 0, TMG: 0, ETT: 0 };
+            riskPool.forEach(risk => {
+                if (countByCat[risk.catID] !== undefined) {
+                    countByCat[risk.catID] += 1;
+                }
+            });
+
             document.getElementById('count-all').innerText = riskPool.length;
+            const spaCount = document.getElementById('count-SPA');
+            const bdrCount = document.getElementById('count-BDR');
+            const tmgCount = document.getElementById('count-TMG');
+            const ettCount = document.getElementById('count-ETT');
+            if (spaCount) spaCount.innerText = countByCat.SPA;
+            if (bdrCount) bdrCount.innerText = countByCat.BDR;
+            if (tmgCount) tmgCount.innerText = countByCat.TMG;
+            if (ettCount) ettCount.innerText = countByCat.ETT;
+            updatePendingCountBadge();
         }
 
         let selectionPool = [];
@@ -520,6 +862,7 @@
 
             filtered.forEach(r => {
                 const isSelected = selectionPool.some(s => s.id === r.id);
+                const isVerified = r.verified !== false;
                 const card = document.createElement('div');
                 card.className = `risk-card flex flex-col justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm cursor-pointer category-${r.catID} ${isSelected ? 'ring-4 ring-slate-900/5 bg-slate-50' : ''}`;
                 card.onclick = () => toggleSelection(r.id);
@@ -532,7 +875,10 @@
                                 <i class="fas fa-check text-xs"></i>
                             </div>
                         </div>
-                        <p class="text-[10px] font-bold text-slate-400 mb-1 uppercase tracking-tight">${r.category}</p>
+                        <div class="flex items-center gap-2 mb-1">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">${r.category}</p>
+                            ${isVerified ? '<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Verified</span>' : '<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-700">Not Verified</span>'}
+                        </div>
                         <h3 class="font-bold text-slate-900 leading-tight text-lg mb-3">${r.hazard}</h3>
                         <p class="text-xs text-slate-500 line-clamp-2 mb-4 italic">${r.impact}</p>
                         
@@ -548,7 +894,7 @@
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-xs font-bold text-slate-500"><i class="fas fa-shield-alt mr-1"></i> ${r.mitigations.length} Controls</span>
+                        <span class="text-xs font-bold ${isVerified ? 'text-slate-500' : 'text-amber-700'}"><i class="fas fa-shield-alt mr-1"></i> ${r.mitigations.length} Controls</span>
                         <button onclick="showDetails('${r.id}', event)" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl flex items-center gap-2">
                             <i class="fas fa-expand-arrows-alt"></i> Full Profile
                         </button>
@@ -560,6 +906,13 @@
 
         function toggleSelection(id) {
             const risk = riskPool.find(r => r.id === id);
+            if (!risk) return;
+
+            if (risk.verified === false) {
+                showToast('This risk is pending admin verification and cannot be exported yet.');
+                return;
+            }
+
             const idx = selectionPool.findIndex(s => s.id === id);
             
             if (idx > -1) {
@@ -630,6 +983,7 @@
             if(event) event.stopPropagation();
             const r = riskPool.find(x => x.id === id);
             if(!r) return;
+            const isVerified = r.verified !== false;
             
             let badgeColor = r.catID === 'SPA' ? 'bg-purple-500' : r.catID === 'BDR' ? 'bg-orange-500' : r.catID === 'TMG' ? 'bg-emerald-500' : 'bg-blue-500';
 
@@ -677,6 +1031,12 @@
             content.innerHTML = `
                 <div class="mb-4">
                     <span class="text-[10px] font-black uppercase tracking-widest text-white ${badgeColor} px-3 py-1.5 rounded-lg shadow-sm">${r.id} | ${r.category}</span>
+                </div>
+                <div class="mb-4 flex items-center gap-2">
+                    ${isVerified
+                        ? '<span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-emerald-100 text-emerald-700">Verified</span>'
+                        : '<span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-amber-100 text-amber-700">Not Verified - Admin Review Pending</span>'}
+                    ${r.source === 'community' ? `<span class="text-[10px] font-bold text-slate-500">Submitted by ${r.submittedBy || 'Anonymous'}</span>` : ''}
                 </div>
                 <h2 class="text-3xl font-black text-slate-900 mb-6 leading-tight">${r.hazard}</h2>
                 
@@ -731,8 +1091,10 @@
                 
                 <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
                     <button onclick="closeDetails()" class="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition text-center">Close Window</button>
-                    <button onclick="toggleSelection('${r.id}'); closeDetails();" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 shadow-lg transition flex items-center justify-center gap-2">
-                        ${selectionPool.some(s => s.id === r.id) ? '<i class="fas fa-minus"></i> Remove from Selection' : '<i class="fas fa-plus"></i> Add to Selection'}
+                    <button onclick="toggleSelection('${r.id}'); closeDetails();" class="${isVerified ? 'bg-slate-900 hover:bg-slate-800' : 'bg-slate-400 cursor-not-allowed'} text-white px-6 py-3 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2">
+                        ${isVerified
+                            ? (selectionPool.some(s => s.id === r.id) ? '<i class="fas fa-minus"></i> Remove from Selection' : '<i class="fas fa-plus"></i> Add to Selection')
+                            : '<i class="fas fa-lock"></i> Awaiting Admin Approval'}
                     </button>
                 </div>
             `;
@@ -853,9 +1215,167 @@
             showToast(`Added ${filtered.length} hazards to pool`);
         };
 
+        function openContributeModal() {
+            document.getElementById('contribute-modal').classList.remove('hidden');
+        }
+
+        function closeContributeModal() {
+            document.getElementById('contribute-modal').classList.add('hidden');
+        }
+
+        function openAdminModal() {
+            if (!adminMode) {
+                const pin = prompt('Admin PIN required to review pending submissions');
+                if (pin !== ADMIN_APPROVAL_PIN) {
+                    showToast('Invalid admin PIN.');
+                    return;
+                }
+                adminMode = true;
+            }
+            renderAdminQueue();
+            document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function createCustomRiskFromForm() {
+            const catID = document.getElementById('cf-cat').value;
+            const hazard = document.getElementById('cf-hazard').value.trim();
+            const mechanism = document.getElementById('cf-mechanism').value.trim();
+            const impact = document.getElementById('cf-impact').value.trim();
+            const submittedBy = document.getElementById('cf-by').value.trim() || 'Anonymous';
+            const initialLikelihood = document.getElementById('cf-il').value;
+            const initialConsequence = document.getElementById('cf-ic').value;
+            const residualLikelihood = document.getElementById('cf-rl').value;
+            const residualConsequence = document.getElementById('cf-rc').value;
+            const riskOwner = document.getElementById('cf-owner').value.trim() || 'Project Engineer';
+            const reference = document.getElementById('cf-ref').value.trim() || 'Community submission';
+            const action = document.getElementById('cf-action').value.trim() || 'Review and validate controls before implementation.';
+            const mitigations = document.getElementById('cf-mitigations').value
+                .split('\n')
+                .map(x => x.trim())
+                .filter(Boolean);
+
+            if (!hazard || !mechanism || !impact || mitigations.length === 0) {
+                return null;
+            }
+
+            return {
+                id: getNextCommunityRiskId(catID),
+                catID,
+                hazard,
+                mechanism,
+                impact,
+                initialLikelihood,
+                initialConsequence,
+                residualLikelihood,
+                residualConsequence,
+                riskOwner,
+                action,
+                reference,
+                mitigations,
+                submittedBy,
+                submittedAt: new Date().toISOString()
+            };
+        }
+
+        function renderAdminQueue() {
+            const container = document.getElementById('admin-queue');
+            if (!container) return;
+
+            if (pendingCustomRisks.length === 0) {
+                container.innerHTML = '<div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-600">No pending submissions.</div>';
+                return;
+            }
+
+            container.innerHTML = pendingCustomRisks.map(item => `
+                <div class="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400">${item.id} | ${item.catID}</div>
+                            <h4 class="font-black text-slate-900 mt-1">${item.hazard}</h4>
+                            <p class="text-xs text-slate-500 mt-1">Submitted by ${item.submittedBy || 'Anonymous'} on ${new Date(item.submittedAt).toLocaleString()}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveCustomRisk('${item.id}')" class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700">Approve</button>
+                            <button onclick="rejectCustomRisk('${item.id}')" class="px-4 py-2 rounded-lg bg-rose-600 text-white text-sm font-bold hover:bg-rose-700">Reject</button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-700 mt-3"><strong>Mechanism:</strong> ${item.mechanism}</p>
+                    <p class="text-sm text-slate-700 mt-2"><strong>Impact:</strong> ${item.impact}</p>
+                </div>
+            `).join('');
+        }
+
+        function approveCustomRisk(id) {
+            const idx = pendingCustomRisks.findIndex(x => x.id === id);
+            if (idx < 0) return;
+            const item = pendingCustomRisks[idx];
+            pendingCustomRisks.splice(idx, 1);
+            approvedCustomRisks.push(item);
+            saveCustomRiskStores();
+            populatePool();
+            renderGrid();
+            renderAdminQueue();
+            showToast(`Approved ${id}`);
+        }
+
+        function rejectCustomRisk(id) {
+            const idx = pendingCustomRisks.findIndex(x => x.id === id);
+            if (idx < 0) return;
+            pendingCustomRisks.splice(idx, 1);
+            saveCustomRiskStores();
+            populatePool();
+            renderGrid();
+            renderAdminQueue();
+            showToast(`Rejected ${id}`);
+        }
+
+        window.approveCustomRisk = approveCustomRisk;
+        window.rejectCustomRisk = rejectCustomRisk;
+
+        document.getElementById('contribute-risk-btn').onclick = openContributeModal;
+        document.getElementById('admin-review-btn').onclick = openAdminModal;
+        document.getElementById('contribute-close').onclick = closeContributeModal;
+        document.getElementById('contribute-cancel').onclick = closeContributeModal;
+        document.getElementById('admin-close').onclick = closeAdminModal;
+
+        document.getElementById('contribute-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const custom = createCustomRiskFromForm();
+            if (!custom) {
+                showToast('Please complete required fields and at least one mitigation.');
+                return;
+            }
+
+            pendingCustomRisks.push(custom);
+            saveCustomRiskStores();
+            populatePool();
+            renderGrid();
+            event.target.reset();
+            closeContributeModal();
+            showToast(`Submitted ${custom.id} for admin approval`);
+        });
+
+        document.getElementById('contribute-modal').addEventListener('click', (event) => {
+            if (event.target.id === 'contribute-modal') closeContributeModal();
+        });
+
+        document.getElementById('admin-modal').addEventListener('click', (event) => {
+            if (event.target.id === 'admin-modal') closeAdminModal();
+        });
+
         // Initialize
-        populatePool();
-        renderGrid();
+        async function initializeApp() {
+            loadCustomRiskStores();
+            await loadWebRiskDatabase();
+            populatePool();
+            renderGrid();
+        }
+
+        initializeApp();
     </script>
 </body>
 </html>

@@ -1,0 +1,133 @@
+{
+  "metadata": {
+    "updatedAt": "2026-03-15T00:09:47.130250+00:00"
+  },
+  "sources": [
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.051366+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.460734+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/mutcd-part6",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.051398+00:00",
+      "lastStatus": "ok",
+      "lastSeen": "2026-03-15T00:09:23.208765+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from mutcd.fhwa.dot.gov",
+      "url": "https://mutcd.fhwa.dot.gov/htm/2009/part6/part6_toc.htm",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.051420+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:24.705015+00:00",
+      "discoveredFrom": "https://mutcd.fhwa.dot.gov/htm/2009/part6/part6_toc.htm"
+    },
+    {
+      "name": "FHWA Work Zones",
+      "url": "https://highways.dot.gov/safety/other/work-zone/work-zones",
+      "kind": "base",
+      "addedAt": "2026-03-14T23:49:55.051440+00:00",
+      "lastStatus": "unavailable: URLError",
+      "lastSeen": "2026-03-15T00:09:41.803075+00:00",
+      "discoveredFrom": ""
+    },
+    {
+      "name": "Discovered from ops.fhwa.dot.gov",
+      "url": "https://ops.fhwa.dot.gov/wz",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.051465+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:43.808499+00:00",
+      "discoveredFrom": "https://ops.fhwa.dot.gov/wz"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/standards",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.926986+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.461828+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/bulletins",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.927028+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.461849+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/training",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.927075+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.461862+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/final-rule",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.927241+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.461961+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/fhwa-safety",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.927401+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.461992+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://www.osha.gov/highway-workzones/mutcd",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:55.927537+00:00",
+      "lastStatus": "discovered",
+      "lastSeen": "2026-03-15T00:09:22.462006+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    },
+    {
+      "name": "Discovered from mutcd.fhwa.dot.gov",
+      "url": "https://mutcd.fhwa.dot.gov/res-policy.htm",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:49:58.158681+00:00",
+      "lastStatus": "ok",
+      "lastSeen": "2026-03-15T00:09:47.130156+00:00",
+      "discoveredFrom": "https://mutcd.fhwa.dot.gov/htm/2009/part6/part6_toc.htm"
+    },
+    {
+      "name": "Discovered from ops.fhwa.dot.gov",
+      "url": "https://ops.fhwa.dot.gov/workersafety/index.htm",
+      "kind": "discovered",
+      "addedAt": "2026-03-14T23:50:41.405677+00:00",
+      "lastStatus": "unavailable: HTTPError",
+      "lastSeen": "2026-03-15T00:09:45.905637+00:00",
+      "discoveredFrom": "https://ops.fhwa.dot.gov/wz"
+    },
+    {
+      "name": "Discovered from www.osha.gov",
+      "url": "https://safety.fhwa.dot.gov/wz",
+      "kind": "discovered",
+      "addedAt": "2026-03-15T00:06:07.431225+00:00",
+      "lastStatus": "unavailable: HTTPError",
+      "lastSeen": "2026-03-15T00:09:44.893914+00:00",
+      "discoveredFrom": "https://www.osha.gov/highway-workzones"
+    }
+  ]
+}
