@@ -230,8 +230,28 @@
                     <textarea id="cf-action" rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Required actions"></textarea>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="text-xs font-bold text-slate-500 uppercase">Mitigations (one per line)</label>
-                    <textarea id="cf-mitigations" required rows="5" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="List controls/mitigations"></textarea>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Controls by Category (one per line)</label>
+                    <p class="text-[11px] text-slate-400 mt-1">Enter controls in any categories below. At least one control is required.</p>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Elimination</label>
+                    <textarea id="cf-ctrl-elimination" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Remove or avoid the hazard"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Substitution</label>
+                    <textarea id="cf-ctrl-substitution" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Use safer alternatives"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Engineering</label>
+                    <textarea id="cf-ctrl-engineering" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Physical design or hardware controls"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Administrative</label>
+                    <textarea id="cf-ctrl-administrative" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Procedures, training, supervision"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">PPE</label>
+                    <textarea id="cf-ctrl-ppe" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" placeholder="Personal protective equipment controls"></textarea>
                 </div>
                 <div class="md:col-span-2 flex justify-end gap-3 pt-2">
                     <button type="button" id="contribute-cancel" class="px-5 py-3 rounded-xl border border-slate-300 font-bold text-slate-600">Cancel</button>
@@ -323,8 +343,28 @@
                     <textarea id="ef-action" rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="text-xs font-bold text-slate-500 uppercase">Mitigations (one per line)</label>
-                    <textarea id="ef-mitigations" required rows="5" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Controls by Category (one per line)</label>
+                    <p class="text-[11px] text-slate-400 mt-1">Edit controls per hierarchy category. At least one control is required.</p>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Elimination</label>
+                    <textarea id="ef-ctrl-elimination" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Substitution</label>
+                    <textarea id="ef-ctrl-substitution" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Engineering</label>
+                    <textarea id="ef-ctrl-engineering" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Administrative</label>
+                    <textarea id="ef-ctrl-administrative" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">PPE</label>
+                    <textarea id="ef-ctrl-ppe" rows="3" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
                 </div>
                 <div class="md:col-span-2 flex justify-end gap-3 pt-2">
                     <button type="button" id="edit-cancel" class="px-5 py-3 rounded-xl border border-slate-300 font-bold text-slate-600">Cancel</button>
@@ -342,6 +382,9 @@
         const CUSTOM_RISKS_APPROVED_KEY = 'riskpool_custom_approved_v1';
         const PENDING_RISK_EDITS_KEY = 'riskpool_pending_edits_v1';
         const APPROVED_RISK_EDITS_KEY = 'riskpool_approved_edits_v1';
+        const WEB_ANALYSIS_LAST_RUN_DATE_KEY = 'riskpool_web_analysis_last_run_date_v1';
+        const WEB_ANALYSIS_RUN_HOUR = 8;
+        const WEB_ANALYSIS_RUN_MINUTE = 30;
         const DATAPOL_FILE = 'datapol.json';
         const WEB_RISK_DATA_FILE = 'web-risk-database.json';
         const ADMIN_APPROVAL_PIN = '8080';
@@ -712,6 +755,62 @@
             return grouped;
         }
 
+        function parseControlLines(text) {
+            return String(text || '')
+                .split('\n')
+                .map(line => line.trim())
+                .filter(Boolean);
+        }
+
+        function collectControlsFromForm(prefix) {
+            const controls = [];
+            const fieldMap = [
+                { type: 'Elimination', id: `${prefix}-ctrl-elimination` },
+                { type: 'Substitution', id: `${prefix}-ctrl-substitution` },
+                { type: 'Engineering', id: `${prefix}-ctrl-engineering` },
+                { type: 'Administrative', id: `${prefix}-ctrl-administrative` },
+                { type: 'PPE', id: `${prefix}-ctrl-ppe` }
+            ];
+
+            fieldMap.forEach(field => {
+                const el = document.getElementById(field.id);
+                if (!el) return;
+                const lines = parseControlLines(el.value);
+                lines.forEach(description => controls.push({ type: field.type, description }));
+            });
+
+            return controls;
+        }
+
+        function controlsToMitigations(controls) {
+            return controls.map(c => c.description).filter(Boolean);
+        }
+
+        function setControlsOnForm(prefix, controls, fallbackMitigations = []) {
+            const grouped = buildControlCategories(
+                Array.isArray(controls) && controls.length > 0
+                    ? controls
+                    : (Array.isArray(fallbackMitigations)
+                        ? fallbackMitigations.map((m, index) => ({
+                            type: classifyMitigationType(m, '', index),
+                            description: m
+                        }))
+                        : [])
+            );
+
+            const setValue = (suffix, values) => {
+                const el = document.getElementById(`${prefix}${suffix}`);
+                if (!el) return;
+                el.value = (values || []).join('\n');
+            };
+
+            setValue('-ctrl-elimination', grouped.Elimination);
+            setValue('-ctrl-substitution', grouped.Substitution);
+            setValue('-ctrl-engineering', grouped.Engineering);
+            setValue('-ctrl-administrative', grouped.Administrative);
+            setValue('-ctrl-ppe', grouped.PPE);
+        }
+
         function createDetailedRisk(cat, hazard, index) {
             const id = `${cat.pre}-${String(index + 1).padStart(3, '0')}`;
             const defaults = getCategoryDefaults(cat.id, cat.name);
@@ -880,6 +979,59 @@
             } catch (err) {
                 console.warn('Web risk database could not be loaded.', err);
             }
+        }
+
+        function dateStampLocal(date = new Date()) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function isAfterScheduledTime(date = new Date()) {
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            return hour > WEB_ANALYSIS_RUN_HOUR || (hour === WEB_ANALYSIS_RUN_HOUR && minute >= WEB_ANALYSIS_RUN_MINUTE);
+        }
+
+        function hasRunToday(date = new Date()) {
+            const lastRun = localStorage.getItem(WEB_ANALYSIS_LAST_RUN_DATE_KEY) || '';
+            return lastRun === dateStampLocal(date);
+        }
+
+        function markWebAnalysisRun(date = new Date()) {
+            localStorage.setItem(WEB_ANALYSIS_LAST_RUN_DATE_KEY, dateStampLocal(date));
+        }
+
+        async function runScheduledWebAnalysis(force = false) {
+            const now = new Date();
+            if (!force) {
+                if (!isAfterScheduledTime(now) || hasRunToday(now)) return false;
+            }
+
+            await loadWebRiskDatabase();
+            markWebAnalysisRun(now);
+            populatePool();
+            renderGrid();
+            showToast('Daily web risk analysis sync completed.');
+            return true;
+        }
+
+        function msUntilNextScheduledRun(now = new Date()) {
+            const next = new Date(now);
+            next.setHours(WEB_ANALYSIS_RUN_HOUR, WEB_ANALYSIS_RUN_MINUTE, 0, 0);
+            if (now >= next) {
+                next.setDate(next.getDate() + 1);
+            }
+            return Math.max(1000, next.getTime() - now.getTime());
+        }
+
+        function scheduleDailyWebAnalysisTimer() {
+            const delay = msUntilNextScheduledRun();
+            setTimeout(async () => {
+                await runScheduledWebAnalysis(true);
+                scheduleDailyWebAnalysisTimer();
+            }, delay);
         }
 
         function getCategoryMeta(catID) {
@@ -1427,7 +1579,7 @@
             document.getElementById('ef-owner').value = risk.riskOwner || '';
             document.getElementById('ef-ref').value = risk.reference || '';
             document.getElementById('ef-action').value = risk.action || '';
-            document.getElementById('ef-mitigations').value = Array.isArray(risk.mitigations) ? risk.mitigations.join('\n') : '';
+            setControlsOnForm('ef', ensureTypedControls(risk), risk.mitigations || []);
             document.getElementById('ef-by').value = '';
             document.getElementById('edit-modal').classList.remove('hidden');
         }
@@ -1447,12 +1599,10 @@
             const hazard = document.getElementById('ef-hazard').value.trim();
             const mechanism = document.getElementById('ef-mechanism').value.trim();
             const impact = document.getElementById('ef-impact').value.trim();
-            const mitigations = document.getElementById('ef-mitigations').value
-                .split('\n')
-                .map(x => x.trim())
-                .filter(Boolean);
+            const controls = collectControlsFromForm('ef');
+            const mitigations = controlsToMitigations(controls);
 
-            if (!hazard || !mechanism || !impact || mitigations.length === 0) return null;
+            if (!hazard || !mechanism || !impact || controls.length === 0) return null;
 
             return {
                 editRequestId: getNextEditRequestId(),
@@ -1469,6 +1619,7 @@
                 riskOwner: document.getElementById('ef-owner').value.trim() || target.riskOwner || 'Project Engineer',
                 reference: document.getElementById('ef-ref').value.trim() || target.reference || 'Edit request',
                 action: document.getElementById('ef-action').value.trim() || target.action || 'Review and validate controls before implementation.',
+                controls,
                 mitigations,
                 requestedBy: document.getElementById('ef-by').value.trim() || 'Anonymous',
                 requestedAt: new Date().toISOString()
@@ -1488,12 +1639,10 @@
             const riskOwner = document.getElementById('cf-owner').value.trim() || 'Project Engineer';
             const reference = document.getElementById('cf-ref').value.trim() || 'Community submission';
             const action = document.getElementById('cf-action').value.trim() || 'Review and validate controls before implementation.';
-            const mitigations = document.getElementById('cf-mitigations').value
-                .split('\n')
-                .map(x => x.trim())
-                .filter(Boolean);
+            const controls = collectControlsFromForm('cf');
+            const mitigations = controlsToMitigations(controls);
 
-            if (!hazard || !mechanism || !impact || mitigations.length === 0) {
+            if (!hazard || !mechanism || !impact || controls.length === 0) {
                 return null;
             }
 
@@ -1510,6 +1659,7 @@
                 riskOwner,
                 action,
                 reference,
+                controls,
                 mitigations,
                 submittedBy,
                 submittedAt: new Date().toISOString()
@@ -1655,7 +1805,7 @@
             event.preventDefault();
             const custom = createCustomRiskFromForm();
             if (!custom) {
-                showToast('Please complete required fields and at least one mitigation.');
+                showToast('Please complete required fields and enter at least one control.');
                 return;
             }
 
@@ -1672,7 +1822,7 @@
             event.preventDefault();
             const request = createEditRequestFromForm();
             if (!request) {
-                showToast('Please complete required fields and at least one mitigation.');
+                showToast('Please complete required fields and enter at least one control.');
                 return;
             }
 
@@ -1700,9 +1850,10 @@
         async function initializeApp() {
             loadCustomRiskStores();
             loadRiskEditStores();
-            await loadWebRiskDatabase();
             populatePool();
             renderGrid();
+            await runScheduledWebAnalysis(false);
+            scheduleDailyWebAnalysisTimer();
         }
 
         initializeApp();
