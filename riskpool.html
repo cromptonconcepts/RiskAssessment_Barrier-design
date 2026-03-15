@@ -252,19 +252,110 @@
         </div>
     </div>
 
+    <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[92] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl p-8 relative custom-scrollbar">
+            <button id="edit-close" class="absolute top-5 right-5 bg-slate-100 p-2 rounded-xl text-slate-500 hover:bg-slate-200 transition">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Request Risk Edit</h3>
+            <p class="text-sm text-slate-500 mb-6">Edits are submitted as pending and only finalized after admin approval.</p>
+
+            <form id="edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Risk ID</label>
+                    <input id="ef-id" type="text" readonly class="w-full mt-1 p-3 border border-slate-300 rounded-xl bg-slate-100" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Category</label>
+                    <input id="ef-cat" type="text" readonly class="w-full mt-1 p-3 border border-slate-300 rounded-xl bg-slate-100" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Requested By</label>
+                    <input id="ef-by" type="text" placeholder="Name or team" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" />
+                </div>
+                <div></div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Hazard / Risk</label>
+                    <input id="ef-hazard" type="text" required class="w-full mt-1 p-3 border border-slate-300 rounded-xl" />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Failure Mechanism</label>
+                    <textarea id="ef-mechanism" required rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Impact / Consequence</label>
+                    <textarea id="ef-impact" required rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Initial Likelihood</label>
+                    <select id="ef-il" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Rare (1)</option><option>Unlikely (2)</option><option>Possible (3)</option><option>Likely (4)</option><option>Almost Certain (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Initial Consequence</label>
+                    <select id="ef-ic" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Insignificant (1)</option><option>Minor (2)</option><option>Moderate (3)</option><option>Major (4)</option><option>Catastrophic (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Residual Likelihood</label>
+                    <select id="ef-rl" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Rare (1)</option><option>Unlikely (2)</option><option>Possible (3)</option><option>Likely (4)</option><option>Almost Certain (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Residual Consequence</label>
+                    <select id="ef-rc" class="w-full mt-1 p-3 border border-slate-300 rounded-xl">
+                        <option>Insignificant (1)</option><option>Minor (2)</option><option>Moderate (3)</option><option>Major (4)</option><option>Catastrophic (5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Risk Owner</label>
+                    <input id="ef-owner" type="text" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Reference</label>
+                    <input id="ef-ref" type="text" class="w-full mt-1 p-3 border border-slate-300 rounded-xl" />
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Action Required</label>
+                    <textarea id="ef-action" rows="2" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Mitigations (one per line)</label>
+                    <textarea id="ef-mitigations" required rows="5" class="w-full mt-1 p-3 border border-slate-300 rounded-xl"></textarea>
+                </div>
+                <div class="md:col-span-2 flex justify-end gap-3 pt-2">
+                    <button type="button" id="edit-cancel" class="px-5 py-3 rounded-xl border border-slate-300 font-bold text-slate-600">Cancel</button>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold">Submit Edit For Admin Approval</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // --- DEEP ANALYSIS DATA SEEDING WITH FULL RISK REGISTER FIELDS ---
         const RISK_POOL_TRANSFER_KEY = 'riskpool_selected_risks_for_register';
         const CONTROL_TYPES = ['Elimination', 'Substitution', 'Engineering', 'Administrative', 'PPE'];
         const CUSTOM_RISKS_PENDING_KEY = 'riskpool_custom_pending_v1';
         const CUSTOM_RISKS_APPROVED_KEY = 'riskpool_custom_approved_v1';
+        const PENDING_RISK_EDITS_KEY = 'riskpool_pending_edits_v1';
+        const APPROVED_RISK_EDITS_KEY = 'riskpool_approved_edits_v1';
         const DATAPOL_FILE = 'datapol.json';
         const WEB_RISK_DATA_FILE = 'web-risk-database.json';
         const ADMIN_APPROVAL_PIN = '8080';
         const riskPool = [];
         let pendingCustomRisks = [];
         let approvedCustomRisks = [];
+        let pendingRiskEdits = [];
+        let approvedRiskEdits = [];
+        let activeEditRiskId = null;
         let adminMode = false;
+
+        function hasPendingEditRequest(riskId) {
+            return pendingRiskEdits.some(item => item.targetRiskId === riskId);
+        }
 
         const spaNames = [
             "Structural Column Collision", "Tail-Swing into Pedestrian Zone", "Vertical Crest Grounding (Low Clearance)",
@@ -682,6 +773,64 @@
             approvedCustomRisks = readJsonArray(CUSTOM_RISKS_APPROVED_KEY);
         }
 
+        function saveRiskEditStores() {
+            localStorage.setItem(PENDING_RISK_EDITS_KEY, JSON.stringify(pendingRiskEdits));
+            localStorage.setItem(APPROVED_RISK_EDITS_KEY, JSON.stringify(approvedRiskEdits));
+        }
+
+        function loadRiskEditStores() {
+            pendingRiskEdits = readJsonArray(PENDING_RISK_EDITS_KEY);
+            approvedRiskEdits = readJsonArray(APPROVED_RISK_EDITS_KEY);
+        }
+
+        function getNextEditRequestId() {
+            const all = [...pendingRiskEdits, ...approvedRiskEdits]
+                .map(item => String(item.editRequestId || ''))
+                .filter(id => id.startsWith('EDT-'));
+            const maxNum = all.reduce((acc, id) => {
+                const m = id.match(/EDT-(\d+)$/);
+                const n = m ? Number.parseInt(m[1], 10) : 0;
+                return Math.max(acc, Number.isFinite(n) ? n : 0);
+            }, 0);
+            return `EDT-${String(maxNum + 1).padStart(3, '0')}`;
+        }
+
+        function applyEditToRiskRecord(risk, edit) {
+            if (!risk || !edit) return;
+
+            risk.hazard = edit.hazard;
+            risk.mechanism = edit.mechanism;
+            risk.impact = edit.impact;
+            risk.initialLikelihood = edit.initialLikelihood;
+            risk.initialConsequence = edit.initialConsequence;
+            risk.initialRisk = buildRiskTextFromPair(edit.initialLikelihood, edit.initialConsequence);
+            risk.residualLikelihood = edit.residualLikelihood;
+            risk.residualConsequence = edit.residualConsequence;
+            risk.residualRisk = buildRiskTextFromPair(edit.residualLikelihood, edit.residualConsequence);
+            risk.riskOwner = edit.riskOwner;
+            risk.action = edit.action;
+            risk.reference = edit.reference;
+            risk.mitigations = Array.isArray(edit.mitigations) ? edit.mitigations : [];
+            risk.controls = ensureTypedControls(risk);
+            risk.controlCategories = buildControlCategories(risk.controls);
+        }
+
+        function applyApprovedRiskEditsToPool() {
+            if (!Array.isArray(approvedRiskEdits) || approvedRiskEdits.length === 0) return;
+
+            const sorted = [...approvedRiskEdits].sort((a, b) => {
+                const aTime = new Date(a.requestedAt || 0).getTime();
+                const bTime = new Date(b.requestedAt || 0).getTime();
+                return aTime - bTime;
+            });
+
+            sorted.forEach(edit => {
+                const target = riskPool.find(r => r.id === edit.targetRiskId);
+                if (!target) return;
+                applyEditToRiskRecord(target, edit);
+            });
+        }
+
         async function loadWebRiskDatabase() {
             try {
                 const embeddedPayload = window.DATAPOL_SYNC_DATA;
@@ -789,8 +938,9 @@
         function updatePendingCountBadge() {
             const badge = document.getElementById('pending-count-badge');
             if (!badge) return;
-            badge.innerText = pendingCustomRisks.length;
-            badge.classList.toggle('animate-pulse', pendingCustomRisks.length > 0);
+            const pendingTotal = pendingCustomRisks.length + pendingRiskEdits.length;
+            badge.innerText = pendingTotal;
+            badge.classList.toggle('animate-pulse', pendingTotal > 0);
         }
 
         function populatePool() {
@@ -820,6 +970,8 @@
             pendingCustomRisks.forEach(item => {
                 riskPool.push(toDetailedCustomRisk(item, false));
             });
+
+            applyApprovedRiskEditsToPool();
 
             const countByCat = { SPA: 0, BDR: 0, TMG: 0, ETT: 0 };
             riskPool.forEach(risk => {
@@ -863,6 +1015,7 @@
             filtered.forEach(r => {
                 const isSelected = selectionPool.some(s => s.id === r.id);
                 const isVerified = r.verified !== false;
+                const hasPendingEdit = hasPendingEditRequest(r.id);
                 const card = document.createElement('div');
                 card.className = `risk-card flex flex-col justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm cursor-pointer category-${r.catID} ${isSelected ? 'ring-4 ring-slate-900/5 bg-slate-50' : ''}`;
                 card.onclick = () => toggleSelection(r.id);
@@ -878,6 +1031,7 @@
                         <div class="flex items-center gap-2 mb-1">
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">${r.category}</p>
                             ${isVerified ? '<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Verified</span>' : '<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-700">Not Verified</span>'}
+                            ${hasPendingEdit ? '<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-200 text-amber-900">Pending Edit</span>' : ''}
                         </div>
                         <h3 class="font-bold text-slate-900 leading-tight text-lg mb-3">${r.hazard}</h3>
                         <p class="text-xs text-slate-500 line-clamp-2 mb-4 italic">${r.impact}</p>
@@ -895,9 +1049,14 @@
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
                         <span class="text-xs font-bold ${isVerified ? 'text-slate-500' : 'text-amber-700'}"><i class="fas fa-shield-alt mr-1"></i> ${r.mitigations.length} Controls</span>
-                        <button onclick="showDetails('${r.id}', event)" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl flex items-center gap-2">
-                            <i class="fas fa-expand-arrows-alt"></i> Full Profile
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openEditModal('${r.id}', event)" class="text-xs font-bold text-amber-700 hover:text-amber-900 transition bg-amber-50 hover:bg-amber-100 px-3 py-2 rounded-xl flex items-center gap-2">
+                                <i class="fas fa-pen-to-square"></i> Edit
+                            </button>
+                            <button onclick="showDetails('${r.id}', event)" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl flex items-center gap-2">
+                                <i class="fas fa-expand-arrows-alt"></i> Full Profile
+                            </button>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -984,6 +1143,7 @@
             const r = riskPool.find(x => x.id === id);
             if(!r) return;
             const isVerified = r.verified !== false;
+            const hasPendingEdit = hasPendingEditRequest(r.id);
             
             let badgeColor = r.catID === 'SPA' ? 'bg-purple-500' : r.catID === 'BDR' ? 'bg-orange-500' : r.catID === 'TMG' ? 'bg-emerald-500' : 'bg-blue-500';
 
@@ -1036,6 +1196,7 @@
                     ${isVerified
                         ? '<span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-emerald-100 text-emerald-700">Verified</span>'
                         : '<span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-amber-100 text-amber-700">Not Verified - Admin Review Pending</span>'}
+                    ${hasPendingEdit ? '<span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-amber-200 text-amber-900">Pending Edit Approval</span>' : ''}
                     ${r.source === 'community' ? `<span class="text-[10px] font-bold text-slate-500">Submitted by ${r.submittedBy || 'Anonymous'}</span>` : ''}
                 </div>
                 <h2 class="text-3xl font-black text-slate-900 mb-6 leading-tight">${r.hazard}</h2>
@@ -1091,6 +1252,9 @@
                 
                 <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
                     <button onclick="closeDetails()" class="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition text-center">Close Window</button>
+                    <button onclick="openEditModal('${r.id}')" class="px-6 py-3 rounded-xl font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 transition text-center flex items-center justify-center gap-2">
+                        <i class="fas fa-pen-to-square"></i> Request Edit
+                    </button>
                     <button onclick="toggleSelection('${r.id}'); closeDetails();" class="${isVerified ? 'bg-slate-900 hover:bg-slate-800' : 'bg-slate-400 cursor-not-allowed'} text-white px-6 py-3 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2">
                         ${isVerified
                             ? (selectionPool.some(s => s.id === r.id) ? '<i class="fas fa-minus"></i> Remove from Selection' : '<i class="fas fa-plus"></i> Add to Selection')
@@ -1240,6 +1404,77 @@
             document.getElementById('admin-modal').classList.add('hidden');
         }
 
+        function openEditModal(riskId, event) {
+            if (event) event.stopPropagation();
+            const risk = riskPool.find(r => r.id === riskId);
+            if (!risk) return;
+
+            if (risk.verified === false) {
+                showToast('Pending risks must be approved before they can be edited.');
+                return;
+            }
+
+            activeEditRiskId = risk.id;
+            document.getElementById('ef-id').value = risk.id;
+            document.getElementById('ef-cat').value = risk.category;
+            document.getElementById('ef-hazard').value = risk.hazard || '';
+            document.getElementById('ef-mechanism').value = risk.mechanism || '';
+            document.getElementById('ef-impact').value = risk.impact || '';
+            document.getElementById('ef-il').value = risk.initialLikelihood || 'Possible (3)';
+            document.getElementById('ef-ic').value = risk.initialConsequence || 'Moderate (3)';
+            document.getElementById('ef-rl').value = risk.residualLikelihood || 'Unlikely (2)';
+            document.getElementById('ef-rc').value = risk.residualConsequence || 'Moderate (3)';
+            document.getElementById('ef-owner').value = risk.riskOwner || '';
+            document.getElementById('ef-ref').value = risk.reference || '';
+            document.getElementById('ef-action').value = risk.action || '';
+            document.getElementById('ef-mitigations').value = Array.isArray(risk.mitigations) ? risk.mitigations.join('\n') : '';
+            document.getElementById('ef-by').value = '';
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+            activeEditRiskId = null;
+        }
+
+        function createEditRequestFromForm() {
+            const targetRiskId = activeEditRiskId;
+            if (!targetRiskId) return null;
+
+            const target = riskPool.find(r => r.id === targetRiskId);
+            if (!target) return null;
+
+            const hazard = document.getElementById('ef-hazard').value.trim();
+            const mechanism = document.getElementById('ef-mechanism').value.trim();
+            const impact = document.getElementById('ef-impact').value.trim();
+            const mitigations = document.getElementById('ef-mitigations').value
+                .split('\n')
+                .map(x => x.trim())
+                .filter(Boolean);
+
+            if (!hazard || !mechanism || !impact || mitigations.length === 0) return null;
+
+            return {
+                editRequestId: getNextEditRequestId(),
+                targetRiskId,
+                catID: target.catID,
+                category: target.category,
+                hazard,
+                mechanism,
+                impact,
+                initialLikelihood: document.getElementById('ef-il').value,
+                initialConsequence: document.getElementById('ef-ic').value,
+                residualLikelihood: document.getElementById('ef-rl').value,
+                residualConsequence: document.getElementById('ef-rc').value,
+                riskOwner: document.getElementById('ef-owner').value.trim() || target.riskOwner || 'Project Engineer',
+                reference: document.getElementById('ef-ref').value.trim() || target.reference || 'Edit request',
+                action: document.getElementById('ef-action').value.trim() || target.action || 'Review and validate controls before implementation.',
+                mitigations,
+                requestedBy: document.getElementById('ef-by').value.trim() || 'Anonymous',
+                requestedAt: new Date().toISOString()
+            };
+        }
+
         function createCustomRiskFromForm() {
             const catID = document.getElementById('cf-cat').value;
             const hazard = document.getElementById('cf-hazard').value.trim();
@@ -1285,12 +1520,12 @@
             const container = document.getElementById('admin-queue');
             if (!container) return;
 
-            if (pendingCustomRisks.length === 0) {
+            if (pendingCustomRisks.length === 0 && pendingRiskEdits.length === 0) {
                 container.innerHTML = '<div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-600">No pending submissions.</div>';
                 return;
             }
 
-            container.innerHTML = pendingCustomRisks.map(item => `
+            const customQueueHTML = pendingCustomRisks.map(item => `
                 <div class="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm">
                     <div class="flex items-start justify-between gap-4">
                         <div>
@@ -1307,6 +1542,41 @@
                     <p class="text-sm text-slate-700 mt-2"><strong>Impact:</strong> ${item.impact}</p>
                 </div>
             `).join('');
+
+            const editQueueHTML = pendingRiskEdits.map(item => `
+                <div class="p-5 rounded-2xl border border-amber-200 bg-amber-50/50 shadow-sm">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-amber-700">${item.editRequestId} | Edit Request</div>
+                            <h4 class="font-black text-slate-900 mt-1">${item.targetRiskId} - ${item.hazard}</h4>
+                            <p class="text-xs text-slate-500 mt-1">Requested by ${item.requestedBy || 'Anonymous'} on ${new Date(item.requestedAt).toLocaleString()}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveEditRequest('${item.editRequestId}')" class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700">Approve</button>
+                            <button onclick="rejectEditRequest('${item.editRequestId}')" class="px-4 py-2 rounded-lg bg-rose-600 text-white text-sm font-bold hover:bg-rose-700">Reject</button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-700 mt-3"><strong>Mechanism:</strong> ${item.mechanism}</p>
+                    <p class="text-sm text-slate-700 mt-2"><strong>Impact:</strong> ${item.impact}</p>
+                    <p class="text-sm text-slate-700 mt-2"><strong>Controls:</strong> ${item.mitigations.length}</p>
+                </div>
+            `).join('');
+
+            const customSection = pendingCustomRisks.length > 0
+                ? `<div>
+                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">Pending New Risks (${pendingCustomRisks.length})</h4>
+                    <div class="space-y-4">${customQueueHTML}</div>
+                </div>`
+                : '';
+
+            const editSection = pendingRiskEdits.length > 0
+                ? `<div class="mt-6">
+                    <h4 class="text-xs font-black uppercase tracking-widest text-amber-700 mb-3">Pending Edit Requests (${pendingRiskEdits.length})</h4>
+                    <div class="space-y-4">${editQueueHTML}</div>
+                </div>`
+                : '';
+
+            container.innerHTML = `${customSection}${editSection}`;
         }
 
         function approveCustomRisk(id) {
@@ -1333,14 +1603,53 @@
             showToast(`Rejected ${id}`);
         }
 
+        function approveEditRequest(editRequestId) {
+            const idx = pendingRiskEdits.findIndex(x => x.editRequestId === editRequestId);
+            if (idx < 0) return;
+
+            const request = pendingRiskEdits[idx];
+            pendingRiskEdits.splice(idx, 1);
+
+            approvedRiskEdits = approvedRiskEdits.filter(x => x.targetRiskId !== request.targetRiskId);
+            approvedRiskEdits.push(request);
+
+            const approvedCustomTarget = approvedCustomRisks.find(x => x.id === request.targetRiskId);
+            if (approvedCustomTarget) {
+                applyEditToRiskRecord(approvedCustomTarget, request);
+            }
+
+            saveRiskEditStores();
+            saveCustomRiskStores();
+            populatePool();
+            renderGrid();
+            renderAdminQueue();
+            showToast(`Approved ${editRequestId}`);
+        }
+
+        function rejectEditRequest(editRequestId) {
+            const idx = pendingRiskEdits.findIndex(x => x.editRequestId === editRequestId);
+            if (idx < 0) return;
+            pendingRiskEdits.splice(idx, 1);
+            saveRiskEditStores();
+            populatePool();
+            renderGrid();
+            renderAdminQueue();
+            showToast(`Rejected ${editRequestId}`);
+        }
+
         window.approveCustomRisk = approveCustomRisk;
         window.rejectCustomRisk = rejectCustomRisk;
+        window.approveEditRequest = approveEditRequest;
+        window.rejectEditRequest = rejectEditRequest;
+        window.openEditModal = openEditModal;
 
         document.getElementById('contribute-risk-btn').onclick = openContributeModal;
         document.getElementById('admin-review-btn').onclick = openAdminModal;
         document.getElementById('contribute-close').onclick = closeContributeModal;
         document.getElementById('contribute-cancel').onclick = closeContributeModal;
         document.getElementById('admin-close').onclick = closeAdminModal;
+        document.getElementById('edit-close').onclick = closeEditModal;
+        document.getElementById('edit-cancel').onclick = closeEditModal;
 
         document.getElementById('contribute-form').addEventListener('submit', (event) => {
             event.preventDefault();
@@ -1359,6 +1668,22 @@
             showToast(`Submitted ${custom.id} for admin approval`);
         });
 
+        document.getElementById('edit-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const request = createEditRequestFromForm();
+            if (!request) {
+                showToast('Please complete required fields and at least one mitigation.');
+                return;
+            }
+
+            pendingRiskEdits.push(request);
+            saveRiskEditStores();
+            updatePendingCountBadge();
+            renderGrid();
+            closeEditModal();
+            showToast(`Submitted ${request.editRequestId} for admin approval`);
+        });
+
         document.getElementById('contribute-modal').addEventListener('click', (event) => {
             if (event.target.id === 'contribute-modal') closeContributeModal();
         });
@@ -1367,9 +1692,14 @@
             if (event.target.id === 'admin-modal') closeAdminModal();
         });
 
+        document.getElementById('edit-modal').addEventListener('click', (event) => {
+            if (event.target.id === 'edit-modal') closeEditModal();
+        });
+
         // Initialize
         async function initializeApp() {
             loadCustomRiskStores();
+            loadRiskEditStores();
             await loadWebRiskDatabase();
             populatePool();
             renderGrid();
