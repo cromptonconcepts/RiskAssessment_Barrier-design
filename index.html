@@ -1772,9 +1772,6 @@
           <button class="btn btn-outline internal-only" onclick="openPythonRiskReport('detailed')">
             🐍 Detailed Python Report
           </button>
-          <button class="btn btn-outline internal-only" onclick="openPythonRiskReport('short')">
-            🐍 Python Short Report
-          </button>
             <button class="btn navigation-allowed" onclick="proceedToBarrierSelection()">
                 Continue to Barrier Selection →
             </button>
@@ -9143,15 +9140,20 @@ function renderEndTreatments(filterText = '') {
     const mappingDetails = document.getElementById('etMappingDetails');
 
     const term = (document.getElementById('etSearch').value || filterText).toLowerCase();
-    const allowedNames = showAll ? [] : getAllowedEndTreatmentNamesForBarrier(selectedBarrier);
-    const mappedSpec = getMappedEndTreatmentSpecForBarrier(selectedBarrier);
+    const hasBarrierSelection = !!(selectedBarrier && selectedBarrier.isTerminal !== true);
+    const allowedNames = showAll || !hasBarrierSelection ? [] : getAllowedEndTreatmentNamesForBarrier(selectedBarrier);
+    const mappedSpec = hasBarrierSelection
+      ? getMappedEndTreatmentSpecForBarrier(selectedBarrier)
+      : { code: '', labels: [] };
 
     if (scopeNote) {
       if (showAll) {
         scopeNote.innerText = 'Showing all end treatments.';
-      } else if (selectedBarrier && allowedNames.length > 0) {
+      } else if (hasBarrierSelection && allowedNames.length > 0) {
         scopeNote.innerText = `Showing mapped end treatments for ${selectedBarrier.name}.`;
-      } else if (selectedBarrier) {
+      } else if (selectedBarrier && selectedBarrier.isTerminal === true) {
+        scopeNote.innerText = 'Select a longitudinal barrier to view mapped end treatments.';
+      } else if (hasBarrierSelection) {
         scopeNote.innerText = 'No specific mapping found for this barrier. Use "Show all" to see available end treatments.';
       } else {
         scopeNote.innerText = 'Select a barrier to see mapped end treatments, or use Show all.';
@@ -9159,7 +9161,7 @@ function renderEndTreatments(filterText = '') {
     }
 
     if (mappingDetails) {
-      if (selectedBarrier && mappedSpec.code && mappedSpec.labels.length > 0) {
+      if (hasBarrierSelection && mappedSpec.code && mappedSpec.labels.length > 0) {
         const listItems = mappedSpec.labels
           .map(item => String(item || '').trim())
           .filter(item => item.length > 0)
@@ -9170,7 +9172,10 @@ function renderEndTreatments(filterText = '') {
           <div style="font-weight:700; color:#0f172a; margin-bottom:6px;">Mapped rule list (${escapeHTML(mappedSpec.code)})</div>
           <ol style="margin:0; padding-left:18px;">${listItems}</ol>
         `;
-      } else if (selectedBarrier) {
+      } else if (selectedBarrier && selectedBarrier.isTerminal === true) {
+        mappingDetails.style.display = 'block';
+        mappingDetails.innerHTML = '<div style="font-weight:700; color:#0f172a; margin-bottom:6px;">Mapped rule list</div><div>Select a longitudinal barrier to view barrier-to-end-treatment mapping.</div>';
+      } else if (hasBarrierSelection) {
         mappingDetails.style.display = 'block';
         mappingDetails.innerHTML = '<div style="font-weight:700; color:#0f172a; margin-bottom:6px;">Mapped rule list</div><div>No mapping found for this selected barrier code.</div>';
       } else {
@@ -9265,7 +9270,7 @@ function selectEndTreatment(id) {
     renderWidthVisual();
 }
 
-function printReport() {
+async function printReport() {
   if (currentUserRole === 'planner' || currentUserRole === 'external') {
     alert('Print is available for Admin only.');
     return;
@@ -9595,6 +9600,64 @@ function printReport() {
     pSign.innerHTML += `<div style="padding:20px; color:#64748b; font-style:italic;">Signature section not found.</div>`;
   }
   printContainer.appendChild(pSign);
+
+  // PAGE 7: Detailed Python Risk Report
+  const pPython = document.createElement('div');
+  pPython.className = 'print-page page-break';
+  pPython.innerHTML = `
+    ${pageHeader('Detailed Risk Report (Python)')}
+    <div id="pythonReportEmbedded" style="min-height:160px; padding:8px;" contenteditable="true">
+      <div style="padding:30px; text-align:center; color:#64748b; font-style:italic;">Loading Python report…</div>
+    </div>`;
+  printContainer.appendChild(pPython);
+
+  // Try to fetch Python report content from the service
+  try {
+    const _buildPayload = window.buildRiskPythonReportPayload;
+    const _checkService = window.isPythonRiskReportServiceAvailable;
+    if (typeof _buildPayload === 'function' && typeof _checkService === 'function') {
+      const pyPayload = _buildPayload('detailed');
+      const pyTitle = `${(pyPayload?.project?.name) || 'Risk Assessment Report'} - Detailed Report`;
+      const serviceOk = await _checkService();
+      const embedEl = pPython.querySelector('#pythonReportEmbedded');
+      if (serviceOk) {
+        const draftResp = await fetch(`${REPORT_SERVICE_BASE_URL}/report/draft`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: pyTitle, payload: pyPayload })
+        });
+        if (draftResp.ok) {
+          const draftData = await draftResp.json();
+          const editorPath = String(draftData?.editor_url || '');
+          if (editorPath) {
+            const editorUrl = new URL(editorPath, REPORT_SERVICE_BASE_URL).toString();
+            const pageResp = await fetch(editorUrl);
+            if (pageResp.ok) {
+              const rawHtml = await pageResp.text();
+              // Strip scripts/styles and extract body content only
+              const noScripts = rawHtml
+                .replace(/<script[\s\S]*?<\/script>/gi, '')
+                .replace(/<style[\s\S]*?<\/style>/gi, '');
+              const bodyMatch = noScripts.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+              const bodyContent = bodyMatch ? bodyMatch[1].trim() : noScripts;
+              if (embedEl) embedEl.innerHTML = bodyContent;
+            } else {
+              if (embedEl) embedEl.innerHTML = `<div style="padding:20px; color:#b91c1c;">Could not load Python report page (HTTP ${pageResp.status}). You can still edit this section manually.</div>`;
+            }
+          } else {
+            if (embedEl) embedEl.innerHTML = `<div style="padding:20px; color:#64748b; font-style:italic;">Python service did not return an editor URL.</div>`;
+          }
+        } else {
+          if (embedEl) embedEl.innerHTML = `<div style="padding:20px; color:#b91c1c;">Python report service error (${draftResp.status}). You can still edit this section manually.</div>`;
+        }
+      } else {
+        if (embedEl) embedEl.innerHTML = `<div style="padding:20px; color:#64748b; font-style:italic;">Python report service is offline. Start the service and click 🐍 Detailed Python Report separately, or type your report content here.</div>`;
+      }
+    }
+  } catch (pyErr) {
+    const embedEl = pPython.querySelector('#pythonReportEmbedded');
+    if (embedEl) embedEl.innerHTML = `<div style="padding:20px; color:#b91c1c;">Failed to load Python report: ${pyErr?.message || 'Unknown error'}. You can still type content here.</div>`;
+  }
 
   openEditableReport();
 }
@@ -10250,6 +10313,8 @@ async function handlePDFUpload(event) {
   }
 
   window.openPythonRiskReport = openPythonRiskReport;
+  window.buildRiskPythonReportPayload = buildRiskPythonReportPayload;
+  window.isPythonRiskReportServiceAvailable = isPythonRiskReportServiceAvailable;
 
 /**
  * Extract PDF text preserving row/column spacing as much as possible

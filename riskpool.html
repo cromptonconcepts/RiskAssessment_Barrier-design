@@ -666,28 +666,102 @@
             };
         }
 
-        function buildMitigations(catID, categoryName, hazard) {
-            const base = [
-                `Undertake targeted ${categoryName.toLowerCase()} review for \"${hazard}\" with documented design assumptions.`,
-                "Implement physical and operational controls (geometry, barriers, signage, speed management, or staging) to remove or reduce conflict exposure.",
-                "Validate control effectiveness through design verification, field check, and pre-start briefing before live operations."
-            ];
+        function buildScenarioControls(catID, categoryName, hazard) {
+            const text = String(hazard || '').toLowerCase();
+            const controls = [];
 
-            if (catID === 'BDR') {
-                return [
-                    base[0],
-                    "Confirm containment class, working width/deflection envelope, and terminal treatment suitability for the site constraints.",
-                    base[2]
-                ];
+            const pushControl = (type, description) => {
+                controls.push({ type, description });
+            };
+
+            // Baseline controls by hierarchy to ensure full mitigation coverage on every risk.
+            pushControl('Elimination', `Remove the conflict condition for "${hazard}" during ${categoryName.toLowerCase()} design by changing alignment/layout before delivery.`);
+            pushControl('Substitution', 'Use a lower-risk method, staging approach, or approved device/system that reduces exposure compared with the original concept.');
+            pushControl('Engineering', `Apply engineered controls specific to ${categoryName.toLowerCase()} including geometry, protection, containment, or separation upgrades.`);
+            pushControl('Administrative', 'Define inspection hold points, pre-start briefings, and trigger-based response actions in site procedures and TMP/TGS documents.');
+            pushControl('PPE', 'Require task-appropriate PPE for exposed workers (high-visibility garments, helmets, footwear, and eye/hearing protection as applicable).');
+
+            if (/collision|strike|impact|encroach|rear-end|hit|head-on|side-swipe|snag|penetration/.test(text)) {
+                pushControl('Elimination', 'Remove unnecessary vehicle-pedestrian interfaces and conflict movements through revised access and traffic paths.');
+                pushControl('Engineering', 'Increase physical separation with barriers, offsets, and channelization to prevent direct intrusion into occupied zones.');
+                pushControl('Administrative', 'Set speed control, spotter, and exclusion-zone protocols for all high-conflict movements.');
             }
-            if (catID === 'TMG') {
-                return [
-                    base[0],
-                    "Optimize warning, taper, and queue management with active monitoring and incident response triggers.",
-                    base[2]
-                ];
+
+            if (/queue|merge|taper|lane|junction|intersection|roundabout|turn|radius|off-track/.test(text)) {
+                pushControl('Engineering', 'Recalculate taper/merge geometry and turning paths using current speed environment and design-vehicle requirements.');
+                pushControl('Administrative', 'Use queue trigger thresholds with rapid escalation actions (warning activation, traffic control adjustment, or staging pause).');
             }
-            return base;
+
+            if (/pedestrian|cycle|cyclist|crossing|dda|walkway|trip|tgsi/.test(text)) {
+                pushControl('Elimination', 'Separate pedestrian/cyclist routes from live traffic with dedicated protected alignments.');
+                pushControl('Engineering', 'Install compliant temporary pathways, detectable edging, anti-slip surfaces, and positive barriers at closure points.');
+                pushControl('Administrative', 'Inspect accessible routes at shift changes and after weather events to maintain DDA compliance.');
+            }
+
+            if (/visibility|blind|night|fog|glare|lighting|reflectivity|sight/.test(text)) {
+                pushControl('Engineering', 'Upgrade lighting levels, device conspicuity, and reflector performance to restore required approach visibility.');
+                pushControl('Administrative', 'Add low-visibility operating protocols including reduced speed environment and enhanced monitoring patrols.');
+                pushControl('PPE', 'Use high-contrast/high-visibility PPE with retroreflective elements for all night or low-light tasks.');
+            }
+
+            if (/flood|drain|scour|washout|rain|water|hydroplan|erosion|wind|storm|ice|snow/.test(text)) {
+                pushControl('Substitution', 'Use weather-resilient temporary materials/devices rated for the expected environmental loads.');
+                pushControl('Engineering', 'Provide drainage continuity, erosion protection, ballast/anchorage, and water management to prevent instability.');
+                pushControl('Administrative', 'Apply weather trigger plans with stop-work and reinspection criteria after threshold events.');
+            }
+
+            if (/barrier|terminal|cushion|deflection|containment|anchor|guardrail|redirective/.test(text)) {
+                pushControl('Elimination', 'Remove non-redirective gaps and incompatible transitions before opening to traffic.');
+                pushControl('Engineering', 'Validate containment class, working width, dynamic deflection, and terminal compatibility for installed system length.');
+                pushControl('Administrative', 'Enforce post-impact inspection and reset/repair response SLAs for barrier and crash cushion assets.');
+            }
+
+            if (/utility|cable|overhead|bridge|clearance|height|manhole|service|rail/.test(text)) {
+                pushControl('Elimination', 'Relocate or isolate conflicting utilities/assets from traffic envelopes where feasible.');
+                pushControl('Engineering', 'Confirm vertical/horizontal clearances and protection details against surveyed as-built constraints.');
+                pushControl('Administrative', 'Integrate permit-to-work, DBYD verification, and utility authority hold points before intrusive works.');
+            }
+
+            if (/roll|slope|superelevation|cross-fall|grounding|stability|outrigger|settlement|rutting/.test(text)) {
+                pushControl('Substitution', 'Use lower center-of-gravity plant/routes or temporary platforms that reduce rollover and stability demand.');
+                pushControl('Engineering', 'Rework grades, crossfall, bearing capacity, and platform support to maintain stable operating envelopes.');
+                pushControl('Administrative', 'Apply stability verification checklists and plant movement permits for high-risk manoeuvres.');
+            }
+
+            if (catID === 'SPA') {
+                pushControl('Engineering', 'Run swept path analysis for worst-case articulated vehicle envelopes and revise geometry to eliminate body/tail conflict.');
+                pushControl('Administrative', 'Issue route restrictions and delivery windows for vehicle classes that exceed available geometric capacity.');
+            } else if (catID === 'BDR') {
+                pushControl('Engineering', 'Confirm barrier line continuity, transition details, and tested installation conditions from manufacturer documentation.');
+                pushControl('Administrative', 'Complete install QA checks for pin/anchor torque, alignment, and damaged-unit replacement before traffic release.');
+            } else if (catID === 'TMG') {
+                pushControl('Engineering', 'Optimize sign spacing, delineation sequence, and portable device placement to deliver unambiguous driver guidance.');
+                pushControl('Administrative', 'Conduct daily TMP conformance audits and update staging controls when field conditions deviate from plan.');
+            } else {
+                pushControl('Engineering', 'Re-verify temporary works design assumptions (geometry, drainage, structural capacity, and staging interfaces).');
+                pushControl('Administrative', 'Maintain engineering verification records and hold points for all temporary works changes.');
+            }
+
+            const seen = new Set();
+            const unique = controls.filter(c => {
+                const key = `${c.type}|${String(c.description || '').toLowerCase()}`;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+
+            const hasType = type => unique.some(c => c.type === type);
+            if (!hasType('Elimination')) unique.push({ type: 'Elimination', description: 'Remove the high-risk activity from live operation periods wherever practicable.' });
+            if (!hasType('Substitution')) unique.push({ type: 'Substitution', description: 'Adopt a lower-risk temporary method or staging option that reduces exposure duration and severity.' });
+            if (!hasType('Engineering')) unique.push({ type: 'Engineering', description: 'Implement physical design controls to isolate or absorb the hazard at source.' });
+            if (!hasType('Administrative')) unique.push({ type: 'Administrative', description: 'Define documented procedures, competencies, and verification checks for the hazard scenario.' });
+            if (!hasType('PPE')) unique.push({ type: 'PPE', description: 'Specify and enforce PPE suited to the residual exposure profile.' });
+
+            return unique;
+        }
+
+        function buildMitigations(catID, categoryName, hazard) {
+            return buildScenarioControls(catID, categoryName, hazard).map(control => control.description);
         }
 
         function classifyMitigationType(mitigationText, catID, index) {
@@ -705,21 +779,41 @@
         }
 
         function ensureTypedControls(record) {
+            const mergeWithScenarioControls = (existingControls) => {
+                const scenarioControls = buildScenarioControls(record.catID || '', record.category || 'Engineering', record.hazard || 'identified hazard');
+                const merged = [...existingControls];
+                const existingKeys = new Set(
+                    merged.map(c => `${c.type}|${String(c.description || '').toLowerCase()}`)
+                );
+
+                scenarioControls.forEach(c => {
+                    const key = `${c.type}|${String(c.description || '').toLowerCase()}`;
+                    if (!existingKeys.has(key)) {
+                        merged.push(c);
+                        existingKeys.add(key);
+                    }
+                });
+
+                return merged;
+            };
+
             if (Array.isArray(record.controls) && record.controls.length > 0) {
-                return record.controls
+                const normalized = record.controls
                     .filter(c => c && c.type && c.description)
                     .map(c => ({
                         type: CONTROL_TYPES.includes(c.type) ? c.type : 'Administrative',
                         description: String(c.description || '').trim()
                     }))
                     .filter(c => c.description.length > 0);
+                return mergeWithScenarioControls(normalized);
             }
 
             const mitigations = Array.isArray(record.mitigations) ? record.mitigations : [];
-            return mitigations.map((m, index) => ({
+            const typedFromMitigations = mitigations.map((m, index) => ({
                 type: classifyMitigationType(m, record.catID, index),
                 description: m
             }));
+            return mergeWithScenarioControls(typedFromMitigations);
         }
 
         function toRiskScore(value, fallback = '3') {
@@ -814,6 +908,7 @@
         function createDetailedRisk(cat, hazard, index) {
             const id = `${cat.pre}-${String(index + 1).padStart(3, '0')}`;
             const defaults = getCategoryDefaults(cat.id, cat.name);
+            const scenarioControls = buildScenarioControls(cat.id, cat.name, hazard);
             const risk = {
                 id,
                 catID: cat.id,
@@ -824,7 +919,7 @@
                 initialLikelihood: defaults.initialLikelihood,
                 initialConsequence: defaults.initialConsequence,
                 initialRisk: defaults.initialRisk,
-                mitigations: buildMitigations(cat.id, cat.name, hazard),
+                mitigations: scenarioControls.map(control => control.description),
                 residualLikelihood: defaults.residualLikelihood,
                 residualConsequence: defaults.residualConsequence,
                 residualRisk: defaults.residualRisk,
@@ -832,7 +927,7 @@
                 action: `Complete design and field verification for \"${hazard}\" and close actions in the project risk register.`,
                 reference: defaults.reference
             };
-            risk.controls = ensureTypedControls(risk);
+            risk.controls = scenarioControls;
             risk.controlCategories = buildControlCategories(risk.controls);
             return risk;
         }
